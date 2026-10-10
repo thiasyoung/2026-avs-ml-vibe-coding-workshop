@@ -34,7 +34,12 @@ def main() -> None:
     print(f"Executable: {sys.executable}")
     if not sys.version_info[:2] == (3, 11):
         raise RuntimeError("This workshop requires Python 3.11.")
-    in_project_environment = project_root in Path(sys.executable).resolve().parents
+    # ``python`` inside a POSIX virtual environment is commonly a symlink to
+    # the managed Python installation. Resolving ``sys.executable`` therefore
+    # escapes ``.venv`` on GitHub Actions even though UV selected it correctly.
+    # ``sys.prefix`` is the virtual-environment root and is stable on Windows,
+    # macOS, and Linux.
+    in_project_environment = Path(sys.prefix).resolve() == (project_root / ".venv").resolve()
     if not in_project_environment:
         raise RuntimeError("Launch this check with UV so it uses the .venv inside this workshop folder.")
     print("Environment: project .venv")
