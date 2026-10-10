@@ -1,0 +1,18 @@
+# Project environment and Python cache
+.venv/
+__pycache__/
+*.py[cod]
+
+# Jupyter creates these automatically
+.ipynb_checkpoints/
+
+# Generated workshop artifacts; source data under data/ remains tracked
+**/outputs/
+
+# Superseded course notebooks are retained locally for provenance, not distribution
+**/archive/
+
+# Local operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
