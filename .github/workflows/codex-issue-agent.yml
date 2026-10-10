@@ -38,6 +38,14 @@ jobs:
       working_ref: ${{ steps.intake.outputs.working_ref }}
       base_ref: ${{ steps.intake.outputs.base_ref }}
     steps:
+      # Checkout creates the GitHub workspace used for the short-lived request
+      # artifact. No repository code is executed in this read-only job.
+      - name: Create the trusted workflow workspace
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+
       - name: Validate trigger, identity, and spend limits
         id: intake
         uses: actions/github-script@v8
@@ -128,6 +136,7 @@ jobs:
               workspace,
               '.codex-agent-request.json',
             );
+            fs.mkdirSync(path.dirname(requestArtifactPath), { recursive: true });
             fs.writeFileSync(requestArtifactPath, JSON.stringify(payloadForCodex, null, 2));
             core.setOutput('execute', 'true');
             core.setOutput('reason', 'authorized request');
@@ -136,6 +145,11 @@ jobs:
             core.setOutput('branch', branch);
             core.setOutput('working_ref', workingRef);
             core.setOutput('base_ref', baseRef);
+
+      - name: Confirm the request artifact exists
+        if: steps.intake.outputs.execute == 'true'
+        shell: bash
+        run: test -s "$GITHUB_WORKSPACE/.codex-agent-request.json"
 
       - name: Upload sanitized request artifact
         if: steps.intake.outputs.execute == 'true'
