@@ -34,4 +34,5 @@ Do not run acquisition notebooks, large model downloads, TensorBoard training, o
 
 - Work on a feature branch; never commit directly to `main`.
 - Keep a pull request limited to one request. Summarize changed files, validations run, and validations not run.
-- Workflow-generated branches use `codex/issue-<number>`. Follow-up `@codex` comments on the originating Issue update that branch and its existing pull request.
+- The Issue-triggered Codex workflow uses `dev/<github-login>` for each authorized collaborator. Ordinary `@codex` requests commit only to that development branch; follow-up comments target the commenting collaborator's own branch.
+- `@codex sync with main` synchronizes the requester's development branch. `@codex prepare merge` runs the lightweight checks and creates or updates that branch's pull request into `main`; it never merges automatically.

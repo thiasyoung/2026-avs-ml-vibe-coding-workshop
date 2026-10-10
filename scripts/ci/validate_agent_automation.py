@@ -1,4 +1,4 @@
-"""Static invariants for the privileged Issue-to-PR automation."""
+"""Static invariants for the constrained collaborator-development automation."""
 
 from __future__ import annotations
 
@@ -17,11 +17,17 @@ REQUIRED_SNIPPETS = (
     "model: gpt-5.6-terra",
     "effort: xhigh",
     "CODEX_AGENT_ENABLED",
-    "INITIAL_ALLOWED_USER: thiasyoung",
     'permission-profile: ":workspace"',
     "safety-strategy: drop-sudo",
     "GITHUB_TOKEN: \"\"",
-    "codex/issue-",
+    "getCollaboratorPermissionLevel",
+    "['admin', 'maintain', 'write']",
+    "dev/${actor}",
+    "Create dev branch only when it does not exist",
+    "codex-dev-${{ github.repository }}-${{ github.actor }}",
+    "sync with main",
+    "prepare merge",
+    "allow-users: ${{ github.actor }}",
     "path === '.git' || path.startsWith('.git/') || path.startsWith('.github/')",
     "GITHUB_WORKSPACE",
     "codex-agent-request.json",
@@ -33,6 +39,7 @@ FORBIDDEN_SNIPPETS = (
     "allow-users: \"*\"",
     "safety-strategy: unsafe",
     "git push origin main",
+    "git push --force",
 )
 
 
