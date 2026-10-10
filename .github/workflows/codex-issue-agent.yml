@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Validate trigger, identity, and spend limits
         id: intake
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           CODEX_AGENT_ENABLED: ${{ vars.CODEX_AGENT_ENABLED || 'false' }}
           MAX_REQUEST_CHARS: ${{ vars.CODEX_MAX_REQUEST_CHARS || env.DEFAULT_MAX_REQUEST_CHARS }}
@@ -50,6 +50,9 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const fs = require('fs');
+            const path = require('path');
+            const workspace = process.env.GITHUB_WORKSPACE;
+            if (!workspace) throw new Error('GITHUB_WORKSPACE is not available.');
             const payload = context.payload;
             const issue = payload.issue;
             const isIssueComment = context.eventName === 'issue_comment';
@@ -121,7 +124,11 @@ jobs:
               trigger: isIssueComment ? 'issue_comment' : 'issue_body',
               requested_by: actor,
             };
-            fs.writeFileSync('.codex-agent-request.json', JSON.stringify(payloadForCodex, null, 2));
+            const requestArtifactPath = path.join(
+              workspace,
+              '.codex-agent-request.json',
+            );
+            fs.writeFileSync(requestArtifactPath, JSON.stringify(payloadForCodex, null, 2));
             core.setOutput('execute', 'true');
             core.setOutput('reason', 'authorized request');
             core.setOutput('issue_number', String(issueNumber));
@@ -132,10 +139,10 @@ jobs:
 
       - name: Upload sanitized request artifact
         if: steps.intake.outputs.execute == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: codex-request-${{ github.run_id }}
-          path: .codex-agent-request.json
+          path: ${{ github.workspace }}/.codex-agent-request.json
           if-no-files-found: error
           retention-days: 1
 
@@ -171,7 +178,7 @@ jobs:
         run: uv sync --locked --no-install-project
 
       - name: Download the Issue request
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: codex-request-${{ github.run_id }}
           path: .
@@ -216,7 +223,7 @@ jobs:
 
       - name: Validate the structured result and write an allowed patch
         id: result
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           CODEX_FINAL_MESSAGE: ${{ needs.codex.outputs.final_message }}
         with:
@@ -275,7 +282,7 @@ jobs:
       - name: Create or update the pull request
         id: pull_request
         if: steps.result.outputs.has_patch == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           CODEX_BRANCH: ${{ needs.intake.outputs.branch }}
           BASE_REF: ${{ needs.intake.outputs.base_ref }}
@@ -322,7 +329,7 @@ jobs:
             core.setOutput('url', pull.html_url);
 
       - name: Report the outcome on the original Issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         env:
           ISSUE_NUMBER: ${{ needs.intake.outputs.issue_number }}
           EVENT_KEY: ${{ needs.intake.outputs.event_key }}
