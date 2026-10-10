@@ -47,3 +47,7 @@ Run `00_Test_Installation.ipynb` or the command-line verifier before the worksho
 - `01_boiling_point/02_BP_1_Chemprop_GNN.ipynb` is a 1,500-molecule, 20-epoch demonstration. Increase either setting only after a rehearsal on the actual workshop hardware.
 - The boiling-point examples use random molecular splits for speed and conceptual clarity. Do not describe their test metrics as estimates of performance on new chemical scaffolds; use a scaffold split for that claim.
 - Run each acquisition notebook before the workshop and retain its output. The IR scraper is intentionally a pre-work step; the workshop starts at the carpentry notebook with its downloaded data. The static IR trainer logs TensorBoard events, saves periodic checkpoints every 25 epochs, restores the validation-best weights, and writes concise test metrics and a summary plot.
+
+## Maintainer automation
+
+After review, maintainers can enable a constrained Issue-to-pull-request Codex workflow. Only the repository owner (`thiasyoung`) can initially trigger it by including `@codex` in an Issue body or Issue comment. Codex proposes changes on a `codex/issue-<number>` feature branch; it never pushes to `main` or merges changes. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for activation, operating instructions, safety boundaries, and troubleshooting.

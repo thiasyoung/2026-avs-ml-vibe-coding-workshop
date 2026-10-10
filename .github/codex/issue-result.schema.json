@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Codex issue agent result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "summary", "tests", "patch"],
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["patch", "no_change"]
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "tests": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 500 },
+      "maxItems": 12
+    },
+    "patch": {
+      "type": "string"
+    }
+  }
+}
