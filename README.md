@@ -50,4 +50,4 @@ Run `00_Test_Installation.ipynb` or the command-line verifier before the worksho
 
 ## Maintainer automation
 
-After review, maintainers can enable a constrained Issue-to-pull-request Codex workflow. Only the repository owner (`thiasyoung`) can initially trigger it by including `@codex` in an Issue body or Issue comment. Codex proposes changes on a `codex/issue-<number>` feature branch; it never pushes to `main` or merges changes. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for activation, operating instructions, safety boundaries, and troubleshooting.
+After review, maintainers can enable a constrained collaborator Codex workflow. Repository collaborators with write access can include `@codex` in an Issue body or Issue comment; ordinary changes are validated and committed to the requester's `dev/<github-login>` branch. `@codex sync with main` updates that branch, and `@codex prepare merge` tests it and opens a pull request into `main`. The workflow never pushes to `main` or merges changes automatically. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for activation, operating instructions, safety boundaries, and troubleshooting.
