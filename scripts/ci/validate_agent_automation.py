@@ -10,6 +10,9 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW = ROOT / ".github/workflows/codex-issue-agent.yml"
 REQUIRED_SNIPPETS = (
     "openai/codex-action@v1",
+    "actions/github-script@v8",
+    "actions/upload-artifact@v6",
+    "actions/download-artifact@v6",
     "OPENAI_API_KEY",
     "model: gpt-5.6-terra",
     "effort: xhigh",
@@ -20,6 +23,7 @@ REQUIRED_SNIPPETS = (
     "GITHUB_TOKEN: \"\"",
     "codex/issue-",
     "path === '.git' || path.startsWith('.git/') || path.startsWith('.github/')",
+    "GITHUB_WORKSPACE",
     "pull-requests: write",
     "issues: write",
 )
