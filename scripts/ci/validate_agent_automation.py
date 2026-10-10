@@ -24,6 +24,7 @@ REQUIRED_SNIPPETS = (
     "codex/issue-",
     "path === '.git' || path.startsWith('.git/') || path.startsWith('.github/')",
     "GITHUB_WORKSPACE",
+    "codex-agent-request.json",
     "pull-requests: write",
     "issues: write",
 )

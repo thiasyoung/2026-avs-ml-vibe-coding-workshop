@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 def main() -> None:
-    request_path = Path(".codex-agent-request.json")
+    request_path = Path("codex-agent-request.json")
     instructions_path = Path(".github/codex/issue-agent-instructions.md")
     output_path = Path(".codex-agent-prompt.md")
 
