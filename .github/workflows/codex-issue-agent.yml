@@ -33,7 +33,7 @@ jobs:
       command: ${{ steps.request.outputs.command }}
     steps:
       - name: Read repository metadata
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           persist-credentials: false
 
@@ -64,19 +64,26 @@ jobs:
 
             // The sender comes from the GitHub event, never from Issue text.
             const actor = event.sender.login;
-            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              username: actor,
-            });
+            const repository = await github.rest.repos.get(context.repo);
             const allowed = new Set(['admin', 'maintain', 'write']);
-            if (!allowed.has(permission.data.user.permission)) {
+            // The repository owner is always trusted. GitHub's collaborator
+            // endpoint can report a public-repository owner's role as `read`.
+            const isOwner = actor.toLowerCase() === repository.data.owner.login.toLowerCase();
+            let hasWriteAccess = isOwner;
+            if (!hasWriteAccess) {
+              const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: actor,
+              });
+              hasWriteAccess = allowed.has(permission.data.user.permission);
+            }
+            if (!hasWriteAccess) {
               core.warning(`Ignoring @codex from ${actor}: repository write access is required.`);
               core.setOutput('run_codex', 'false');
               return;
             }
 
-            const repository = await github.rest.repos.get(context.repo);
             const base = repository.data.default_branch;
             const branch = `dev/${actor}`;
             try {
@@ -158,7 +165,7 @@ jobs:
       CODEX_COMMAND: ${{ needs.prepare.outputs.command }}
     steps:
       - name: Check out the requester's development branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ needs.prepare.outputs.branch }}
           fetch-depth: 0

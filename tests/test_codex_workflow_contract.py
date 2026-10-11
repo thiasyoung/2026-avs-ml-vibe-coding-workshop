@@ -15,6 +15,11 @@ class CodexWorkflowContractTests(unittest.TestCase):
         self.assertIn("const actor = event.sender.login", WORKFLOW)
         self.assertIn("getCollaboratorPermissionLevel", WORKFLOW)
         self.assertIn("new Set(['admin', 'maintain', 'write'])", WORKFLOW)
+        self.assertIn("const isOwner = actor.toLowerCase()", WORKFLOW)
+
+    def test_workflow_uses_node_24_checkout(self) -> None:
+        self.assertNotIn("actions/checkout@v4", WORKFLOW)
+        self.assertIn("actions/checkout@v5", WORKFLOW)
 
     def test_requester_branch_is_created_or_reused(self) -> None:
         self.assertIn("const branch = `dev/${actor}`", WORKFLOW)
