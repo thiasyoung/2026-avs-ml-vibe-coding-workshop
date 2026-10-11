@@ -6,13 +6,9 @@ __pycache__/
 # Jupyter creates these automatically
 .ipynb_checkpoints/
 
-# Notebook-run outputs are tracked when an authorized Issue explicitly asks to
-# preserve them. Keep only disposable or very large training artifacts ignored.
-**/outputs/**/checkpoints/
-**/outputs/**/tensorboard/
-**/outputs/**/*.ckpt
-**/outputs/**/*.pt
-**/outputs/**/*.pth
+# Generated workshop artifacts are ignored by default. An isolated runner
+# output-migration step must select and stage only its intended deliverables.
+**/outputs/
 
 # Superseded course notebooks are retained locally for provenance, not distribution
 **/archive/
