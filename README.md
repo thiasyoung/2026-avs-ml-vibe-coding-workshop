@@ -50,4 +50,4 @@ Run `00_Test_Installation.ipynb` or the command-line verifier before the worksho
 
 ## Maintainer automation
 
-After review, maintainers can enable a constrained Issue-to-pull-request Codex workflow. Only the repository owner (`thiasyoung`) can initially trigger it by including `@codex` in an Issue body or Issue comment. Codex proposes changes on a `codex/issue-<number>` feature branch; it never pushes to `main` or merges changes. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for activation, operating instructions, safety boundaries, and troubleshooting.
+Trusted repository collaborators with write access can include `@codex` in an Issue or Issue comment to use the hosted Codex workshop runner. It creates or reuses `dev/<their-GitHub-username>`, can set up the UV environment, access the documented public data/model sources, execute requested notebooks, and commits the resulting code, populated notebooks, and useful output artifacts to that branch. It does not push to `main` or merge branches. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for operation and troubleshooting.

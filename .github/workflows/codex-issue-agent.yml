@@ -1,4 +1,4 @@
-name: Codex Issue-to-PR agent
+name: Codex workshop runner
 
 on:
   issues:
@@ -6,378 +6,301 @@ on:
   issue_comment:
     types: [created]
 
-# The default is read-only. Only the publisher job receives narrowly scoped
-# write permissions, and it runs on a fresh runner after Codex has exited.
+# The workflow-level token is read-only.  Only the job that publishes the
+# completed work receives repository write permission.
 permissions:
   contents: read
   issues: read
-  pull-requests: read
 
 concurrency:
-  group: codex-issue-${{ github.repository }}-${{ github.event.issue.number }}
+  # Requests for one person's development branch are serialized; different
+  # collaborators can work at the same time.
+  group: codex-workshop-${{ github.repository }}-${{ github.actor }}
   cancel-in-progress: false
 
-env:
-  # This explicit identity is intentionally the only initial trigger authority.
-  # Change it in a reviewed pull request to add another maintainer.
-  INITIAL_ALLOWED_USER: thiasyoung
-  DEFAULT_MAX_REQUEST_CHARS: "6000"
-  DEFAULT_MAX_RUNS_PER_ISSUE: "6"
-
 jobs:
-  intake:
-    name: Authorize and prepare Issue request
+  prepare:
+    name: Authorize and prepare request
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    permissions:
+      contents: write
+      issues: read
     outputs:
-      execute: ${{ steps.intake.outputs.execute }}
-      reason: ${{ steps.intake.outputs.reason }}
-      issue_number: ${{ steps.intake.outputs.issue_number }}
-      event_key: ${{ steps.intake.outputs.event_key }}
-      branch: ${{ steps.intake.outputs.branch }}
-      working_ref: ${{ steps.intake.outputs.working_ref }}
-      base_ref: ${{ steps.intake.outputs.base_ref }}
+      run_codex: ${{ steps.request.outputs.run_codex }}
+      issue_number: ${{ steps.request.outputs.issue_number }}
+      branch: ${{ steps.request.outputs.branch }}
+      base_branch: ${{ steps.request.outputs.base_branch }}
+      command: ${{ steps.request.outputs.command }}
     steps:
-      # Checkout creates the GitHub workspace used for the short-lived request
-      # artifact. No repository code is executed in this read-only job.
-      - name: Create the trusted workflow workspace
-        uses: actions/checkout@v5
+      - name: Read repository metadata
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
 
-      - name: Validate trigger, identity, and spend limits
-        id: intake
+      - name: Authorize request and create development branch
+        id: request
         uses: actions/github-script@v8
         env:
-          CODEX_AGENT_ENABLED: ${{ vars.CODEX_AGENT_ENABLED || 'false' }}
-          MAX_REQUEST_CHARS: ${{ vars.CODEX_MAX_REQUEST_CHARS || env.DEFAULT_MAX_REQUEST_CHARS }}
-          MAX_RUNS_PER_ISSUE: ${{ vars.CODEX_MAX_RUNS_PER_ISSUE || env.DEFAULT_MAX_RUNS_PER_ISSUE }}
-          INITIAL_ALLOWED_USER: ${{ env.INITIAL_ALLOWED_USER }}
+          CODEX_AGENT_ENABLED: ${{ vars.CODEX_AGENT_ENABLED || 'true' }}
         with:
-          github-token: ${{ github.token }}
           script: |
-            const fs = require('fs');
-            const path = require('path');
-            const workspace = process.env.GITHUB_WORKSPACE;
-            if (!workspace) throw new Error('GITHUB_WORKSPACE is not available.');
-            const payload = context.payload;
-            const issue = payload.issue;
-            const isIssueComment = context.eventName === 'issue_comment';
-            const actor = payload.sender?.login || '';
-            const requestText = isIssueComment ? (payload.comment?.body || '') : (issue?.body || '');
-            const marker = /(^|\s)@codex\b/i;
-            const issueNumber = issue?.number;
-            const baseRef = payload.repository.default_branch;
-            const branch = `codex/issue-${issueNumber}`;
-            const eventKey = isIssueComment
-              ? `comment-${payload.comment.id}`
-              : `issue-${issue.id}-${issue.updated_at}`;
-            const maxChars = Number.parseInt(process.env.MAX_REQUEST_CHARS, 10) || 6000;
-            const maxRuns = Number.parseInt(process.env.MAX_RUNS_PER_ISSUE, 10) || 6;
-
-            const stop = (reason) => {
-              core.info(`Codex intake declined: ${reason}`);
-              core.setOutput('execute', 'false');
-              core.setOutput('reason', reason);
-              core.setOutput('issue_number', String(issueNumber || ''));
-              core.setOutput('event_key', eventKey || '');
-              core.setOutput('branch', branch || '');
-              core.setOutput('working_ref', baseRef || '');
-              core.setOutput('base_ref', baseRef || '');
-            };
-
-            if (!issueNumber) return stop('no Issue payload');
-            if (isIssueComment && issue.pull_request) return stop('pull-request comments are not triggers');
-            if (!marker.test(requestText)) return stop('no @codex marker in the triggering text');
-            if (actor.toLowerCase() !== process.env.INITIAL_ALLOWED_USER.toLowerCase()) {
-              return stop('triggering account is not the initially authorized user');
+            const event = context.payload;
+            const isComment = context.eventName === 'issue_comment';
+            if (isComment && event.issue.pull_request) {
+              core.setOutput('run_codex', 'false');
+              return;
             }
-            if (process.env.CODEX_AGENT_ENABLED.trim().toLowerCase() !== 'true') {
-              return stop('CODEX_AGENT_ENABLED is not true');
-            }
-            if (requestText.length > maxChars) return stop(`request exceeds ${maxChars} characters`);
 
-            const comments = await github.paginate(github.rest.issues.listComments, {
+            const text = isComment ? event.comment.body : event.issue.body;
+            if (!/@codex\b/i.test(text || '')) {
+              core.setOutput('run_codex', 'false');
+              return;
+            }
+            if (process.env.CODEX_AGENT_ENABLED.toLowerCase() !== 'true') {
+              core.warning('Codex Issue agent is disabled by CODEX_AGENT_ENABLED.');
+              core.setOutput('run_codex', 'false');
+              return;
+            }
+
+            // The sender comes from the GitHub event, never from Issue text.
+            const actor = event.sender.login;
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: issueNumber,
-              per_page: 100,
+              username: actor,
             });
-            const botComments = comments.filter((comment) => comment.user?.login === 'github-actions[bot]');
-            if (botComments.some((comment) => (comment.body || '').includes(`<!-- codex-agent-event:${eventKey} -->`))) {
-              return stop('this event already completed');
-            }
-            if (botComments.filter((comment) => (comment.body || '').includes('<!-- codex-agent-event:')).length >= maxRuns) {
-              return stop(`Issue has reached its ${maxRuns}-run cap`);
+            const allowed = new Set(['admin', 'maintain', 'write']);
+            if (!allowed.has(permission.data.user.permission)) {
+              core.warning(`Ignoring @codex from ${actor}: repository write access is required.`);
+              core.setOutput('run_codex', 'false');
+              return;
             }
 
-            const pulls = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              head: `${context.repo.owner}:${branch}`,
-              base: baseRef,
-              per_page: 1,
-            });
-            const workingRef = pulls.data.length ? branch : baseRef;
-            const payloadForCodex = {
-              issue: {
-                number: issueNumber,
-                title: (issue.title || '').slice(0, maxChars),
-                body: (issue.body || '').slice(0, maxChars),
-                url: issue.html_url,
-              },
-              triggering_request: requestText.slice(0, maxChars),
-              trigger: isIssueComment ? 'issue_comment' : 'issue_body',
-              requested_by: actor,
-            };
-            const requestArtifactPath = path.join(
-              workspace,
-              'codex-agent-request.json',
+            const repository = await github.rest.repos.get(context.repo);
+            const base = repository.data.default_branch;
+            const branch = `dev/${actor}`;
+            try {
+              await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              const source = await github.rest.git.getRef({ ...context.repo, ref: `heads/${base}` });
+              try {
+                await github.rest.git.createRef({
+                  ...context.repo,
+                  ref: `refs/heads/${branch}`,
+                  sha: source.data.object.sha,
+                });
+              } catch (createError) {
+                // A simultaneous request may have created it; in that case reuse it.
+                if (createError.status !== 422) throw createError;
+              }
+            }
+
+            const redactCredentials = (value) => String(value || '').replace(
+              /\b(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/g,
+              '[REDACTED]',
             );
-            fs.mkdirSync(path.dirname(requestArtifactPath), { recursive: true });
-            fs.writeFileSync(requestArtifactPath, JSON.stringify(payloadForCodex, null, 2));
-            core.setOutput('execute', 'true');
-            core.setOutput('reason', 'authorized request');
-            core.setOutput('issue_number', String(issueNumber));
-            core.setOutput('event_key', eventKey);
+            const normalized = text.trim().toLowerCase();
+            const command = normalized.includes('@codex sync with main')
+              ? 'sync_with_main'
+              : normalized.includes('@codex prepare merge') ? 'prepare_merge' : 'development';
+            const request = {
+              issue_number: event.issue.number,
+              issue_title: redactCredentials(event.issue.title),
+              request: redactCredentials(text),
+              actor,
+              branch,
+              base_branch: base,
+              event: context.eventName,
+              command,
+            };
+            await require('fs').promises.writeFile(
+              'codex-agent-request.json',
+              JSON.stringify(request, null, 2) + '\n',
+              { encoding: 'utf8', mode: 0o600 },
+            );
+            core.setOutput('run_codex', 'true');
+            core.setOutput('issue_number', String(event.issue.number));
             core.setOutput('branch', branch);
-            core.setOutput('working_ref', workingRef);
-            core.setOutput('base_ref', baseRef);
+            core.setOutput('base_branch', base);
+            core.setOutput('command', command);
 
-      - name: Confirm the request artifact exists
-        if: steps.intake.outputs.execute == 'true'
+      - name: Verify request file
+        if: steps.request.outputs.run_codex == 'true'
         shell: bash
         run: |
-          if [[ ! -s "$GITHUB_WORKSPACE/codex-agent-request.json" ]]; then
-            echo "::error::Expected request JSON was not created: $GITHUB_WORKSPACE/codex-agent-request.json"
-            exit 1
-          fi
-          echo "Request JSON exists and is non-empty."
+          test -f "$GITHUB_WORKSPACE/codex-agent-request.json" \
+            || { echo "::error::Request JSON not created"; exit 1; }
+          echo "Request file exists."
 
-      - name: Upload sanitized request artifact
-        if: steps.intake.outputs.execute == 'true'
+      - name: Upload request for isolated execution
+        if: steps.request.outputs.run_codex == 'true'
         uses: actions/upload-artifact@v6
         with:
-          name: codex-request-${{ github.run_id }}
-          path: ${{ github.workspace }}/codex-agent-request.json
+          name: codex-agent-request-${{ github.run_id }}
+          path: codex-agent-request.json
           if-no-files-found: error
           retention-days: 1
 
   codex:
-    name: Inspect, edit, and draft a patch
-    needs: intake
-    if: needs.intake.outputs.execute == 'true'
+    name: Run Codex and publish development work
+    needs: prepare
+    if: needs.prepare.outputs.run_codex == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    permissions:
-      contents: read
-    outputs:
-      final_message: ${{ steps.run_codex.outputs.final-message }}
-    steps:
-      - name: Check out the existing feature branch or default branch
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ needs.intake.outputs.working_ref }}
-          persist-credentials: false
-
-      - name: Install Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: .python-version
-
-      - name: Install UV and the locked workshop environment
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: uv.lock
-
-      - name: Prepare the isolated environment before Codex starts
-        run: uv sync --locked --no-install-project
-
-      - name: Download the Issue request
-        uses: actions/download-artifact@v6
-        with:
-          name: codex-request-${{ github.run_id }}
-          path: .
-
-      - name: Build a trusted prompt around the Issue data
-        run: uv run --locked python .github/scripts/prepare_codex_prompt.py
-
-      # This intentionally is the final step in this job. Codex receives no
-      # GitHub write token and returns only structured text to the new runner.
-      - name: Run Codex in the isolated workspace
-        id: run_codex
-        uses: openai/codex-action@v1
-        env:
-          GITHUB_TOKEN: ""
-          GH_TOKEN: ""
-        with:
-          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          allow-users: thiasyoung
-          model: gpt-5.6-terra
-          effort: xhigh
-          permission-profile: ":workspace"
-          safety-strategy: drop-sudo
-          prompt-file: .codex-agent-prompt.md
-          output-schema-file: .github/codex/issue-result.schema.json
-
-  publish:
-    name: Validate patch and propose pull request
-    needs: [intake, codex]
-    if: needs.intake.outputs.execute == 'true' && needs.codex.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 300
     permissions:
       contents: write
       issues: write
-      pull-requests: write
+    env:
+      ISSUE_NUMBER: ${{ needs.prepare.outputs.issue_number }}
+      CODEX_BRANCH: ${{ needs.prepare.outputs.branch }}
+      BASE_BRANCH: ${{ needs.prepare.outputs.base_branch }}
+      CODEX_COMMAND: ${{ needs.prepare.outputs.command }}
     steps:
-      - name: Check out the target feature branch or default branch
-        uses: actions/checkout@v5
+      - name: Check out the requester's development branch
+        uses: actions/checkout@v4
         with:
-          ref: ${{ needs.intake.outputs.working_ref }}
+          ref: ${{ needs.prepare.outputs.branch }}
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Validate the structured result and write an allowed patch
-        id: result
-        uses: actions/github-script@v8
-        env:
-          CODEX_FINAL_MESSAGE: ${{ needs.codex.outputs.final_message }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          github-token: ${{ github.token }}
-          script: |
-            const fs = require('fs');
-            const raw = process.env.CODEX_FINAL_MESSAGE || '';
-            let result;
-            try {
-              result = JSON.parse(raw);
-            } catch (error) {
-              throw new Error(`Codex did not return valid structured JSON: ${error.message}`);
-            }
-            if (!['patch', 'no_change'].includes(result.mode) || typeof result.summary !== 'string' ||
-                !Array.isArray(result.tests) || typeof result.patch !== 'string') {
-              throw new Error('Codex result does not match the expected contract.');
-            }
-            const protectedPath = (path) =>
-              path === 'AGENTS.md' || path === '.gitignore' || path === 'docs/GITHUB_CODEX_AGENT.md' ||
-              path === '.git' || path.startsWith('.git/') || path.startsWith('.github/');
-            const paths = [...result.patch.matchAll(/^diff --git a\/(.+?) b\/(.+)$/gm)]
-              .flatMap((match) => [match[1], match[2]]);
-            if (result.mode === 'patch') {
-              if (!result.patch.startsWith('diff --git ') || paths.length === 0) {
-                throw new Error('A patch result must contain a unified git diff.');
-              }
-              if (paths.some(protectedPath)) throw new Error('Codex attempted to modify a protected path.');
-              if (/^GIT binary patch$/m.test(result.patch) || /^new file mode 120000$/m.test(result.patch)) {
-                throw new Error('Binary and symlink patches are not accepted.');
-              }
-              fs.writeFileSync('.codex-agent.patch', result.patch, 'utf8');
-              core.setOutput('has_patch', 'true');
-            } else {
-              if (result.patch.trim()) throw new Error('A no_change result must not contain a patch.');
-              core.setOutput('has_patch', 'false');
-            }
-            fs.writeFileSync('.codex-agent-result.json', JSON.stringify(result, null, 2));
+          python-version: '3.11'
 
-      - name: Apply validated patch and push only the feature branch
-        if: steps.result.outputs.has_patch == 'true'
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Create locked workshop environment
+        run: uv sync --locked --no-install-project
+
+      - name: Bring development branch up to date with main
+        if: needs.prepare.outputs.command == 'sync_with_main'
+        shell: bash
         env:
-          CODEX_BRANCH: ${{ needs.intake.outputs.branch }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          git switch -C "$CODEX_BRANCH"
-          git apply --check --whitespace=error .codex-agent.patch
-          git apply --index --whitespace=error .codex-agent.patch
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git diff --cached --quiet && exit 0
-          git commit -m "codex: address Issue #${{ needs.intake.outputs.issue_number }}"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push --set-upstream origin "$CODEX_BRANCH"
+          git fetch origin "${BASE_BRANCH}"
+          # Leave straightforward conflicts for Codex to resolve in this
+          # disposable checkout; the publishing step makes the single commit.
+          git merge --no-commit --no-ff "origin/${BASE_BRANCH}" || true
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
-      - name: Create or update the pull request
-        id: pull_request
-        if: steps.result.outputs.has_patch == 'true'
-        uses: actions/github-script@v8
-        env:
-          CODEX_BRANCH: ${{ needs.intake.outputs.branch }}
-          BASE_REF: ${{ needs.intake.outputs.base_ref }}
-          ISSUE_NUMBER: ${{ needs.intake.outputs.issue_number }}
-          CODEX_RESULT: ${{ needs.codex.outputs.final_message }}
+      - name: Download request
+        uses: actions/download-artifact@v7
         with:
-          github-token: ${{ github.token }}
+          name: codex-agent-request-${{ github.run_id }}
+          path: .codex-agent-handoff
+
+      - name: Create Codex prompt
+        run: >-
+          uv run --no-sync python .github/scripts/prepare_codex_prompt.py
+          --request .codex-agent-handoff/codex-agent-request.json
+          --instructions .github/codex/issue-agent-instructions.md
+          --output .codex-agent-prompt.md
+
+      - name: Run Codex
+        id: codex_run
+        uses: openai/codex-action@v1
+        env:
+          # Codex receives its own API credential only.  The GitHub write token
+          # is deliberately reserved for the publishing steps below.
+          GITHUB_TOKEN: ''
+          GH_TOKEN: ''
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          model: gpt-5.6-terra
+          effort: xhigh
+          sandbox: danger-full-access
+          prompt-file: .codex-agent-prompt.md
+          output-schema-file: .github/codex/issue-result.schema.json
+
+      - name: Commit completed workshop work
+        id: publish
+        if: always()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          rm -f codex-agent-request.json .codex-agent-prompt.md
+          rm -rf .codex-agent-handoff
+          git add -A
+
+          # Outputs are ignored in the repository by default.  Preserve useful
+          # generated data, figures, and executed notebooks, but leave caches,
+          # event logs, and very large trained-weight files on the runner.
+          while IFS= read -r -d '' file; do
+            git add -f -- "$file"
+          done < <(
+            find . -type f -path '*/outputs/*' \
+              ! -path '*/trainer_logs/*' \
+              ! -path '*/tensorboard/*' \
+              ! -path '*/checkpoints/*' \
+              ! -name '*.ckpt' ! -name '*.pt' ! -name '*.pth' \
+              -size -50M -print0
+          )
+
+          if git diff --cached --quiet; then
+            echo 'status=no_changes' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m "codex: Issue #${ISSUE_NUMBER}"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push origin "HEAD:refs/heads/${CODEX_BRANCH}"
+          echo 'status=pushed' >> "$GITHUB_OUTPUT"
+
+      - name: Create merge pull request on request
+        id: merge_pr
+        if: always() && needs.prepare.outputs.command == 'prepare_merge' && (steps.publish.outputs.status == 'pushed' || steps.publish.outputs.status == 'no_changes')
+        uses: actions/github-script@v8
+        with:
           script: |
-            const result = JSON.parse(process.env.CODEX_RESULT);
-            const issueNumber = Number(process.env.ISSUE_NUMBER);
-            const head = `${context.repo.owner}:${process.env.CODEX_BRANCH}`;
-            const existing = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+            const openPulls = await github.rest.pulls.list({
+              ...context.repo,
               state: 'open',
-              head,
-              base: process.env.BASE_REF,
+              head: `${context.repo.owner}:${process.env.CODEX_BRANCH}`,
+              base: process.env.BASE_BRANCH,
               per_page: 1,
             });
-            const title = `Codex: Issue #${issueNumber}`;
-            const body = [
-              `Closes #${issueNumber}.`,
-              '',
-              'This change was proposed by the constrained Codex Issue workflow. Review before merging.',
-              '',
-              '## Summary',
-              result.summary,
-              '',
-              '## Lightweight checks run by Codex',
-              ...(result.tests.length ? result.tests.map((item) => `- ${item}`) : ['- Not reported']),
-            ].join('\n');
-            let pull;
-            if (existing.data.length) {
-              pull = (await github.rest.pulls.update({
-                owner: context.repo.owner, repo: context.repo.repo,
-                pull_number: existing.data[0].number, title, body,
-              })).data;
-            } else {
-              pull = (await github.rest.pulls.create({
-                owner: context.repo.owner, repo: context.repo.repo,
-                title, head: process.env.CODEX_BRANCH, base: process.env.BASE_REF, body,
-              })).data;
-            }
+            const pull = openPulls.data[0] || (await github.rest.pulls.create({
+              ...context.repo,
+              title: `Workshop updates from ${process.env.CODEX_BRANCH}`,
+              head: process.env.CODEX_BRANCH,
+              base: process.env.BASE_BRANCH,
+              body: `Prepared by Codex in response to Issue #${process.env.ISSUE_NUMBER}.`,
+            })).data;
             core.setOutput('url', pull.html_url);
 
-      - name: Report the outcome on the original Issue
+      - name: Report result on Issue
+        if: always()
         uses: actions/github-script@v8
         env:
-          ISSUE_NUMBER: ${{ needs.intake.outputs.issue_number }}
-          EVENT_KEY: ${{ needs.intake.outputs.event_key }}
-          PULL_REQUEST_URL: ${{ steps.pull_request.outputs.url }}
-          CODEX_RESULT: ${{ needs.codex.outputs.final_message }}
+          STATUS: ${{ steps.publish.outputs.status || 'failed' }}
+          BRANCH: ${{ needs.prepare.outputs.branch }}
+          PR_URL: ${{ steps.merge_pr.outputs.url || '' }}
+          RAW_RESULT: ${{ steps.codex_run.outputs.final-message || '' }}
         with:
-          github-token: ${{ github.token }}
           script: |
-            const result = JSON.parse(process.env.CODEX_RESULT);
-            const clean = (text) => String(text).replace(/@/g, '＠').slice(0, 4000);
-            const link = process.env.PULL_REQUEST_URL
-              ? `[Open the proposed pull request](${process.env.PULL_REQUEST_URL})`
-              : 'No pull request was created because Codex reported no allowed change.';
-            const body = [
-              `<!-- codex-agent-event:${process.env.EVENT_KEY} -->`,
-              '## Codex Issue agent result',
-              '',
-              link,
-              '',
-              clean(result.summary),
-              '',
-              '### Lightweight checks reported by Codex',
-              ...(result.tests.length ? result.tests.map((item) => `- ${clean(item)}`) : ['- Not reported']),
-              '',
-              'This workflow never merges or pushes directly to the default branch. Review the pull request and its checks before merging.',
-            ].join('\n');
+            const status = process.env.STATUS;
+            const branch = process.env.BRANCH;
+            let result = {};
+            try { result = JSON.parse(process.env.RAW_RESULT); } catch (_) {}
+            const summary = result.summary || (status === 'pushed'
+              ? 'Codex completed the requested work and committed the changes.'
+              : status === 'no_changes'
+                ? 'Codex completed its run but did not produce repository changes.'
+                : 'The Codex run did not finish cleanly. Open the workflow log for details.');
+            const tests = Array.isArray(result.tests) && result.tests.length
+              ? `\n\nChecks:\n${result.tests.map(test => `- ${test}`).join('\n')}`
+              : '';
+            const branchUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branch}`;
+            const pullRequest = process.env.PR_URL ? `\n\nMerge pull request: ${process.env.PR_URL}` : '';
             await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              ...context.repo,
               issue_number: Number(process.env.ISSUE_NUMBER),
-              body,
+              body: `## Codex workshop runner\n\n${summary}${tests}\n\nDevelopment branch: [${branch}](${branchUrl})${pullRequest}\n\nStatus: **${status}**`,
             });

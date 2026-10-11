@@ -3,11 +3,11 @@
   "title": "Codex issue agent result",
   "type": "object",
   "additionalProperties": false,
-  "required": ["mode", "summary", "tests", "patch"],
+  "required": ["mode", "summary", "tests"],
   "properties": {
     "mode": {
       "type": "string",
-      "enum": ["patch", "no_change"]
+      "enum": ["completed", "no_change"]
     },
     "summary": {
       "type": "string",
@@ -17,9 +17,6 @@
       "type": "array",
       "items": { "type": "string", "maxLength": 500 },
       "maxItems": 12
-    },
-    "patch": {
-      "type": "string"
     }
   }
 }

@@ -1,4 +1,4 @@
-"""Static invariants for the privileged Issue-to-PR automation."""
+"""Static contract checks for the trusted Codex Issue runner."""
 
 from __future__ import annotations
 
@@ -12,27 +12,25 @@ REQUIRED_SNIPPETS = (
     "openai/codex-action@v1",
     "actions/github-script@v8",
     "actions/upload-artifact@v6",
-    "actions/download-artifact@v6",
+    "actions/download-artifact@v7",
     "OPENAI_API_KEY",
     "model: gpt-5.6-terra",
     "effort: xhigh",
     "CODEX_AGENT_ENABLED",
-    "INITIAL_ALLOWED_USER: thiasyoung",
-    'permission-profile: ":workspace"',
-    "safety-strategy: drop-sudo",
-    "GITHUB_TOKEN: \"\"",
-    "codex/issue-",
-    "path === '.git' || path.startsWith('.git/') || path.startsWith('.github/')",
+    "sandbox: danger-full-access",
+    "GITHUB_TOKEN: ''",
+    "dev/${actor}",
+    "getCollaboratorPermissionLevel",
     "GITHUB_WORKSPACE",
     "codex-agent-request.json",
-    "pull-requests: write",
     "issues: write",
+    "git push origin \"HEAD:refs/heads/${CODEX_BRANCH}\"",
 )
 FORBIDDEN_SNIPPETS = (
     "pull_request_target:",
     "allow-users: \"*\"",
-    "safety-strategy: unsafe",
     "git push origin main",
+    "git push --force",
 )
 
 
@@ -46,12 +44,12 @@ def main() -> int:
     forbidden = [item for item in FORBIDDEN_SNIPPETS if item in workflow]
     if missing or forbidden:
         if missing:
-            print("Missing safety invariants:", *missing, sep="\n- ")
+            print("Missing workflow contract elements:", *missing, sep="\n- ")
         if forbidden:
             print("Forbidden workflow content found:", *forbidden, sep="\n- ")
         return 1
 
-    print("Codex automation static safety invariants passed.")
+    print("Codex trusted-runner workflow contract passed.")
     return 0
 
 
