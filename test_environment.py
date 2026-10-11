@@ -34,7 +34,10 @@ def main() -> None:
     print(f"Executable: {sys.executable}")
     if not sys.version_info[:2] == (3, 11):
         raise RuntimeError("This workshop requires Python 3.11.")
-    in_project_environment = project_root in Path(sys.executable).resolve().parents
+    # On POSIX, the virtual-environment Python executable is commonly a
+    # symlink to the managed interpreter. ``sys.prefix`` remains the actual
+    # virtual-environment root on Windows, macOS, and Linux.
+    in_project_environment = Path(sys.prefix).resolve() == (project_root / ".venv").resolve()
     if not in_project_environment:
         raise RuntimeError("Launch this check with UV so it uses the .venv inside this workshop folder.")
     print("Environment: project .venv")
