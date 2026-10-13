@@ -19,9 +19,9 @@ Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example fo
 
 ### 02_ir_functional_groups
 
-1. `00_IR_Get_Data_NISTChemPy_v2.ipynb` — pre-work acquisition script. It produces a raw table with IR arrays, SMILES, and functional-group labels.
-2. `01_IR_Vibe_Coding_Data_Carpentry.ipynb` — the hands-on notebook. Participants inspect, validate, and refine the data; its final artifact is `outputs/carpentry/IR_model_ready.parquet`.
-3. `02_IR_Optimized_Training.ipynb` — a static, best-practice multi-label classifier. Re-run it after changing the carpentry output to see the effect on model quality.
+1. `00_IR_Get_Data_NISTChemPy_v2.ipynb` — resumable NIST WebBook acquisition. It retains native downloaded arrays in a raw checkpoint Parquet file, then creates a standardized IR/SMILES/functional-group table.
+2. `01_IR_Vibe_Coding_Data_Carpentry.ipynb` — the hands-on notebook. Participants audit, visualize, and refine the data using guided prompts; it writes separate `IR_train.parquet`, `IR_validation.parquet`, and `IR_test.parquet` files plus a data manifest.
+3. `02_IR_Optimized_Training.ipynb` — a static, best-practice multi-label classifier that consumes those three artifacts unchanged, documents each run, reports per-target test metrics, and includes an IR-file upload classifier.
 
 ### 03_htem_conductivity
 
@@ -46,7 +46,7 @@ Run `00_Test_Installation.ipynb` or the command-line verifier before the worksho
 
 - `01_boiling_point/02_BP_1_Chemprop_GNN.ipynb` is a 1,500-molecule, 20-epoch demonstration. Increase either setting only after a rehearsal on the actual workshop hardware.
 - The boiling-point examples use random molecular splits for speed and conceptual clarity. Do not describe their test metrics as estimates of performance on new chemical scaffolds; use a scaffold split for that claim.
-- Run each acquisition notebook before the workshop and retain its output. The IR scraper is intentionally a pre-work step; the workshop starts at the carpentry notebook with its downloaded data. The static IR trainer logs TensorBoard events, saves periodic checkpoints every 25 epochs, restores the validation-best weights, and writes concise test metrics and a summary plot.
+- Run each acquisition notebook before the workshop and retain its output. The IR scraper is intentionally a pre-work step; the workshop starts at the carpentry notebook with its downloaded data. The carpentry notebook writes fixed training, validation, and test Parquet files; the static IR trainer logs TensorBoard events, saves periodic checkpoints every 25 epochs, restores the validation-best weights, and writes metrics, predictions, a summary plot, and run documentation.
 
 ## Maintainer automation
 
