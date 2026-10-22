@@ -1,0 +1,125 @@
+material_class,total_groups,all_splits_feasible,train_groups,train_libraries,train_points,validation_groups,validation_libraries,validation_points,test_groups,test_libraries,test_points,all_splits_present,coverage_note
+CoO + NiO + ZnO,53,True,32,33,1452,11,11,484,10,10,440,True,all splits
+Sn + Zn,38,True,23,24,961,8,8,352,7,7,299,True,all splits
+Co + Sn + Ta,27,True,16,17,748,5,5,220,6,6,264,True,all splits
+N2 + Sn + Zn,27,True,16,18,765,5,6,248,6,6,264,True,all splits
+CoO + NiO,26,True,16,16,703,5,5,220,5,5,220,True,all splits
+CoO + ZnO,25,True,15,17,747,5,5,220,5,5,214,True,all splits
+Ga2O3 + ZnO,23,True,14,14,616,5,5,220,4,4,176,True,all splits
+In2O3 + SnO2 + ZnO,23,True,14,14,616,5,5,220,4,4,176,True,all splits
+Cu2S + SnS2,21,True,13,15,624,4,6,263,4,7,306,True,all splits
+Mn2O3 + SnO2,19,True,11,11,484,4,4,176,4,4,176,True,all splits
+Cu,18,True,11,11,477,3,3,132,4,4,167,True,all splits
+Sb + Zn,18,True,11,12,515,4,4,176,3,3,132,True,all splits
+Cr2O3 + Mn2O3,17,True,10,10,440,3,3,132,4,4,174,True,all splits
+Cu + Ta,17,True,10,10,440,3,3,132,4,4,176,True,all splits
+Ge + Zn,16,True,10,10,440,3,3,132,3,3,95,True,all splits
+Cu2S + Sb2S3,15,True,9,9,394,3,3,122,3,3,90,True,all splits
+Ag + V,14,True,8,8,352,3,3,132,3,3,132,True,all splits
+Cu + N2,14,True,8,8,352,3,3,130,3,3,132,True,all splits
+Sn,14,True,8,9,396,3,3,132,3,3,132,True,all splits
+SnO2 + TiO2 + ZnO,14,True,8,10,440,3,3,132,3,3,132,True,all splits
+TiO2 + ZnO,14,True,8,8,349,3,3,132,3,3,131,True,all splits
+Cr2O3 + MnO,13,True,8,9,396,2,2,88,3,3,132,True,all splits
+Cu2S + SrS,13,True,8,9,396,2,2,88,3,3,131,True,all splits
+In2O3 + Mn2O3,13,True,8,8,352,3,3,132,2,2,88,True,all splits
+Mo + Zn,13,True,8,8,309,2,2,53,3,3,94,True,all splits
+MnO + SnO2,11,True,7,7,308,2,2,88,2,2,88,True,all splits
+MnSe + MnTe,11,True,7,7,224,2,2,88,2,2,46,True,all splits
+Cu + Zn,10,True,6,6,258,2,2,88,2,2,86,True,all splits
+BaS + Cu2S,9,True,5,8,352,2,2,88,2,2,88,True,all splits
+Cu + Sn,8,True,5,5,220,2,2,88,1,1,44,True,all splits
+Cu2O,8,True,5,5,220,1,1,44,2,2,88,True,all splits
+Cu2S + GeS2,8,True,5,5,220,2,2,88,1,1,44,True,all splits
+Cu2Se + Sb2Se3,8,True,5,5,220,1,1,44,2,2,88,True,all splits
+Fe2O3 + In2O3,8,True,5,5,220,1,1,44,2,2,88,True,all splits
+MnSe + SnTe,8,True,5,5,182,2,2,88,1,1,44,True,all splits
+SnS + SnTe,8,True,5,5,198,2,2,88,1,1,44,True,all splits
+MgO + ZnO,7,True,4,4,176,2,2,88,1,1,44,True,all splits
+MnTe + ZnSe,7,True,4,9,368,2,3,132,1,3,132,True,all splits
+Mo + W + Zn,7,True,4,4,116,2,2,88,1,1,44,True,all splits
+Co,6,True,4,4,171,1,1,41,1,1,44,True,all splits
+CoO,6,True,4,4,151,1,1,44,1,1,44,True,all splits
+Cu + N,6,True,4,4,176,1,1,44,1,1,44,True,all splits
+Cu2Se + In2Se3,6,True,4,4,176,1,1,44,1,1,42,True,all splits
+Co + Sn + V,5,True,3,3,132,1,1,44,1,1,44,True,all splits
+Cr2O3 + Mg,5,True,3,3,132,1,1,44,1,1,44,True,all splits
+Cu2O + ZnO,5,True,3,3,132,1,1,44,1,1,44,True,all splits
+Cu2S,5,True,3,3,131,1,1,1,1,1,44,True,all splits
+Cu2S + In2S3,5,True,3,4,176,1,1,44,1,1,44,True,all splits
+MnO,5,True,3,4,176,1,1,44,1,1,44,True,all splits
+Ta,5,True,3,3,132,1,1,44,1,1,26,True,all splits
+CaS + SnS,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+Cr2O3 + MgO + MnO,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+Cu2S + SnS,4,True,2,2,87,1,1,44,1,1,44,True,all splits
+Cu2Se + Ga2Se3 + In2Se3,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+Ni,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+Se + Sn,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+SnS2,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+ZnO,4,True,2,2,88,1,1,44,1,1,44,True,all splits
+Cr2O3 + MgO,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Cr2O3 + MgO + Mn2O3,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Cu2O + Cu2Se + ZnO,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Ga2O3 + MgO + ZnO,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Ge + Sn,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+MnSe,3,True,1,1,44,1,1,44,1,3,132,True,all splits
+MnTe + SnTe,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+NiO,3,True,1,1,44,1,1,10,1,1,44,True,all splits
+NiO + ZnO,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Sb,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+Si + Sn,3,True,1,1,44,1,1,11,1,1,44,True,all splits
+Sn + Te,3,True,1,1,44,1,1,44,1,1,44,True,all splits
+C + S,2,False,1,1,44,0,0,0,1,2,88,False,train + one holdout; only two independent groups
+CeS2 + Cu2S + SnS2,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+Cr2O3,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+Cr2O3 + MnO + ZnO,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+Cr2O3 + ZnO,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+Cu2S + In2S3 + S,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+Fe,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+In2O3 + SnO2,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+In2S3,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+MnSe + SnSe + SnTe,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+MnTe,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+MnTe + SnSe2,2,False,1,1,6,0,0,0,1,1,6,False,train + one holdout; only two independent groups
+SnS,2,False,1,2,88,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+SnS + SnSe,2,False,1,1,44,1,1,44,0,0,0,False,train + one holdout; only two independent groups
+SnSe + SnTe,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+SnTe,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+Ti,2,False,1,1,44,0,0,0,1,1,44,False,train + one holdout; only two independent groups
+Ag,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Al + Sc,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+BaS,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+CaS,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Co + Cu + Zn,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Co + Fe,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Co3O4 + ZnO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cr + Mn + MnO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu + N2 + Sn,1,False,1,1,43,0,0,0,0,0,0,False,train only; one independent group
+Cu + SnS2,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2O + Cu2S,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2O + N,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2S + GeS2 + SnS,1,False,1,1,11,0,0,0,0,0,0,False,train only; one independent group
+Cu2S + ZnS,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2Se,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2Se + In2Se3 + S,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Cu2Se + Sb2S3,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+CuS,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+CuSe2 + SbSe2,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Ge,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+In2O3 + ZnO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+In2S3 + ZrS2,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+In2Se3,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Mn2O3,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Mn2O3 + MnO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+MnSe + MnTe + SnTe,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Sb2S3,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Sb2Se3,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Si,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Sn + SrO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+SnO2,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+SnO2 + ZnO,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+SnSe2,1,False,1,1,6,0,0,0,0,0,0,False,train only; one independent group
+SrS,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+V,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+W + Zn,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group
+Zn,1,False,1,1,44,0,0,0,0,0,0,False,train only; one independent group

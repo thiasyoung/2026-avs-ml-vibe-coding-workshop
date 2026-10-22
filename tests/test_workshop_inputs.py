@@ -33,8 +33,8 @@ class WorkshopInputTests(unittest.TestCase):
 
     def test_htem_input_contract(self) -> None:
         self.assert_parquet_columns(
-            "03_htem_conductivity/data/Filtered_Libraries_Data_wTauc_interpolated_trans.parquet",
-            {"interpolated_transmittances", "log10_conductivity"},
+            "03_htem_conductivity/data/htem_spatial_snapshot.parquet",
+            {"deposition_compounds", "deposition_power", "sample_library_id", "position", "x_mm", "y_mm", "thickness", "fpm_conductivity"},
         )
 
 

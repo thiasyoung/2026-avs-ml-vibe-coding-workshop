@@ -7,6 +7,7 @@ dependencies = [
     "beautifulsoup4==4.12.3",
     "chemprop==2.2.1",
     "ipykernel==6.29.5",
+    "ipywidgets==8.1.9",
     "iterative-stratification==0.1.9",
     "jcamp==1.2.2",
     "jupyterlab==4.3.4",

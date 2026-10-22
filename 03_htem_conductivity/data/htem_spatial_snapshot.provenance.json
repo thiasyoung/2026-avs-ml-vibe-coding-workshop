@@ -1,0 +1,709 @@
+{
+  "mode": "live_scalar_api",
+  "api_base": "https://htem-api.nlr.gov/api",
+  "completed_at_utc": "2026-10-22T01:45:55.255921+00:00",
+  "public_libraries": 1891,
+  "requested_libraries": 1891,
+  "recipe_libraries": 1891,
+  "libraries_with_scalar_rows": 1879,
+  "rows": 82644,
+  "complete": false,
+  "failures": [
+    {
+      "library_id": 10941,
+      "stage": "individual_scalar_fallback",
+      "recovered_points": 0,
+      "unavailable_samples": [
+        {
+          "sample_id": 370941,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370941"
+        },
+        {
+          "sample_id": 370942,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370942"
+        },
+        {
+          "sample_id": 370943,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370943"
+        },
+        {
+          "sample_id": 370944,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370944"
+        },
+        {
+          "sample_id": 370945,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370945"
+        },
+        {
+          "sample_id": 370946,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370946"
+        },
+        {
+          "sample_id": 370947,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370947"
+        },
+        {
+          "sample_id": 370948,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370948"
+        },
+        {
+          "sample_id": 370949,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370949"
+        },
+        {
+          "sample_id": 370950,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370950"
+        },
+        {
+          "sample_id": 370951,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370951"
+        },
+        {
+          "sample_id": 370952,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370952"
+        },
+        {
+          "sample_id": 370953,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370953"
+        },
+        {
+          "sample_id": 370954,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370954"
+        },
+        {
+          "sample_id": 370955,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370955"
+        },
+        {
+          "sample_id": 370956,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370956"
+        },
+        {
+          "sample_id": 370957,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370957"
+        },
+        {
+          "sample_id": 370958,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370958"
+        },
+        {
+          "sample_id": 370959,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370959"
+        },
+        {
+          "sample_id": 370960,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370960"
+        },
+        {
+          "sample_id": 370961,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370961"
+        },
+        {
+          "sample_id": 370962,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370962"
+        },
+        {
+          "sample_id": 370963,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370963"
+        },
+        {
+          "sample_id": 370964,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370964"
+        },
+        {
+          "sample_id": 370965,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370965"
+        },
+        {
+          "sample_id": 370966,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370966"
+        },
+        {
+          "sample_id": 370967,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370967"
+        },
+        {
+          "sample_id": 370968,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370968"
+        },
+        {
+          "sample_id": 370969,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370969"
+        },
+        {
+          "sample_id": 370970,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370970"
+        },
+        {
+          "sample_id": 370971,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370971"
+        },
+        {
+          "sample_id": 370972,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370972"
+        },
+        {
+          "sample_id": 370973,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370973"
+        },
+        {
+          "sample_id": 370974,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370974"
+        },
+        {
+          "sample_id": 370975,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370975"
+        },
+        {
+          "sample_id": 370976,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370976"
+        },
+        {
+          "sample_id": 370977,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370977"
+        },
+        {
+          "sample_id": 370978,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370978"
+        },
+        {
+          "sample_id": 370979,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370979"
+        },
+        {
+          "sample_id": 370980,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370980"
+        },
+        {
+          "sample_id": 370981,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370981"
+        },
+        {
+          "sample_id": 370982,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370982"
+        },
+        {
+          "sample_id": 370983,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370983"
+        },
+        {
+          "sample_id": 370984,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/370984"
+        }
+      ]
+    },
+    {
+      "library_id": 12922,
+      "stage": "individual_scalar_fallback",
+      "recovered_points": 0,
+      "unavailable_samples": [
+        {
+          "sample_id": 399408,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399408"
+        },
+        {
+          "sample_id": 399409,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399409"
+        },
+        {
+          "sample_id": 399410,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399410"
+        },
+        {
+          "sample_id": 399411,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399411"
+        },
+        {
+          "sample_id": 399412,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399412"
+        },
+        {
+          "sample_id": 399413,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399413"
+        },
+        {
+          "sample_id": 399414,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399414"
+        },
+        {
+          "sample_id": 399415,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399415"
+        },
+        {
+          "sample_id": 399416,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399416"
+        },
+        {
+          "sample_id": 399417,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399417"
+        },
+        {
+          "sample_id": 399418,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399418"
+        },
+        {
+          "sample_id": 399419,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399419"
+        },
+        {
+          "sample_id": 399420,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399420"
+        },
+        {
+          "sample_id": 399421,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399421"
+        },
+        {
+          "sample_id": 399422,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399422"
+        },
+        {
+          "sample_id": 399423,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399423"
+        },
+        {
+          "sample_id": 399424,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399424"
+        },
+        {
+          "sample_id": 399425,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399425"
+        },
+        {
+          "sample_id": 399426,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399426"
+        },
+        {
+          "sample_id": 399427,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399427"
+        },
+        {
+          "sample_id": 399428,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399428"
+        },
+        {
+          "sample_id": 399429,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399429"
+        },
+        {
+          "sample_id": 399430,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399430"
+        },
+        {
+          "sample_id": 399431,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399431"
+        },
+        {
+          "sample_id": 399432,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399432"
+        },
+        {
+          "sample_id": 399433,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399433"
+        },
+        {
+          "sample_id": 399434,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399434"
+        },
+        {
+          "sample_id": 399435,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399435"
+        },
+        {
+          "sample_id": 399436,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399436"
+        },
+        {
+          "sample_id": 399437,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399437"
+        },
+        {
+          "sample_id": 399438,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399438"
+        },
+        {
+          "sample_id": 399439,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399439"
+        },
+        {
+          "sample_id": 399440,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399440"
+        },
+        {
+          "sample_id": 399441,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399441"
+        },
+        {
+          "sample_id": 399442,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399442"
+        },
+        {
+          "sample_id": 399443,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399443"
+        },
+        {
+          "sample_id": 399444,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399444"
+        },
+        {
+          "sample_id": 399445,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399445"
+        },
+        {
+          "sample_id": 399446,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399446"
+        },
+        {
+          "sample_id": 399447,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399447"
+        },
+        {
+          "sample_id": 399448,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399448"
+        },
+        {
+          "sample_id": 399449,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399449"
+        },
+        {
+          "sample_id": 399450,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399450"
+        },
+        {
+          "sample_id": 399451,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/399451"
+        }
+      ]
+    },
+    {
+      "library_id": 12930,
+      "stage": "individual_scalar_fallback",
+      "recovered_points": 0,
+      "unavailable_samples": [
+        {
+          "sample_id": 396447,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396447"
+        },
+        {
+          "sample_id": 396449,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396449"
+        },
+        {
+          "sample_id": 396448,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396448"
+        },
+        {
+          "sample_id": 396451,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396451"
+        },
+        {
+          "sample_id": 396450,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396450"
+        },
+        {
+          "sample_id": 396453,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396453"
+        },
+        {
+          "sample_id": 396452,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396452"
+        },
+        {
+          "sample_id": 396455,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396455"
+        },
+        {
+          "sample_id": 396454,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396454"
+        },
+        {
+          "sample_id": 396459,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396459"
+        },
+        {
+          "sample_id": 396458,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396458"
+        },
+        {
+          "sample_id": 396461,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396461"
+        },
+        {
+          "sample_id": 396460,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396460"
+        },
+        {
+          "sample_id": 396463,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396463"
+        },
+        {
+          "sample_id": 396462,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396462"
+        },
+        {
+          "sample_id": 396465,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396465"
+        },
+        {
+          "sample_id": 396464,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396464"
+        },
+        {
+          "sample_id": 396467,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396467"
+        },
+        {
+          "sample_id": 396466,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396466"
+        },
+        {
+          "sample_id": 396438,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396438"
+        },
+        {
+          "sample_id": 396439,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396439"
+        },
+        {
+          "sample_id": 396440,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396440"
+        },
+        {
+          "sample_id": 396441,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396441"
+        },
+        {
+          "sample_id": 396434,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396434"
+        },
+        {
+          "sample_id": 396435,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396435"
+        },
+        {
+          "sample_id": 396436,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396436"
+        },
+        {
+          "sample_id": 396437,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396437"
+        },
+        {
+          "sample_id": 396443,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396443"
+        },
+        {
+          "sample_id": 396444,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396444"
+        },
+        {
+          "sample_id": 396469,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396469"
+        },
+        {
+          "sample_id": 396468,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396468"
+        },
+        {
+          "sample_id": 396475,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396475"
+        },
+        {
+          "sample_id": 396474,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396474"
+        },
+        {
+          "sample_id": 396473,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396473"
+        },
+        {
+          "sample_id": 396472,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396472"
+        },
+        {
+          "sample_id": 396471,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396471"
+        },
+        {
+          "sample_id": 396470,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396470"
+        },
+        {
+          "sample_id": 396457,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396457"
+        },
+        {
+          "sample_id": 396456,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396456"
+        },
+        {
+          "sample_id": 396445,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396445"
+        },
+        {
+          "sample_id": 396446,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396446"
+        },
+        {
+          "sample_id": 396432,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396432"
+        },
+        {
+          "sample_id": 396433,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396433"
+        },
+        {
+          "sample_id": 396442,
+          "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample/396442"
+        }
+      ]
+    }
+  ],
+  "sample_count_gaps": [
+    {
+      "library_id": 10941,
+      "expected_samples": 44,
+      "scalar_positions": 0
+    },
+    {
+      "library_id": 12922,
+      "expected_samples": 44,
+      "scalar_positions": 0
+    },
+    {
+      "library_id": 12930,
+      "expected_samples": 44,
+      "scalar_positions": 0
+    }
+  ],
+  "recovered_batch_errors": [
+    {
+      "library_ids": [
+        10941,
+        10943,
+        10945,
+        10946,
+        10947,
+        10948,
+        10949,
+        10953,
+        10958,
+        10959,
+        10960,
+        10962,
+        10989,
+        10990,
+        10991,
+        10993,
+        11015,
+        11016,
+        11017,
+        11018,
+        11019,
+        11021,
+        11022,
+        11041,
+        11042
+      ],
+      "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample_library/prop?ids=10941,10943,10945,10946,10947,10948,10949,10953,10958,10959,10960,10962,10989,10990,10991,10993,11015,11016,11017,11018,11019,11021,11022,11041,11042"
+    },
+    {
+      "library_ids": [
+        12803,
+        12804,
+        12805,
+        12806,
+        12835,
+        12865,
+        12866,
+        12870,
+        12898,
+        12908,
+        12915,
+        12916,
+        12921,
+        12922,
+        12924,
+        12925,
+        12929,
+        12930,
+        12931,
+        12933,
+        12934,
+        12935,
+        12936,
+        12937
+      ],
+      "error": "400 Client Error: Bad Request for url: https://htem-api.nlr.gov/api/sample_library/prop?ids=12803,12804,12805,12806,12835,12865,12866,12870,12898,12908,12915,12916,12921,12922,12924,12925,12929,12930,12931,12933,12934,12935,12936,12937"
+    }
+  ],
+  "fallback_libraries_without_substrate_coordinates": [
+    10798
+  ],
+  "rows_missing_substrate_coordinates": 44,
+  "libraries_without_scalar_rows": [
+    8567,
+    9168,
+    9585,
+    10941,
+    11211,
+    11212,
+    11215,
+    12910,
+    12922,
+    12930,
+    12943,
+    13097
+  ],
+  "libraries_with_no_valid_sample_ids": [
+    8567,
+    9168,
+    9585,
+    11211,
+    11212,
+    11215,
+    12910,
+    12943,
+    13097
+  ],
+  "sha256": "51a069ce534a815cc57c8bf50a22e13089a495db8d5eac8be1b6c3c1c52f723a",
+  "library_catalog_sha256": "203d297f9578a99fb6dde0feeb7dcbea2e9bea8446dc679cf8ad3b4751bcf1f2",
+  "label_units": {
+    "thickness": "um",
+    "opt_direct_bandgap": "eV",
+    "fpm_conductivity": "S/cm",
+    "x_mm": "mm",
+    "y_mm": "mm"
+  },
+  "fields": [
+    "id",
+    "sample_library_id",
+    "position",
+    "x_mm",
+    "y_mm",
+    "absolute_temp_c",
+    "pdac",
+    "deposition_sample_time_min",
+    "deposition_initial_temp_c",
+    "deposition_base_pressure_mtorr",
+    "deposition_growth_pressure_mtorr",
+    "deposition_compounds",
+    "deposition_power",
+    "deposition_gases",
+    "deposition_gas_flow_sccm",
+    "deposition_substrate_material",
+    "deposition_target_pulses",
+    "deposition_rep_rate",
+    "deposition_energy",
+    "deposition_cycles",
+    "deposition_ts_distance",
+    "thickness",
+    "opt_direct_bandgap",
+    "fpm_conductivity"
+  ],
+  "temperature_source": "API absolute_temp_c per position; distinct from library initial temperature; no trajectory inferred",
+  "coordinate_source": "API scalar-property x_mm/y_mm (substrate grid), NOT sample xyz_mm stage/focus",
+  "observation_key": "id is the composite library:position key, not the numeric /api/sample ID",
+  "cache_policy": "Allowlisted process/scalar arrays only; fallback sample spectra discarded in memory, never cached",
+  "note": "All discovered public libraries requested, no has_opt/has_ele/complete-target filter; cached responses can predate this run."
+}

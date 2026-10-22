@@ -10,6 +10,7 @@ PACKAGES = {
     "Beautiful Soup": "bs4",
     "Chemprop": "chemprop",
     "IPython kernel": "ipykernel",
+    "Jupyter widgets": "ipywidgets",
     "JCAMP": "jcamp",
     "JupyterLab": "jupyterlab",
     "Matplotlib": "matplotlib",
