@@ -48,6 +48,10 @@ save('00_HTEM_Get_Data_NREL.ipynb', [
     md('''
     # 00 · Download compact HTEM process records and substrate grids
 
+    ![HTEM database Finder interface with its element-selection periodic table](../docs/data_sources/htem_database.png)
+
+    *Figure 1. The [High Throughput Experimental Materials (HTEM) database](https://htem.nlr.gov/) Finder interface. This notebook uses its public API to collect deposition recipes, substrate locations and scalar property measurements for spatial thickness/conductivity prediction; full spectra are not retained. Screenshot captured October 21, 2026; credit: HTEM / National Laboratory of the Rockies.*
+
     **Collect as much public data as the API exposes**, not just libraries with optical/electrical data.
     Retain deposition recipes, per-library positions, substrate `x_mm`/`y_mm`, local `absolute_temp_c`, thickness, conductivity,
     and optional direct bandgap. No spectra, measured composition, contacts, or full instrument records
