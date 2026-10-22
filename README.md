@@ -57,6 +57,19 @@ Run `00_Test_Installation.ipynb` or the command-line verifier before the worksho
 
 ## Notes for presenters
 
+Each code cell now has short **What to notice** bullet points immediately above it, including
+the worked alternatives and the instructor feature-selection study. Blank practice cells
+are labeled as exercises, not completed work. Existing code and saved outputs are retained.
+
+For an explanations-and-results view in **VS Code**, open the Command Palette and run
+**Notebook: Collapse All Cell Inputs** (search `Collapse All Cell Inputs`). Run
+**Expand All Cell Inputs** to edit code again, or expand just the cell you want. Outputs
+remain visible. VS Code may restore a previous editor view, so use this command even if
+the notebook's input-collapse metadata is already set. JupyterLab uses the saved
+`jupyter.source_hidden` hints and also provides a left-hand cell collapser. GitHub's
+static notebook preview may still show code; hiding inputs is a reader view, not redaction.
+See [the notebook presentation guide](docs/NOTEBOOK_PRESENTATION.md).
+
 - `01_boiling_point/02_BP_1_Chemprop_GNN.ipynb` is a 1,500-molecule, 20-epoch demonstration. Increase either setting only after a rehearsal on the actual workshop hardware.
 - The boiling-point examples use random molecular splits for speed and conceptual clarity. Do not describe their test metrics as estimates of performance on new chemical scaffolds; use a scaffold split for that claim.
 - Run each acquisition notebook before the workshop and retain its output. The IR scraper is intentionally a pre-work step; the workshop starts at the carpentry notebook with its downloaded data. The static IR trainer logs TensorBoard events, saves checkpoints every 25 epochs, restores the lowest eligible validation-loss weights, and writes test metrics and a summary plot. Its 2,000-epoch cap is a resource limit; run documentation records whether the robust stopping rule actually triggered.
