@@ -19,18 +19,30 @@ REQUIRED_SNIPPETS = (
     "CODEX_AGENT_ENABLED",
     "sandbox: danger-full-access",
     "GITHUB_TOKEN: ''",
-    "dev/${actor}",
+    "const branch = 'main'",
+    "group: codex-workshop-${{ github.repository }}-main",
+    "queue: max",
+    "cancel-in-progress: false",
+    "ref: main",
     "getCollaboratorPermissionLevel",
+    "permission.data.permission",
     "GITHUB_WORKSPACE",
     "codex-agent-request.json",
     "issues: write",
     "git push origin \"HEAD:refs/heads/${CODEX_BRANCH}\"",
+    'git fetch origin "$CODEX_BRANCH"',
+    '"$(git rev-parse FETCH_HEAD)" != "$START_SHA"',
+    "if: success() && steps.codex_run.outcome == 'success'",
 )
 FORBIDDEN_SNIPPETS = (
     "pull_request_target:",
     "allow-users: \"*\"",
-    "git push origin main",
     "git push --force",
+    "dev/${actor}",
+    "permission.data.user.permission",
+    "github.rest.git.createRef",
+    "github.rest.pulls.create",
+    "git merge --no-commit",
 )
 
 

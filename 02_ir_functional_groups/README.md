@@ -12,15 +12,15 @@ then measure its effect using the same static neural network and fixed evaluatio
 
 ## Notebook sequence
 
-1. [00 — Get data](00_IR_Get_Data_NISTChemPy_v2.ipynb): acquire native NIST spectra,
+- [00 — Get data](00_IR_Get_Data_NISTChemPy_v2.ipynb): acquire native NIST spectra,
    their units, SMILES, and labels. This is pre-work, not the live workshop exercise.
-2. [01 — Examine and prepare](01_IR_Vibe_Coding_Data_Carpentry.ipynb): start with a
+- [01 — Examine and prepare](01_IR_Vibe_Coding_Data_Carpentry.ipynb): start with a
    deliberately simple numeric baseline, then investigate more careful carpentry.
    [Examples 01a–01d](examples/README.md) demonstrate signal conversion, coverage,
    padding/resampling, duplicate and label checks, quality filtering, and balancing.
-3. [02 — Static training](02_IR_Optimized_Training.ipynb): select a prepared dataset
+- [02 — Static training](02_IR_Optimized_Training.ipynb): select a prepared dataset
    with `CARPENTRY_DIR`; train and evaluate the unchanged functional-group classifier.
-4. [03 — Compare results](03_IR_Compare_Carpentry.ipynb): compare compatible runs,
+- [03 — Compare results](03_IR_Compare_Carpentry.ipynb): compare compatible runs,
    aggregate F1 scores, per-group results, and stopping behavior.
 
 ## Before running

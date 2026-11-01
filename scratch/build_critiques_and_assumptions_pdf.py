@@ -75,7 +75,7 @@ with PdfPages(PDF_PATH) as pdf:
         pdf,
         1,
         "Critiques and assumptions",
-        "Self-evaluation of 05_BP_4_One_Shot_Workflow.ipynb",
+        "Self-evaluation of 04_BP_One_Shot_Workflow.ipynb",
     )
     y = 0.84
     y = add_section(

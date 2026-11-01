@@ -8,7 +8,7 @@ import nbformat as nbf
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DESTINATION = ROOT / "01_boiling_point" / "05_BP_4_One_Shot_Workflow.ipynb"
+DESTINATION = ROOT / "01_boiling_point" / "04_BP_One_Shot_Workflow.ipynb"
 
 
 def markdown(source: str):
@@ -22,6 +22,8 @@ def code(source: str):
 cells = [
     markdown(
         """
+        # 04 · Boiling point: worked one-shot prediction workflow
+
         <h1 style="color:#1D4E89;">Step 0: Conditioning the Coding Assistant</h1>
 
         This completed notebook shows one transparent, CPU-friendly path from molecular SMILES to boiling-point predictions. It keeps the supplied data immutable, records every decision, and treats the final test set as a one-time estimate. The code is intentionally compact enough to read during a workshop.
@@ -680,7 +682,7 @@ manifest = {
     'software': {'python': sys.version, 'platform': platform.platform(), 'pandas': pd.__version__, 'numpy': np.__version__,
                  'scikit_learn': sklearn.__version__, 'rdkit': rdkit.__version__},
     'reproduce': [
-        'uv run --locked jupyter nbconvert --to notebook --execute --inplace 01_boiling_point/05_BP_4_One_Shot_Workflow.ipynb --ExecutePreprocessor.timeout=600',
+        'uv run --locked jupyter nbconvert --to notebook --execute --inplace 01_boiling_point/04_BP_One_Shot_Workflow.ipynb --ExecutePreprocessor.timeout=600',
         'uv run --locked python scripts/ci/validate_notebooks.py',
     ],
     'test_set_access': 'Step 10 only, after selected_configuration.json was written',

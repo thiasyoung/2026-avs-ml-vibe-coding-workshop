@@ -70,11 +70,12 @@ runs are historical, not current dataset sizes or the current partial-label nume
 
 ## Notebook sequence
 
-1. `00_HTEM_Get_Data_NREL.ipynb`: broad public acquisition, compact scalar/process records only.
-2. `01_HTEM_Process_Data_Carpentry.ipynb`: completed spatial data preparation and leakage-safe splits.
-3. `02_HTEM_Process_Emulator_Vibe_Coding.ipynb`: the default **linear Ridge regression** (`Ridge(alpha=10)`, not unregularized OLS or kernel ridge), with model-experiment prompts, evaluation, parity/maps, and saved-model inference.
-4. `examples/02a_HTEM_Kernel_Ridge.ipynb`, `02b_HTEM_Feed_Forward_Network.ipynb`, `02c_HTEM_Grid_GNN.ipynb`, `02d_HTEM_Random_Forest.ipynb`: independent nonlinear/architecture alternatives on exactly the same prepared problem.
-5. `03_HTEM_Compare_Architectures.ipynb`: a short table/error chart and a test-parity panel for each algorithm and property. Thickness is in µm, conductivity in log10(S/cm); shared property limits and all points expose poor predictions rather than clipping them. It does not train or change data; the workshop default stays linear regardless of the validation ranking.
+- `00_HTEM_Get_Data_NREL.ipynb`: broad public acquisition, compact scalar/process records only.
+- `01_HTEM_Process_Data_Carpentry.ipynb`: completed spatial data preparation and leakage-safe splits.
+- `02_HTEM_Process_Emulator_Vibe_Coding.ipynb`: the default **linear Ridge regression** (`Ridge(alpha=10)`, not unregularized OLS or kernel ridge), with model-experiment prompts, evaluation, parity/maps, and saved-model inference.
+- `03_HTEM_Compare_Architectures.ipynb`: a short table/error chart and a test-parity panel for each algorithm and property. Thickness is in µm, conductivity in log10(S/cm); shared property limits and all points expose poor predictions rather than clipping them. It does not train or change data; the workshop default stays linear regardless of the validation ranking.
+
+Worked alternatives to `02`: `examples/02a_HTEM_Kernel_Ridge.ipynb`, `02b_HTEM_Feed_Forward_Network.ipynb`, `02c_HTEM_Grid_GNN.ipynb`, and `02d_HTEM_Random_Forest.ipynb` are independent nonlinear/architecture alternatives on exactly the same prepared problem.
 
 Run top-to-bottom with the workshop UV environment/VS Code kernel. From the repository root:
 

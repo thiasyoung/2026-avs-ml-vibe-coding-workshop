@@ -31,7 +31,7 @@ def write_notebook(path: Path, notebook: dict) -> None:
 
 
 def update_chemprop() -> None:
-    path = ROOT / "01_boiling_point" / "02_BP_1_Chemprop_GNN.ipynb"
+    path = ROOT / "01_boiling_point" / "01_BP_Chemprop_GNN.ipynb"
     notebook = json.loads(path.read_text(encoding="utf-8"))
 
     replace_cell(
@@ -513,14 +513,14 @@ def update_chemprop() -> None:
 
 
 def update_foundation() -> None:
-    path = ROOT / "01_boiling_point" / "03_BP_2_Foundation_Model.ipynb"
+    path = ROOT / "01_boiling_point" / "02_BP_Foundation_Model.ipynb"
     notebook = json.loads(path.read_text(encoding="utf-8"))
 
     replace_cell(
         notebook,
         0,
         '''
-        # 3. Boiling point: frozen MoLFormer embeddings + feed-forward network
+        # 02 · Boiling point: frozen MoLFormer embeddings + feed-forward network
 
         **Workshop goal:** use a pretrained molecular language model as a fixed feature extractor, then train a small feed-forward network to predict boiling point. MoLFormer reads each SMILES string and produces an embedding. The large pretrained transformer stays frozen; the regression head learns only from the frozen MoLFormer embedding and boiling-point labels.
 
@@ -530,7 +530,7 @@ def update_foundation() -> None:
 
         ## Workshop workflow
 
-        1. Recreate the same reproducible training, validation, and held-out test split used in notebook 02.
+        1. Recreate the same reproducible training, validation, and held-out test split used in notebook 01.
         2. Convert the split SMILES strings into frozen MoLFormer embeddings.
         3. Train a feed-forward regression network on the training embeddings. After each full 20-epoch window, stop only when validation loss exceeds training loss and both its ordinary slope and its slope after removing the five highest recent validation losses are positive.
         4. Restore the lowest validation-loss checkpoint that meets the selection rule, then evaluate it once on the held-out test set with a loss plot, parity plot, and good/bad molecular examples.
@@ -575,7 +575,7 @@ def update_foundation() -> None:
                          f'{completed}/{total} ({percent:.0f}%)</div>'))
 
 
-        # Use the same data-selection and split settings as notebook 02.
+        # Use the same data-selection and split settings as notebook 01.
         SEED = 42
         SAMPLE_SIZE = 4000
         MODEL_ID = 'ibm-research/MoLFormer-XL-both-10pct'
@@ -623,7 +623,7 @@ def update_foundation() -> None:
         if invalid_smiles:
             raise ValueError(f'Sampled data contain {invalid_smiles} invalid SMILES strings.')
 
-        # This is intentionally identical to the split recipe in notebook 02: 80% / 10% / 10%.
+        # This is intentionally identical to the split recipe in notebook 01: 80% / 10% / 10%.
         indices = np.arange(len(data))
         train_indices, held_out_indices = train_test_split(indices, test_size=0.20, random_state=SEED)
         val_indices, test_indices = train_test_split(held_out_indices, test_size=0.50, random_state=SEED)
@@ -739,7 +739,7 @@ def update_foundation() -> None:
                 best_state = copy.deepcopy(head.state_dict())
 
             # A rising slope must survive removal of the five largest losses, preventing brief spikes
-            # from ending training.  This is the same stopping rule used in notebook 02.
+            # from ending training.  This is the same stopping rule used in notebook 01.
             if len(history) >= VALIDATION_SLOPE_WINDOW:
                 recent_validation_loss = [row['validation_loss'] for row in history[-VALIDATION_SLOPE_WINDOW:]]
                 raw_slope, trimmed_slope = robust_validation_slopes(recent_validation_loss)

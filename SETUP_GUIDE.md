@@ -1,16 +1,11 @@
 # AVS Workshop Setup Guide
 
-This guide is distributed with the workshop-content repository. All participants use **UV + VS Code**, then choose one supported coding-agent workflow: Codex in VS Code or the separate containerized local-LLM agent workflow.
-
 Complete this setup before the workshop. This guide includes the Windows, macOS, and
-Linux installation instructions and Git setup in one place; no separate Git guide is
-needed. The shared workshop commands work in Windows PowerShell and macOS/Linux
-terminals; tool installers and interpreter paths differ. No Conda, separate Python
-installation, or manual environment activation is needed.
+Linux installation instructions and Git setup.
 
 ## Platform compatibility
 
-The current Python 3.11 lockfile targets these native environments:
+These setup instructions are compatible with these native environments:
 
 | Platform | Workshop environment |
 | --- | --- |
@@ -19,10 +14,6 @@ The current Python 3.11 lockfile targets these native environments:
 | Linux, x86-64 or ARM64 | Compatible package selection on a modern glibc distribution, such as Ubuntu 22.04 or newer. |
 | macOS, Intel (x86-64) | Not supported natively by the pinned PyTorch 2.5.1 package. |
 
-Apple Silicon macOS and both Linux architectures pass UV cross-platform dependency
-dry-runs; this is **not** an end-to-end notebook execution test on those systems.
-Rehearse the environment check and intended notebooks on participant hardware.
-Alpine/musl Linux, 32-bit systems, and native Windows ARM are not targeted by this lockfile.
 
 **Intel Mac users:** contact the organizer for access to a compatible Linux environment
 rather than changing package versions locally. PyTorch stopped publishing Intel macOS
@@ -168,7 +159,7 @@ uncached data/model downloads.
 
 Create the environment separately on each computer—do not copy `.venv` between operating
 systems. Share the repository and lockfile instead. Do not replace the locked packages
-with platform-specific guesses if an installation fails; send the error to the organizer.
+with platform-specific guesses if an installation fails. Contact an organizer for support.
 
 ## 5. Select the workshop kernel
 
@@ -186,9 +177,15 @@ Then return to the notebook kernel picker and choose that environment.
 Open the Command Palette with **Ctrl+Shift+P** on Windows/Linux or **Cmd+Shift+P** on macOS.
 The notebook's printed executable should point into this workshop's `.venv`.
 
+After the installation check, open the [workshop roadmap](00_Workshop_Roadmap.ipynb).
+Follow the filename numbers in each module: [BP `00`–`04`](01_boiling_point/README.md),
+[IR `00`–`03`](02_ir_functional_groups/README.md), or
+[HTEM `00`–`03`](03_htem_conductivity/README.md). Lettered examples are alternatives
+to their numbered step. The module guides explain the acquisition pre-work and live exercises.
+
 ## 6. Select a coding-agent workflow
 
-### Path A — Codex in VS Code
+### Path A (recommended)— Codex in VS Code
 
 Install the OpenAI **Codex** extension for VS Code, open the Codex view, and sign in. Keep this workshop folder open as the VS Code workspace. Codex can inspect the local notebooks and data in that workspace, so you can request tasks against the actual files without uploading them or re-explaining their structure.
 
@@ -196,7 +193,7 @@ For example:
 
 > Inspect `02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb` and explain the checks applied before writing the model-ready dataset.
 
-### Path B — Containerized local-LLM agent workflow
+### Path B (advanced users)— Containerized local-LLM agent workflow
 
 Use the separate local-agent repository: `<CONTAINERIZED_LOCAL_LLM_AGENT_REPOSITORY_URL>`. Follow its instructions to set up and run the containerized local-LLM agent, then use it with this same local workshop folder. The local-agent repository owns all container, model, and agent instructions.
 
@@ -222,4 +219,3 @@ Use the separate local-agent repository: `<CONTAINERIZED_LOCAL_LLM_AGENT_REPOSIT
 - **No compatible PyTorch wheel:** check the platform table above. In particular, Intel macOS is not supported by this pinned environment; changing installation commands will not supply a missing wheel.
 - **Linux cannot load a shared library:** use a supported glibc distribution and send the exact missing-library message to the organizer; package availability alone does not verify system-library compatibility.
 
-The workshop is configured to copy packages rather than hard-link them, which makes it reliable in Windows OneDrive folders. An isolated environment prevents dependency conflicts but is not a security sandbox; run only material you trust.

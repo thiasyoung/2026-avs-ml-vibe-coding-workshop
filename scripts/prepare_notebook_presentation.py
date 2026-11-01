@@ -1,7 +1,7 @@
-"""Add curated teaching notes and input-collapse hints without executing notebooks.
+"""Add concise code summaries and input-collapse hints without executing notebooks.
 
 Run from any directory; --check verifies coverage and freshness without writing.
-Notes follow code-cell order. Review the matching entry whenever code changes.
+Summaries follow code-cell order. Review the matching entry whenever code changes.
 """
 from __future__ import annotations
 
@@ -17,7 +17,8 @@ EXCLUDED = {".git", ".venv", ".ipynb_checkpoints", "archive", "outputs"}
 MARKER = "workshop_presentation"
 GUIDE = (
     "### Reading and presenting this notebook\n\n"
-    "The bullet points above each code cell explain what to notice; saved outputs remain visible. "
+    "Each code block has a descriptive heading followed by a short explanation labeled **Code Summary:**; "
+    "saved outputs remain visible. "
     "In **VS Code**, open the Command Palette (`Ctrl+Shift+P` on Windows/Linux, "
     "`Cmd+Shift+P` on macOS) and choose **Notebook: Collapse All Cell Inputs** "
     "(search for `Collapse All Cell Inputs`). Use **Expand All Cell Inputs** to edit, "
@@ -28,301 +29,352 @@ GUIDE = (
     "Hiding code does not disable execution or remove it from the file.\n"
 )
 
-# Each tuple contains the important discussion points for ONE code cell.
-NOTES: dict[str, list[tuple[str, ...]]] = {
+# Each paragraph summarizes ONE code cell. Blank exercises describe intended work,
+# not completed analysis. Keep the NOTES name and generated-cell metadata stable.
+NOTES: dict[str, list[str]] = {
     "00_Test_Installation.ipynb": [
-        ("Confirm Python 3.11 and select the workshop .venv as the notebook kernel.",
-         "Run this notebook from the repository root; a failed assertion means setup needs attention."),
-        ("Import the packages needed by all three workshop modules, including NISTChemPy and Chemprop.",
-         "This is an import smoke test, not a dataset download or model-training test."),
+        "Checks that the notebook is running from the workshop folder with Python 3.11 and the workshop virtual environment.",
+        "Checks that the packages used throughout the workshop can be imported. This verifies installation without downloading data or training a model.",
     ],
     "00_Ten_Steps_in_Prompts.ipynb": [
-        ("Load the reaction CSV named in the prompt and preview its rows.",
-         "This is a generic practice template; supply that CSV before running it."),
-        ("Practice cell: ask for column meanings, missing values, numeric summaries, and readable data figures.",
-         "The cell is intentionally blank; expand it and insert the generated code."),
-        ("Practice cell: inspect duplicate rows, missing targets, and inconsistent entries.",
-         "Review flagged records before deciding whether to change them."),
-        ("Practice cell: flag serious anomalies and explain why each deserves inspection.",
-         "An unusual observation is not automatically an incorrect measurement."),
-        ("Practice cell: apply justified cleaning decisions and summarize the edits.",
-         "Save a new working dataset and preserve the original source."),
-        ("Practice cell: propose raw, transformed, and interaction features using domain knowledge.",
-         "Exclude information that would be unavailable when making a real prediction."),
-        ("Practice cell: compare feature sets or inspect feature importance with a suitable plot.",
-         "Use training/validation data for decisions; do not select features using test results."),
-        ("Practice cell: export the selected features and target as a clearly named modeling dataset.",
-         "Preserve row identity so feature and target arrays stay aligned."),
-        ("Practice cell: build reusable starter models appropriate for the prediction task.",
-         "Keep model names, settings, and training interfaces consistent across experiments."),
-        ("Practice cell: create reproducible train, validation, and test splits.",
-         "Choose grouping, stratification, or time ordering to match the real prediction setting."),
-        ("Practice cell: create experiment folders, metadata, predictions, and a running results table.",
-         "Record train/validation results now; reserve test evaluation for the final analysis."),
-        ("Practice cell: compare model families on the same training and validation observations.",
-         "Track settings and compare validation performance against a simple baseline."),
-        ("Practice cell: vary settings for a promising model while keeping data and splits fixed.",
-         "Save training histories when the algorithm has epochs; do not invent curves for other models."),
-        ("Practice cell: test alternative feature sets against the current validation baseline.",
-         "Keep the experiment controlled and leave the test set untouched."),
-        ("Practice cell: rank experiments using validation metrics and freeze the finalists.",
-         "Only then evaluate those finalists on the held-out test data."),
-        ("Practice cell: produce readable data, experiment-comparison, and final-performance figures.",
-         "Label axes and units, save PNG files, and report limitations alongside the results."),
+        "Loads and previews the reaction dataset named in the prompt. This practice template requires you to supply that CSV file.",
+        "This blank practice cell is for code that explains the dataset's columns, missing values, and distributions using summaries and plots.",
+        "This blank practice cell is for checking duplicate rows, missing targets, and inconsistent entries before choosing any corrections.",
+        "This blank practice cell is for identifying unusual observations and explaining why they warrant inspection, without assuming that every outlier is an error.",
+        "This blank practice cell is for applying justified corrections and saving a cleaned dataset while preserving the original data.",
+        "This blank practice cell is for creating useful model inputs from domain knowledge, including transformations and interactions available at prediction time.",
+        "This blank practice cell is for comparing feature sets or plotting feature importance using training and validation data, not test results.",
+        "This blank practice cell is for exporting the chosen inputs and target as an aligned modeling dataset.",
+        "This blank practice cell is for defining reusable starter models with consistent settings and training interfaces for later comparisons.",
+        "This blank practice cell is for creating reproducible training, validation, and test sets that reflect the intended prediction setting.",
+        "This blank practice cell is for recording experiment settings, predictions, and training/validation results in organized output folders.",
+        "This blank practice cell is for comparing model families against a simple baseline using the same training and validation observations.",
+        "This blank practice cell is for varying model settings while holding the data and splits fixed, recording training histories where applicable.",
+        "This blank practice cell is for testing alternative feature sets against the current validation baseline while leaving the test set untouched.",
+        "This blank practice cell is for selecting finalists using validation results, then evaluating those fixed choices on held-out test data.",
+        "This blank practice cell is for producing labeled figures that summarize the data, experiments, final performance, and limitations.",
     ],
     "01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb": [
-        ("Configure the tested NISTChemPy version, polite request delays, and resumable output paths.",
-         "Live collection is off by default so an existing Parquet dataset can be reused."),
-        ("Discover neutral compounds with phase-change records, subdividing searches when results are truncated.",
-         "Save the candidate IDs for the later resumable collection step; discovery runs only in live mode."),
-        ("Parse NIST boiling-point records only when the reported units are kelvin, and derive canonical SMILES.",
-         "This cell also fetches one illustrative compound from NIST, so it still needs internet access."),
-        ("Download missing records with checkpoints and a failure audit, or reuse an existing raw dataset.",
-         "Preserve raw SMILES/BP_K measurements before preparing the final two-column dataset."),
-        ("Clean cached data without repeating the long download: validate SMILES and finite, plausible kelvin values.",
-         "Combine repeated canonical structures using median BP, save SMILES/BP in kelvin, and write a cleaning audit.",
-         "A plausibility filter does not establish the correct units of an ambiguous legacy measurement."),
+        "Sets up NIST access, request delays, and resumable data files. Live collection is off by default so existing Parquet data can be reused.",
+        "Finds neutral compounds with phase-change data and saves their NIST identifiers for collection. Large searches are subdivided to avoid truncated results; this runs only in live mode.",
+        "Defines how to extract canonical SMILES and boiling-point measurements reported in kelvin. An illustrative compound is fetched from NIST, so this cell requires internet access.",
+        "Collects missing measurements with checkpoints and a failure log, or reloads the existing raw dataset. Original SMILES and kelvin measurements are preserved before cleaning.",
+        "Cleans cached measurements without downloading them again, checks molecular structures and plausible temperatures, and combines repeated structures by median boiling point. Saves a two-column SMILES/BP table in kelvin and an audit; range checks alone cannot confirm ambiguous source units.",
     ],
-    "01_boiling_point/02_BP_1_Chemprop_GNN.ipynb": [
-        ("Load boiling points in kelvin and make reproducible molecular train/validation/test splits shared with the foundation-model demo.",
-         "Only SMILES supplies input features; depth controls message-passing steps and hidden dimension controls vector width.",
-         "Review the architecture, 20-epoch segments, and learning-rate settings before starting the longer training cell."),
-        ("Train quietly in 20-epoch Chemprop CLI segments and stitch the recorded training/validation losses.",
-         "At segment boundaries, stop only if both the raw and top-five-trimmed 20-epoch validation slopes rise and validation loss exceeds training loss.",
-         "Segments transfer weights, not optimizer state. Select the lowest eligible native segment checkpoint, with a fallback if none qualify."),
-        ("Plot the stitched loss curves separately from training and mark the actual selected checkpoint.",
-         "Generate all split predictions using that checkpoint, not the last training epoch."),
-        ("Compare train, validation, and test MAE/RMSE/R² against a training-mean baseline in kelvin.",
-         "Use common-axis parity plots and best/worst held-out molecules to discuss strengths and failures.",
-         "Save aligned predictions, metrics, architecture settings, and the selected checkpoint path."),
-        ("Enter a valid SMILES string, such as CCO for ethanol, and predict with the selected final checkpoint.",
-         "The returned scalar is a boiling point in kelvin; a plausible example is not a substitute for held-out evaluation."),
-        ("Optional blank practice cell: expand it to add a question or your own follow-up calculation.",
-         "No additional analysis is implemented in this cell."),
+    "01_boiling_point/01_BP_Chemprop_GNN.ipynb": [
+        "Loads boiling points in kelvin, creates the molecular splits shared with the foundation-model example, and configures Chemprop training. Molecular graphs derived from SMILES are the only inputs.",
+        "Trains Chemprop in 20-epoch segments, carrying forward weights but not optimizer state. Stopping checks require rising validation-loss trends both before and after removing the five highest losses, with validation loss above training loss. Saves the lowest eligible segment checkpoint, with a documented fallback.",
+        "Plots the combined training and validation loss histories, marks the selected checkpoint, and uses that checkpoint to predict boiling points for all three splits.",
+        "Compares model errors against a simple mean baseline, shows train/validation/test parity plots and good/bad held-out examples, and saves predictions, metrics, and model settings. Boiling-point errors are reported in kelvin.",
+        "Predicts the boiling point in kelvin for an editable SMILES string using the selected final model. The example input is ethanol, written as CCO.",
+        "This optional practice cell is blank and ready for a follow-up question or calculation.",
     ],
-    "01_boiling_point/03_BP_2_Foundation_Model.ipynb": [
-        ("Use the same reproducible molecular splits as the Chemprop example and keep boiling points in kelvin.",
-         "Configure a frozen MoLFormer encoder and a 64 → 32 → 16 feed-forward head without extra molecular descriptors.",
-         "The head uses a small learning rate, cosine warm restarts, and the robust 20-epoch stopping rule."),
-        ("Load the public MoLFormer model and freeze its weights; the first run requires a model download.",
-         "Convert SMILES into fixed embeddings, then fit embedding and target standardization on training data only."),
-        ("Train only the regression head with AdamW/MSE, cosine warm restarts, and gradient clipping.",
-         "Require positive raw and top-five-trimmed validation slopes plus validation loss above training loss to stop.",
-         "Restore the lowest eligible validation-loss epoch, with an overall-minimum fallback; the epoch cap is not proof of convergence."),
-        ("Plot training/validation standardized MSE and learning rate after training completes.",
-         "Mark the selected checkpoint and any robust-slope stopping epoch, rather than labeling every upward fluctuation."),
-        ("Undo target standardization before calculating boiling-point errors in kelvin.",
-         "Compare all three split parity plots on the same axes and inspect good/bad held-out molecules.",
-         "Save the metrics and test predictions for the restored head."),
-        ("Predict a new SMILES using the frozen encoder, training-fitted scaling, and restored head.",
-         "Edit the example SMILES and read the resulting boiling point in kelvin."),
-        ("Optional blank practice cell: expand it for your own follow-up prediction or analysis.",
-         "This cell does not contain another model or training step."),
+    "01_boiling_point/02_BP_Foundation_Model.ipynb": [
+        "Loads the same molecular splits as Chemprop and configures a frozen MoLFormer encoder with a small feed-forward regression head. Training uses cosine warm restarts and the robust 20-epoch stopping rule; boiling points remain in kelvin.",
+        "Loads the pretrained MoLFormer encoder and converts SMILES into fixed embeddings without updating the encoder. Embedding and target scaling are fitted on training data only; the first run downloads the model.",
+        "Trains the regression head using AdamW, MSE, and cosine warm restarts. Stopping requires rising raw and outlier-trimmed validation trends with validation loss above training loss. Restores the lowest eligible validation-loss weights, or the documented fallback if no epoch qualifies.",
+        "Shows training/validation loss and learning-rate histories, marking the restored model and any slope-based stopping point rather than every upward fluctuation.",
+        "Converts predictions back to kelvin, compares train/validation/test parity plots, and examines good/bad held-out examples. Saves evaluation metrics and test predictions from the restored model.",
+        "Predicts a boiling point in kelvin for an editable SMILES string using the frozen encoder, training-fitted scaling, and restored regression head.",
+        "This optional practice cell is blank and ready for another prediction or analysis.",
     ],
-    "01_boiling_point/05_BP_4_One_Shot_Workflow.ipynb": [
-        ("Locate the workshop dataset and create separate experiment/figure output folders.",
-         "Set the seed and SMILES-derived feature policy; prefer acquired NIST data over the packaged fallback."),
-        ("Audit canonical molecular identity, missing/nonfinite targets, components, charge, and plausible temperature bounds.",
-         "Check the source provenance for units; a numerical range alone cannot confirm kelvin."),
-        ("Review flagged rows and repeated canonical identities before modeling.",
-         "Repeated measurements can disagree; inspect their BP range rather than silently discarding them."),
-        ("Retain eligible single-component molecules and summarize repeated identities by median BP.",
-         "Freeze an 80/10/10 split of unique canonical structures and assert no molecular identity overlap."),
-        ("Inspect the training target distribution and individual training labels.",
-         "These plots describe the training data; unusual values still need source-based review."),
-        ("Build molecular size/polarity descriptors and radius-two Morgan fingerprints directly from SMILES.",
-         "Save the representation specification; neither BP nor source identifiers are model features."),
-        ("Define comparable regression metrics and tree-model builders.",
-         "Fit a training-median dummy baseline to establish a useful minimum benchmark."),
-        ("Compare descriptor-only and fingerprint-augmented tree models on fixed training/validation splits.",
-         "Save hypotheses, settings, runtime, and predictions for each experiment; no test score is used for selection."),
-        ("Compare validation MAE across experiments against the training-median baseline.",
-         "Lower is better; this is a validation comparison, not a ranking by test performance."),
-        ("Inspect the leading validation model's train–validation gap and largest errors by molecular size.",
-         "Use these patterns to propose an experiment, not to claim a causal chemical explanation."),
-        ("Try a 1024-bit fingerprint representation with the leading model family and fixed split.",
-         "Keep the change only if validation MAE improves, then save the frozen final configuration."),
-        ("Fit the chosen configuration on training data and now report independent test metrics.",
-         "Save aligned predictions and compare held-out performance to the training-median baseline."),
-        ("Read train/validation/test parity plots and the held-out residual plot in kelvin.",
-         "Review the largest test errors to describe limitations, not to retune the selected model."),
-        ("Save the final inference bundle and predict new SMILES with validity checks.",
-         "Training-set fingerprint similarity is a heuristic local-support diagnostic, not calibrated prediction uncertainty."),
-        ("Reload the saved model in a fresh Python interpreter without retraining.",
-         "Check finite predictions, row alignment, and deliberate rejection of unsupported inputs."),
-        ("Save a reproducibility manifest with dataset checksum, software versions, split policy, and chosen configuration.",
-         "Use it to distinguish a repeatable experiment from an undocumented one-shot answer."),
+    "01_boiling_point/04_BP_One_Shot_Workflow.ipynb": [
+        "Locates the boiling-point dataset, sets a reproducible seed, and creates experiment folders. Acquired NIST data is preferred over the packaged fallback, and inputs will be derived only from SMILES.",
+        "Audits molecular identities, missing targets, molecular components, charges, and temperature ranges before modeling. Temperature bounds flag suspicious records but cannot establish their source units.",
+        "Displays flagged records and boiling-point disagreements among repeated molecular structures so questionable measurements can be examined before cleaning.",
+        "Keeps eligible single-component molecules, combines repeated structures by median boiling point, and creates fixed 80/10/10 splits with no shared molecular identities.",
+        "Plots the training boiling-point distribution and displays example labels to show the range of values the model will learn from.",
+        "Converts SMILES into molecular descriptors and Morgan fingerprints, then saves the feature specification. Boiling points and source identifiers are not used as inputs.",
+        "Defines regression metrics and candidate tree models, then fits a training-median baseline as a reference for evaluating useful improvements.",
+        "Trains descriptor-only and fingerprint-augmented models on the same splits, recording settings, runtime, and predictions. Model selection uses validation performance rather than test results.",
+        "Compares validation mean absolute error across experiments and the training-median baseline, showing which approaches improve on a simple constant prediction.",
+        "Examines the leading model's training/validation gap and largest validation errors by molecular size to motivate the next experiment.",
+        "Tests a 1024-bit fingerprint with the leading model family and retains it only if validation error improves. Saves the selected configuration before test evaluation.",
+        "Fits the selected configuration on training data and evaluates it on the independent test set, saving aligned predictions and a comparison with the median baseline.",
+        "Shows train/validation/test parity plots, test residuals, and the largest held-out errors in kelvin to illustrate the selected model's performance and limitations.",
+        "Saves the inference bundle and predicts new SMILES with input checks. Fingerprint similarity provides a rough indication of training-set support, not a calibrated uncertainty estimate.",
+        "Reloads the saved model in a fresh Python process and checks that inference works without retraining, preserves row alignment, and rejects unsupported inputs.",
+        "Records the dataset checksum, software versions, split policy, and selected settings in a manifest so the experiment can be traced and reproduced.",
     ],
     "02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb": [
-        ("Load candidate NIST IDs and configure polite, resumable IR acquisition with the tested NISTChemPy version.",
-         "Live collection defaults to off; keep the native checkpoint so the workshop need not repeat scraping."),
-        ("Fetch the first available IR spectrum and derive canonical SMILES from the NIST molecular structure.",
-         "Preserve native x/y arrays and units; derive 12 binary functional-group labels using explicit SMARTS rules."),
-        ("Collect only outstanding records, checkpoint successful downloads, and retain retrieval failures.",
-         "Acquisition preserves native spectra; conversion, cropping, padding, and regridding belong in notebook 01."),
-        ("Reload the native checkpoint and inspect recorded coordinate/signal units and example arrays.",
-         "No spectral normalization or data carpentry is applied in this preview."),
-        ("Verify that molecular IDs, SMILES, native arrays, unit fields, and all labels are present.",
-         "Continue to notebook 01 for data examination and carpentry, not directly to training."),
+        "Loads candidate NIST identifiers and sets up resumable IR collection with request delays. Live downloading is off by default so the workshop can reuse the native-spectrum checkpoint.",
+        "Defines retrieval of each compound's first available IR spectrum and canonical SMILES. Native coordinates, signals, and units are preserved, while molecular substructure rules assign 12 functional-group labels.",
+        "Downloads outstanding records, saves progress, and logs retrieval failures. Spectra remain in their original form; signal conversion and grid preparation are deferred to notebook 01.",
+        "Reloads the native-spectrum checkpoint and previews coordinate units, signal units, and example arrays without normalizing or reshaping the spectra.",
+        "Checks that the acquired table contains molecular identifiers, SMILES, native arrays, units, and functional-group labels before data carpentry in notebook 01.",
     ],
     "02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
-        ("Load native arrays and exclude the frozen validation/test molecular observations from the training pool.",
-         "Preview the recorded numbers and the fixed 500-point reference grid; this is intentionally a minimal baseline."),
-        ("Use recorded numeric signals as-is, require full reference coverage, and linearly resize to a uniform grid.",
-         "Apply per-spectrum min–max normalization and inspect the resulting numeric curves and audit counts."),
-        ("Save the baseline training table together with the unchanged evaluation files and a data manifest.",
-         "Reload and verify finite uniform features, binary labels, and disjoint identities before using static IR 02."),
+        "Loads native spectra, separates the frozen validation/test molecules from the training pool, and previews the fixed 500-point reference grid for a minimal preparation baseline.",
+        "Uses the recorded numeric signals directly, retains spectra covering the full reference range, and linearly resamples them to a common grid. Each spectrum is min–max normalized, then plotted alongside preparation counts.",
+        "Saves the baseline training data, unchanged evaluation tables, and a manifest. Reloading checks uniform finite inputs, binary labels, and separated molecular identities before training in notebook 02.",
     ],
     "02_ir_functional_groups/02_IR_Optimized_Training.ipynb": [
-        ("Select the carpentry output directory while keeping the model configuration fixed across data comparisons.",
-         "Verify the frozen evaluation hashes, 500-point grid, binary labels, and molecular identity separation.",
-         "Fit StandardScaler on training features only; seed the run and set the initial learning rate to 1e-5."),
-        ("Define a 256 → 128 ReLU classifier with batch normalization and dropout; output one logit per functional group.",
-         "Use training-derived class weights in BCEWithLogitsLoss, AdamW, and cosine annealing with warm restarts.",
-         "Create a unique run folder, TensorBoard log, and reproducibility metadata before training."),
-        ("Train with gradient clipping and compare training/validation loss in the same evaluation mode.",
-         "Stop only when raw and top-five-trimmed 20-epoch validation slopes are positive and validation loss exceeds training loss.",
-         "Save periodic checkpoints and restore the lowest eligible validation loss, or its documented fallback; report if the epoch cap is reached."),
-        ("Choose per-label probability thresholds using validation data only, then evaluate the held-out test set.",
-         "Report macro/micro F1, exact match, and per-group confusion-derived metrics; plot loss/LR and classification scores.",
-         "Save the restored model, scaling, thresholds, predictions, and run documentation."),
-        ("Upload one CSV/Parquet spectrum with wavenumber and IR columns to use the trained classifier.",
-         "Supply signal values already prepared consistently with the selected carpentry dataset; this helper only regrids and applies the fitted scaler.",
-         "The uploaded spectrum must cover the training coordinate range; the helper rejects unsupported bounds."),
+        "Loads the selected carpentry output and checks its grid, labels, molecular separation, and frozen evaluation files. Fits input standardization on training data only and keeps the training configuration fixed for data comparisons, starting at a learning rate of 1e-5.",
+        "Builds the multi-label neural classifier and configures class-weighted binary cross-entropy, AdamW, and cosine warm restarts. Creates an experiment folder, TensorBoard log, and settings record before training.",
+        "Trains the classifier, saves periodic checkpoints, and monitors comparable training/validation losses. Stopping requires rising 20-epoch validation trends both with and without the five highest losses, with validation loss above training loss. Restores the lowest eligible validation-loss model or the documented fallback, and reports any epoch-limit stop.",
+        "Selects classification thresholds on validation data, evaluates the restored model on the test set, and plots training histories and functional-group scores. Saves the model, scaling, thresholds, predictions, and metrics for comparison.",
+        "Classifies an uploaded CSV or Parquet spectrum using the trained model. Signals must already match the chosen carpentry preparation; this helper only regrids and scales them, rejecting spectra that do not cover the required coordinate range.",
     ],
     "02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb": [
-        ("Locate the baseline and four worked carpentry strategies and choose a comparison output folder.",
-         "TRAIN_ALL is off by default; turning it on executes the existing static trainer for all options."),
-        ("Accept only completed runs whose dataset checksums, frozen holdouts, grid, labels, and training protocol match.",
-         "Compare F1, sample counts, selected epoch, and stopping reason; flag missing/stale runs rather than inventing scores.",
-         "These strategies bundle multiple edits, so a score difference does not isolate one cleansing step."),
-        ("Compare aggregate F1 and per-functional-group test scores for compatible runs.",
-         "Read both gains and regressions honestly; do not select another model by repeatedly optimizing the test set."),
+        "Locates the baseline and four worked carpentry outputs and sets the comparison folder. Training is off by default; enabling TRAIN_ALL runs the same static trainer for every option.",
+        "Checks completed runs for compatible datasets, frozen holdouts, and training settings, then compares scores, sample counts, and stopping information. Missing or stale results are flagged. Each strategy combines several changes, so score differences cannot isolate a single cleansing step.",
+        "Plots overall and per-functional-group test F1 for compatible runs, showing both improvements and regressions from the different data-preparation strategies.",
     ],
     "03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb": [
-        ("Locate the HTEM module, load the shared acquisition helpers, and configure readable workshop plots.",
-         "Keep paths relative to the workshop so the notebook works from the module or repository root."),
-        ("Download all public libraries with compact resumable recipe/scalar caches, or explicitly select the offline snapshot.",
-         "Retain each deposition/position and substrate x/y coordinates, process settings, and scalar property labels—not full spectra.",
-         "Check provenance, failures, and sample-count gaps; do not silently fill missing coordinates or claim unavailable records were downloaded."),
-        ("Preview per-location process/label rows and the number of positions in each deposition.",
-         "Preserve missing targets and substrate-grid identity for later masked training and spatial maps."),
+        "Locates the HTEM module and loads its shared download helpers and plotting settings, using paths that work from either the module or repository folder.",
+        "Downloads compact process settings, substrate coordinates, and scalar properties from public HTEM libraries, or loads the explicitly selected offline snapshot. Resumable caches and acquisition logs preserve provenance; full spectra are excluded and unavailable records are not filled in.",
+        "Previews the per-location dataset and counts positions within each deposition. Missing property labels and substrate-grid identities are preserved for later training and spatial maps.",
     ],
     "03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb": [
-        ("Load the shared HTEM preparation helpers and use repository-relative module paths.",
-         "Set a reproducible seed; every later architecture consumes this same preparation."),
-        ("Verify the acquired dataset checksum and inspect missing fields, ranges, units, and unique deposition/position keys.",
-         "Substrate coordinates are millimeters, thickness is micrometers, and conductivity is S/cm."),
-        ("Build the audited spatial cohort with the frozen grouped/material-balanced split and explicit missing-label masks.",
-         "Use recipe, physical XY, local temperature, and instructor-selected source descriptors; measured film properties are labels only.",
-         "Inspect source chemistry/DOS coverage rather than treating missing references as known material phases."),
-        ("See how a real reference atomic structure becomes a frozen ALIGNN graph embedding.",
-         "This cell only defines the optional instructor extraction function; the class uses shipped compact features and need not install ALIGNN."),
-        ("Rebuild curated elemental descriptors and a 16-component reference-crystal PCA fitted on unique training compositions only.",
-         "Combine them with the existing recipe/atomic/reference-gap/DOS inputs and train-fit imputation/scaling.",
-         "Assert exact agreement with all three shared frozen matrices; reference crystals are not verified film or source phases."),
-        ("Verify disjoint recipe/library groups, material-class split coverage, label counts, and frozen evaluation identity.",
-         "Singleton/two-group classes have explicit rare-class exceptions; missing labels remain masked, not imputed.",
-         "Preserve full raw planned grids separately from the rows with available targets."),
-        ("Inspect training-only property distributions and flag IQR anomalies for review without automatically removing them.",
-         "Count categorical support across independent libraries to expose sparse training coverage."),
+        "Loads the shared HTEM preparation helpers and sets a reproducible seed. Every model in this module will use the same prepared dataset.",
+        "Verifies the downloaded dataset and examines missing values, ranges, units, and deposition/location identifiers. Coordinates are in millimeters, thickness in micrometers, and conductivity in S/cm.",
+        "Builds the spatial modeling dataset with grouped, material-balanced splits and masks for missing labels. Inputs combine recipe settings, position, local temperature, and source-material descriptors; measured film properties remain targets rather than prediction inputs.",
+        "Defines an optional instructor function for turning a reference atomic structure into a frozen ALIGNN embedding. It does not run extraction; participants use the shipped compact features without installing ALIGNN.",
+        "Reconstructs elemental descriptors and reduced reference-crystal embeddings using training-fitted transformations, then checks agreement with the shared feature matrices. These reference structures describe candidate source chemistry, not verified phases of the deposited film.",
+        "Checks separated recipe/library groups, material-class coverage, available labels, and frozen evaluation identities. Rare classes have documented split exceptions; missing labels remain masked, and full substrate grids are kept separately for spatial modeling.",
+        "Plots training-property distributions, flags statistical outliers for review without removing them automatically, and counts independent libraries per material category to highlight sparse coverage.",
     ],
     "03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb": [
-        ("Load completed runs only after checking shared data, preprocessing, labeled locations, and result fingerprints.",
-         "Compare five algorithms on expanded test labels and separately on the original fixed paired holdout.",
-         "Rank using validation performance; the default participant model remains linear Ridge and this notebook does not retrain."),
-        ("Compare validation standardized error, test thickness MAE, and test conductivity log-MAE.",
-         "These metrics use different units/scales; lower is better within each panel, not across panels."),
-        ("Plot test-set thickness and log10 conductivity parity for every algorithm using the verified saved predictions.",
-         "Use shared property-wise axes and observed-label masks so model comparisons are fair; no refitting or silent omission of invalid predictions."),
+        "Loads verified results from five models trained on the shared features, without retraining. Compares expanded test observations and the original paired holdout separately, with model ranking based on validation performance.",
+        "Compares validation error, test thickness error, and test conductivity error in separate panels. Each panel uses its own scale and units, with lower error indicating better performance.",
+        "Plots test predictions against measured thickness and log conductivity for each algorithm using shared axes and the same available labels. Results come from verified saved predictions, not refitted models.",
     ],
     "scratch/HTEM_Feature_Selection_Study.ipynb": [
-        ("Instructor-only study: compare predefined chemistry feature blocks with fixed Ridge and forest selectors.",
-         "Use existing grouped training/validation observations; do not consult test scores to choose features."),
-        ("Inspect independent reference-crystal provenance, checkpoint checksums, coverage, and extraction failures.",
-         "Run the candidate study using only training-fitted transforms and validation-based selection."),
-        ("Compare each selector's validation errors and the equal-selector relative ranking.",
-         "Report the exploratory gain interval and selector/single-holdout dependence; an interval spanning zero is not proof of improvement."),
-        ("Deploy the already chosen feature specification and compact source table for shared workshop preparation.",
-         "Then rerun participant 01, every architecture, and comparison 03; this is an instructor publishing step, not routine model tuning."),
+        "Sets up an instructor comparison of candidate chemistry features using fixed Ridge and Random Forest models on grouped training/validation data. Test results are not used to choose features.",
+        "Checks reference-crystal provenance and extraction coverage, then evaluates candidate features with training-fitted transformations and validation-based selection.",
+        "Compares validation errors and relative feature rankings across the two models. The reported exploratory gain interval reflects uncertainty; an interval spanning zero does not establish an improvement.",
+        "Publishes the selected feature specification and compact source table for the shared workshop dataset. This instructor step is followed by rerunning preparation, all architectures, and their comparison.",
     ],
 }
 
 IR_VARIANTS = [
-    ("01a_IR_Omit_Transmittance.ipynb", "Keep absorbance records only; require full spectral coverage and use linear resampling.",
-     "Canonicalize molecular identities and deduplicate training presentations; inspect how many examples are lost."),
-    ("01b_IR_Convert_Transmittance.ipynb", "Convert supported transmittance to absorbance, require full coverage, and linearly resample.",
-     "Check categorical labels against SMILES/SMARTS and audit inconsistent training records."),
-    ("01c_IR_Padding_and_Quality.ipynb", "Convert supported signals to absorbance and allow zero-padding for partial coverage of at least 80%.",
-     "Apply training-only roughness-based quality filtering; statistical anomalies need not be measurement errors."),
-    ("01d_IR_Resampling_and_Balancing.ipynb", "Convert supported signals, pad acceptable partial coverage, then bin-downsample and upsample to the shared grid.",
-     "Use capped rare-label oversampling on training only; resizing does not restore lost spectral information."),
+    ("01a_IR_Omit_Transmittance.ipynb",
+     "Keeps only absorbance spectra with full reference coverage, resamples them linearly, and deduplicates training molecules. Displays the resulting spectra, label counts, and action audit to show what was retained and removed."),
+    ("01b_IR_Convert_Transmittance.ipynb",
+     "Converts supported transmittance signals to absorbance and linearly resamples fully covered spectra. Checks functional-group labels against molecular substructures and displays the preparation audit and resulting spectra."),
+    ("01c_IR_Padding_and_Quality.ipynb",
+     "Converts supported signals to absorbance, zero-pads spectra covering at least 80% of the reference range, and filters training spectra using roughness. Displays the audit and resulting spectra; statistical anomalies are not necessarily measurement errors."),
+    ("01d_IR_Resampling_and_Balancing.ipynb",
+     "Converts supported signals, pads acceptable partial spectra, and downsamples then upsamples to the shared grid. Capped oversampling increases rare-label representation in training only. Displays the audit and resulting spectra; resizing cannot restore missing spectral detail."),
 ]
-for filename, spectral, cleansing in IR_VARIANTS:
+for filename, preparation_summary in IR_VARIANTS:
     NOTES["02_ir_functional_groups/examples/" + filename] = [
-        ("Select this example's signal, bounds, resampling, and cleansing policies and its own output folder.",
-         "Exclude frozen validation/test molecular observations before any training-data changes."),
-        ("Examine native signal/coordinate units, NaNs, array lengths, coverage, label categories, duplicates, and statistical anomalies.",
-         "Use the preceding hypothesis/prompt to explain what to fix; inspect flagged observations rather than assuming they are wrong."),
-        (spectral, cleansing,
-         "Review the action audit, label counts, padded/resampled records, and uniform example spectra."),
-        ("Save this strategy's training output alongside the byte-identical frozen evaluation tables and manifest.",
-         "Reload and check finite normalized 500-point arrays, 12 binary labels, and disjoint identities; point static IR 02 at the printed directory."),
+        "Sets this example's signal-conversion, grid, and cleansing policies and its output folder. Frozen validation/test molecules are excluded before any training-data changes.",
+        "Examines native units, missing values, array lengths, coverage, labels, duplicates, and statistical anomalies. The tables support the preceding prompt's hypothesis without automatically treating every flagged observation as incorrect.",
+        preparation_summary,
+        "Saves this strategy's training table alongside unchanged frozen evaluation files and a manifest. Reloading verifies finite normalized 500-point spectra, 12 binary labels, and separated identities; the printed folder can be selected in the static trainer.",
     ]
 
 HTEM_SETUP = (
-    "Load notebook 01's shared frozen features, target transforms, masks, and material-balanced group splits without rebuilding them.",
-    "Each input row includes process conditions and that location's x/y; properties are two standardized log targets with separate observed-label masks.",
-    "Write this architecture's artifacts to its own experiment folder so comparisons remain separate.",
+    "Loads notebook 01's shared features, target transforms, label masks, and grouped splits without rebuilding them. "
+    "Each row represents process conditions at one substrate location; this model's results are saved in a separate experiment folder."
 )
 HTEM_EVALUATE = (
-    "Predict each labeled location and save models, aligned split predictions, metrics, and reproducibility fingerprints.",
-    "Undo target transforms for physical-unit reporting and inspect train/validation/test parity plots; missing labels are excluded per property, never imputed.",
+    "Predicts each location, converts results back to physical units, and shows train/validation/test parity plots. "
+    "Saves the model, aligned predictions, metrics, and reproducibility records; evaluation uses only observed labels for each property."
 )
 HTEM_MAP = (
-    "Reconstruct actual and predicted maps for one held-out deposition from its individual location predictions.",
-    "Pivot on exact substrate x/y coordinates without averaging depositions or interpolating holes; compare both level and spatial gradients.",
+    "Reconstructs measured and predicted maps for one held-out deposition using each location's exact x/y coordinates. "
+    "Side-by-side maps reveal property levels and spatial gradients without averaging different depositions or filling missing locations."
 )
 HTEM_INFER = (
-    "Reload the saved model and first verify that the unchanged recipe/grid reproduces its reference predictions.",
-    "Then edit planned recipe settings or the requested x/y/local-temperature grid and save new predicted thickness/conductivity maps.",
-    "No measured film property is required as an input; point models predict each row independently, while the GNN requires its full planned grid.",
+    "Reloads the model and checks that it reproduces saved predictions, then predicts thickness/conductivity maps for editable process settings and substrate locations. "
+    "No measured film properties are required as inputs; the GNN uses a full planned grid rather than independent rows."
 )
 HTEM_CURVES = (
-    "Display training/validation loss and learning-rate history separately from model fitting.",
-    "Mark the restored validation-minimum epoch and read the stopping note; a finite epoch cap does not guarantee convergence.",
+    "Plots training/validation loss and learning-rate histories, marks the restored validation-minimum model, and reports why training stopped. "
+    "Reaching the epoch limit alone does not demonstrate convergence."
 )
 NOTES["03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
     HTEM_SETUP,
-    ("Fit linear Ridge regression with alpha=10, separately using each property's observed training labels.",
-     "This is the default process emulator and has no neural epochs or early-stopping curve; tune it through the workshop prompts."),
+    "Fits a separate linear Ridge model for each property's observed training labels as the workshop baseline. This non-neural model has no epoch-based training history; the prompts guide subsequent model experiments.",
     HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
 ]
 NOTES["03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb"] = [
     HTEM_SETUP,
-    ("Search nine alpha/RBF-width settings and select by mean standardized validation RMSE, never test error.",
-     "Fit full exact float64 kernels with checked solver residuals; this can require substantial RAM and has no epoch loss curve."),
+    "Compares nine RBF kernel Ridge settings and selects by validation error. Exact kernel fitting includes numerical checks and can require substantial memory; it does not produce an epoch-based loss curve.",
     HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
 ]
 NOTES["03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb"] = [
     HTEM_SETUP,
-    ("Fit a 64 → 32 feed-forward network on the unchanged prepared per-location feature rows.",
-     "Use AdamW, cosine decay, observed-label loss masks, and validation-minimum checkpointing with a patience limit."),
+    "Trains a feed-forward neural network on the shared per-location features using AdamW and cosine learning-rate decay. Missing targets are masked, and patience-based stopping restores the lowest-validation-loss model.",
     HTEM_CURVES, HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
 ]
 NOTES["03_htem_conductivity/examples/02c_HTEM_Grid_GNN.ipynb"] = [
     HTEM_SETUP,
-    ("Build one geometry-only neighbor graph for each full planned deposition grid, retaining unlabeled nodes.",
-     "Visualize horizontal/vertical connectivity; never connect different depositions or construct edges from measured properties."),
-    ("Train a width-64, two-message-layer graph model with one output per substrate location, not one pooled output per deposition.",
-     "Use observed-label masks, cosine decay, and validation-minimum checkpointing with patience-based stopping."),
+    "Builds and visualizes a neighbor graph for each full substrate grid, including unlabeled positions. Connections depend only on geometry and never link different depositions.",
+    "Trains a graph neural network to predict properties at each substrate location rather than one value per deposition. Uses observed-label masks, cosine learning-rate decay, and patience-based stopping to restore the lowest-validation-loss model.",
     HTEM_CURVES, HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
 ]
 NOTES["03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb"] = [
     HTEM_SETUP,
-    ("Fit a separate 300-tree Random Forest for each property using its observed training labels.",
-     "Keep a fixed seed, bounded depth/threads, and no row-level out-of-bag substitute for independent deposition validation."),
+    "Fits a separate 300-tree Random Forest for each property's observed training labels, using reproducible settings and bounded computational resources. Evaluation retains the same independent deposition splits as the other models.",
     HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
+]
+
+# Headings name the purpose of the following code cell, in the same order as NOTES.
+HEADINGS: dict[str, list[str]] = {
+    "00_Test_Installation.ipynb": [
+        "Check the workshop kernel",
+        "Verify required packages",
+    ],
+    "00_Ten_Steps_in_Prompts.ipynb": [
+        "Load the practice dataset",
+        "Practice: explore the dataset",
+        "Practice: inspect data quality",
+        "Practice: investigate unusual observations",
+        "Practice: clean and save the data",
+        "Practice: engineer model inputs",
+        "Practice: compare feature sets",
+        "Practice: export aligned modeling data",
+        "Practice: define starter models",
+        "Practice: split data reproducibly",
+        "Practice: organize experiment tracking",
+        "Practice: compare model families",
+        "Practice: tune model settings",
+        "Practice: test alternative features",
+        "Practice: select and evaluate finalists",
+        "Practice: visualize results and limitations",
+    ],
+    "01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb": [
+        "Configure NIST data acquisition",
+        "Find compounds with phase-change data",
+        "Extract SMILES and kelvin measurements",
+        "Collect or reload raw boiling points",
+        "Clean and export boiling-point data",
+    ],
+    "01_boiling_point/01_BP_Chemprop_GNN.ipynb": [
+        "Prepare molecular splits and configure Chemprop",
+        "Train Chemprop and select a checkpoint",
+        "Plot loss histories and generate predictions",
+        "Evaluate boiling-point predictions",
+        "Predict boiling point from a SMILES string",
+        "Optional practice: extend the prediction analysis",
+    ],
+    "01_boiling_point/02_BP_Foundation_Model.ipynb": [
+        "Prepare shared splits and configure the regression head",
+        "Generate frozen MoLFormer embeddings",
+        "Train the regression head and restore selected weights",
+        "Visualize loss and learning-rate histories",
+        "Evaluate predictions in kelvin",
+        "Predict with the frozen encoder and trained head",
+        "Optional practice: explore another prediction",
+    ],
+    "01_boiling_point/04_BP_One_Shot_Workflow.ipynb": [
+        "Locate the dataset and organize the experiment",
+        "Audit molecular identities and boiling-point values",
+        "Inspect flagged records and repeated measurements",
+        "Clean molecular records and freeze the splits",
+        "Explore the training boiling-point distribution",
+        "Build molecular descriptors and fingerprints",
+        "Define model candidates and a simple baseline",
+        "Run controlled model and feature experiments",
+        "Compare validation errors against the baseline",
+        "Analyze validation errors to guide the next experiment",
+        "Test a revised fingerprint representation",
+        "Evaluate the selected model on held-out data",
+        "Visualize parity plots and prediction errors",
+        "Save the model and predict new molecules",
+        "Verify inference in a fresh Python process",
+        "Save the reproducibility manifest",
+    ],
+    "02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb": [
+        "Configure resumable NIST IR collection",
+        "Define native-spectrum retrieval and functional-group labels",
+        "Collect native spectra and checkpoint progress",
+        "Preview recorded units and spectral arrays",
+        "Verify the acquisition table before carpentry",
+    ],
+    "02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
+        "Load native spectra and reserve evaluation molecules",
+        "Create the minimal uniform-spectrum baseline",
+        "Save and validate the baseline training dataset",
+    ],
+    "02_ir_functional_groups/02_IR_Optimized_Training.ipynb": [
+        "Load the selected dataset and standardize training inputs",
+        "Define the classifier and configure optimization",
+        "Train with robust stopping and checkpoint selection",
+        "Select thresholds and evaluate functional-group predictions",
+        "Classify an uploaded prepared spectrum",
+    ],
+    "02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb": [
+        "Locate carpentry experiments and configure the comparison",
+        "Validate completed runs and assemble their results",
+        "Compare overall and per-group classification scores",
+    ],
+    "03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb": [
+        "Load HTEM acquisition helpers",
+        "Download compact process and scalar-property records",
+        "Preview substrate locations and available labels",
+    ],
+    "03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb": [
+        "Configure shared HTEM data preparation",
+        "Audit process records, units, and location identities",
+        "Build process-only features and grouped spatial splits",
+        "Define optional reference-crystal embedding extraction",
+        "Reconstruct and verify the frozen chemistry features",
+        "Check split coverage, label masks, and full grids",
+        "Examine training distributions and material coverage",
+    ],
+    "03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb": [
+        "Verify and assemble saved architecture results",
+        "Compare validation and test errors by property",
+        "Plot held-out parity across all architectures",
+    ],
+    "scratch/HTEM_Feature_Selection_Study.ipynb": [
+        "Configure the instructor chemistry-feature study",
+        "Verify reference features and evaluate candidates",
+        "Compare validation rankings and exploratory gains",
+        "Publish the selected shared feature specification",
+    ],
+}
+
+IR_PREPARATION_HEADINGS = {
+    "01a_IR_Omit_Transmittance.ipynb": "Retain absorbance spectra and deduplicate molecules",
+    "01b_IR_Convert_Transmittance.ipynb": "Convert transmittance and check functional-group labels",
+    "01c_IR_Padding_and_Quality.ipynb": "Pad partial spectra and filter training roughness",
+    "01d_IR_Resampling_and_Balancing.ipynb": "Resample spectra and balance rare training labels",
+}
+for filename, preparation_heading in IR_PREPARATION_HEADINGS.items():
+    HEADINGS["02_ir_functional_groups/examples/" + filename] = [
+        "Configure this carpentry strategy and protect evaluation data",
+        "Examine native spectra and data-quality flags",
+        preparation_heading,
+        "Save and validate the prepared training dataset",
+    ]
+
+HTEM_RESULT_HEADINGS = [
+    "Evaluate per-location predictions and save the model",
+    "Reconstruct measured and predicted substrate maps",
+    "Reload the model and predict an editable process grid",
+]
+HEADINGS["03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
+    "Load the shared process features and spatial splits",
+    "Fit the linear Ridge process-emulator baseline",
+    *HTEM_RESULT_HEADINGS,
+]
+HEADINGS["03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb"] = [
+    "Load the shared process features and spatial splits",
+    "Select an RBF kernel Ridge model using validation error",
+    *HTEM_RESULT_HEADINGS,
+]
+HEADINGS["03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb"] = [
+    "Load the shared process features and spatial splits",
+    "Train a per-location feed-forward process emulator",
+    "Inspect neural training and checkpoint selection",
+    *HTEM_RESULT_HEADINGS,
+]
+HEADINGS["03_htem_conductivity/examples/02c_HTEM_Grid_GNN.ipynb"] = [
+    "Load the shared process features and spatial splits",
+    "Construct geometry-only graphs of substrate grids",
+    "Train a graph model with per-location predictions",
+    "Inspect graph-model training and checkpoint selection",
+    *HTEM_RESULT_HEADINGS,
+]
+HEADINGS["03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb"] = [
+    "Load the shared process features and spatial splits",
+    "Fit a Random Forest for each observed property",
+    *HTEM_RESULT_HEADINGS,
 ]
 
 
@@ -351,6 +403,10 @@ def prepare_notebook(notebook: dict, relative: str) -> dict:
     if notes is None or len(notes) != len(code_cells):
         raise ValueError(f"{relative}: review teaching notes for {len(code_cells)} code cells "
                          f"(catalog contains {len(notes) if notes is not None else 0})")
+    headings = HEADINGS.get(relative)
+    if headings is None or len(headings) != len(code_cells):
+        raise ValueError(f"{relative}: review descriptive headings for {len(code_cells)} code cells "
+                         f"(catalog contains {len(headings) if headings is not None else 0})")
     cells = []
     note_index = 0
     guide_inserted = False
@@ -362,7 +418,7 @@ def prepare_notebook(notebook: dict, relative: str) -> dict:
         if cell["cell_type"] == "code":
             key = cell.get("id", f"code-{note_index}")
             digest = hashlib.sha256(source_text(cell).encode("utf-8")).hexdigest()
-            text = "**What to notice**\n\n" + "\n".join("- " + point for point in notes[note_index]) + "\n"
+            text = f"### {headings[note_index]}\n\nCode Summary: {notes[note_index]}\n"
             cells.append(markdown_cell(relative, key, text,
                                        {"kind": "notes", "code_cell": key, "source_sha256": digest}))
             jupyter = cell.setdefault("metadata", {}).setdefault("jupyter", {})
@@ -377,7 +433,7 @@ def prepare_notebook(notebook: dict, relative: str) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--check", action="store_true", help="Verify notes/collapse metadata without writing")
+    parser.add_argument("--check", action="store_true", help="Verify summaries/collapse metadata without writing")
     args = parser.parse_args()
     changed = []
     count = code_count = 0
@@ -394,7 +450,7 @@ def main() -> int:
             changed.append(relative)
             updates.append((path, updated))
     if args.check and changed:
-        print("Presentation notes/settings need updating:", *changed, sep="\n- ")
+        print("Presentation summaries/settings need updating:", *changed, sep="\n- ")
         return 1
     for path, updated in updates:
         path.write_text(json.dumps(updated, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

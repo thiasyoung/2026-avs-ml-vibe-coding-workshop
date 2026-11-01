@@ -17,7 +17,7 @@ Use this prepared input if present:
 Its acquisition notebook and adjacent NIST_BP_SMILES_cleaning_audit.csv document BP in kelvin. Inspect the actual file and provenance rather than hard-coding its row count. If it is absent, use the prepared fallback at 01_boiling_point/data/CompoundData.parquet after checking its units and provenance. Select one source explicitly; do not silently combine the files. The only model input supplied by a user is SMILES, and the target is BP. Derive every predictive feature from SMILES; existing identifiers, measured properties, and stored 3-D structures are not additional inputs. In particular, calculate molecular weight from SMILES if you use it.
 
 Create:
-  01_boiling_point/05_BP_4_One_Shot_Workflow.ipynb
+  01_boiling_point/04_BP_One_Shot_Workflow.ipynb
 
 Save supporting artifacts under:
   01_boiling_point/outputs/bp_one_shot_2/

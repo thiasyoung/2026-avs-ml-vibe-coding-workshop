@@ -6,30 +6,23 @@ on:
   issue_comment:
     types: [created]
 
-# The workflow-level token is read-only.  Only the job that publishes the
-# completed work receives repository write permission.
+# Authorization is read-only. Only the job that publishes completed work
+# receives repository write permission; Codex is not passed that write token.
 permissions:
   contents: read
   issues: read
-
-concurrency:
-  # Requests for one person's development branch are serialized; different
-  # collaborators can work at the same time.
-  group: codex-workshop-${{ github.repository }}-${{ github.actor }}
-  cancel-in-progress: false
 
 jobs:
   prepare:
     name: Authorize and prepare request
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       issues: read
     outputs:
       run_codex: ${{ steps.request.outputs.run_codex }}
       issue_number: ${{ steps.request.outputs.issue_number }}
       branch: ${{ steps.request.outputs.branch }}
-      base_branch: ${{ steps.request.outputs.base_branch }}
       command: ${{ steps.request.outputs.command }}
     steps:
       - name: Read repository metadata
@@ -37,7 +30,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Authorize request and create development branch
+      - name: Authorize request for the shared main branch
         id: request
         uses: actions/github-script@v8
         env:
@@ -64,6 +57,10 @@ jobs:
 
             // The sender comes from the GitHub event, never from Issue text.
             const actor = event.sender.login;
+            if (event.sender.type !== 'User') {
+              core.setOutput('run_codex', 'false');
+              return;
+            }
             const repository = await github.rest.repos.get(context.repo);
             const allowed = new Set(['admin', 'maintain', 'write']);
             // The repository owner is always trusted. GitHub's collaborator
@@ -76,7 +73,7 @@ jobs:
                 repo: context.repo.repo,
                 username: actor,
               });
-              hasWriteAccess = allowed.has(permission.data.user.permission);
+              hasWriteAccess = allowed.has(permission.data.permission);
             }
             if (!hasWriteAccess) {
               core.warning(`Ignoring @codex from ${actor}: repository write access is required.`);
@@ -84,40 +81,22 @@ jobs:
               return;
             }
 
-            const base = repository.data.default_branch;
-            const branch = `dev/${actor}`;
-            try {
-              await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
-            } catch (error) {
-              if (error.status !== 404) throw error;
-              const source = await github.rest.git.getRef({ ...context.repo, ref: `heads/${base}` });
-              try {
-                await github.rest.git.createRef({
-                  ...context.repo,
-                  ref: `refs/heads/${branch}`,
-                  sha: source.data.object.sha,
-                });
-              } catch (createError) {
-                // A simultaneous request may have created it; in that case reuse it.
-                if (createError.status !== 422) throw createError;
-              }
-            }
+            const branch = 'main';
+            await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
 
             const redactCredentials = (value) => String(value || '').replace(
               /\b(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/g,
               '[REDACTED]',
             );
-            const normalized = text.trim().toLowerCase();
-            const command = normalized.includes('@codex sync with main')
-              ? 'sync_with_main'
-              : normalized.includes('@codex prepare merge') ? 'prepare_merge' : 'development';
+            // Legacy branch-management commands now validate main only.
+            const command = /^@codex\s+(sync with main|prepare merge)\s*[.!]?\s*$/i.test(text.trim())
+              ? 'validate_main' : 'development';
             const request = {
               issue_number: event.issue.number,
               issue_title: redactCredentials(event.issue.title),
               request: redactCredentials(text),
               actor,
               branch,
-              base_branch: base,
               event: context.eventName,
               command,
             };
@@ -129,7 +108,6 @@ jobs:
             core.setOutput('run_codex', 'true');
             core.setOutput('issue_number', String(event.issue.number));
             core.setOutput('branch', branch);
-            core.setOutput('base_branch', base);
             core.setOutput('command', command);
 
       - name: Verify request file
@@ -150,26 +128,35 @@ jobs:
           retention-days: 1
 
   codex:
-    name: Run Codex and publish development work
+    name: Run Codex and update main
     needs: prepare
     if: needs.prepare.outputs.run_codex == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 300
+    concurrency:
+      # Only authorized requests reach this shared lock. Each starts from the
+      # latest main after the preceding request has finished publishing.
+      group: codex-workshop-${{ github.repository }}-main
+      queue: max
+      cancel-in-progress: false
     permissions:
       contents: write
       issues: write
     env:
       ISSUE_NUMBER: ${{ needs.prepare.outputs.issue_number }}
       CODEX_BRANCH: ${{ needs.prepare.outputs.branch }}
-      BASE_BRANCH: ${{ needs.prepare.outputs.base_branch }}
-      CODEX_COMMAND: ${{ needs.prepare.outputs.command }}
     steps:
-      - name: Check out the requester's development branch
+      - name: Check out the latest main branch
         uses: actions/checkout@v5
         with:
-          ref: ${{ needs.prepare.outputs.branch }}
+          ref: main
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Record the starting main revision
+        id: start
+        shell: bash
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -181,19 +168,6 @@ jobs:
 
       - name: Create locked workshop environment
         run: uv sync --locked --no-install-project
-
-      - name: Bring development branch up to date with main
-        if: needs.prepare.outputs.command == 'sync_with_main'
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch origin "${BASE_BRANCH}"
-          # Leave straightforward conflicts for Codex to resolve in this
-          # disposable checkout; the publishing step makes the single commit.
-          git merge --no-commit --no-ff "origin/${BASE_BRANCH}" || true
-          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Download request
         uses: actions/download-artifact@v7
@@ -224,13 +198,19 @@ jobs:
           prompt-file: .codex-agent-prompt.md
           output-schema-file: .github/codex/issue-result.schema.json
 
-      - name: Commit completed workshop work
+      - name: Commit completed workshop work to main
         id: publish
-        if: always()
+        if: success() && steps.codex_run.outcome == 'success'
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          START_SHA: ${{ steps.start.outputs.sha }}
         run: |
+          if [ "$CODEX_BRANCH" != main ] || [ "$(git branch --show-current)" != main ] \
+             || [ "$(git rev-parse HEAD)" != "$START_SHA" ]; then
+            echo "::error::Checkout changed unexpectedly; refusing to publish."
+            exit 1
+          fi
           rm -f codex-agent-request.json .codex-agent-prompt.md
           rm -rf .codex-agent-handoff
           git add -A
@@ -256,31 +236,18 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "codex: Issue #${ISSUE_NUMBER}"
+          # Other runner requests share the main lock, but a person may still
+          # push while Codex works. Never rebase untested changes or force-push.
+          trap 'git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch origin "$CODEX_BRANCH"
+          if [ "$(git rev-parse FETCH_HEAD)" != "$START_SHA" ]; then
+            echo "::error::main changed during this run. Nothing was pushed; submit the request again to use the latest main."
+            exit 1
+          fi
           git push origin "HEAD:refs/heads/${CODEX_BRANCH}"
+          echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo 'status=pushed' >> "$GITHUB_OUTPUT"
-
-      - name: Create merge pull request on request
-        id: merge_pr
-        if: always() && needs.prepare.outputs.command == 'prepare_merge' && (steps.publish.outputs.status == 'pushed' || steps.publish.outputs.status == 'no_changes')
-        uses: actions/github-script@v8
-        with:
-          script: |
-            const openPulls = await github.rest.pulls.list({
-              ...context.repo,
-              state: 'open',
-              head: `${context.repo.owner}:${process.env.CODEX_BRANCH}`,
-              base: process.env.BASE_BRANCH,
-              per_page: 1,
-            });
-            const pull = openPulls.data[0] || (await github.rest.pulls.create({
-              ...context.repo,
-              title: `Workshop updates from ${process.env.CODEX_BRANCH}`,
-              head: process.env.CODEX_BRANCH,
-              base: process.env.BASE_BRANCH,
-              body: `Prepared by Codex in response to Issue #${process.env.ISSUE_NUMBER}.`,
-            })).data;
-            core.setOutput('url', pull.html_url);
 
       - name: Report result on Issue
         if: always()
@@ -288,7 +255,7 @@ jobs:
         env:
           STATUS: ${{ steps.publish.outputs.status || 'failed' }}
           BRANCH: ${{ needs.prepare.outputs.branch }}
-          PR_URL: ${{ steps.merge_pr.outputs.url || '' }}
+          COMMIT_SHA: ${{ steps.publish.outputs.commit_sha || '' }}
           RAW_RESULT: ${{ steps.codex_run.outputs.final-message || '' }}
         with:
           script: |
@@ -296,7 +263,9 @@ jobs:
             const branch = process.env.BRANCH;
             let result = {};
             try { result = JSON.parse(process.env.RAW_RESULT); } catch (_) {}
-            const summary = result.summary || (status === 'pushed'
+            const summary = status === 'failed'
+              ? 'The request was not published to main. Check the workflow log for a run error, a newer main revision, or a branch-protection rejection. Retry the request after resolving the cause.'
+              : result.summary || (status === 'pushed'
               ? 'Codex completed the requested work and committed the changes.'
               : status === 'no_changes'
                 ? 'Codex completed its run but did not produce repository changes.'
@@ -305,9 +274,11 @@ jobs:
               ? `\n\nChecks:\n${result.tests.map(test => `- ${test}`).join('\n')}`
               : '';
             const branchUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/tree/${branch}`;
-            const pullRequest = process.env.PR_URL ? `\n\nMerge pull request: ${process.env.PR_URL}` : '';
+            const commit = process.env.COMMIT_SHA
+              ? `\n\nCommit: https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${process.env.COMMIT_SHA}`
+              : '';
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: Number(process.env.ISSUE_NUMBER),
-              body: `## Codex workshop runner\n\n${summary}${tests}\n\nDevelopment branch: [${branch}](${branchUrl})${pullRequest}\n\nStatus: **${status}**`,
+              body: `## Codex workshop runner\n\n${summary}${tests}\n\nShared branch: [${branch}](${branchUrl})${commit}\n\nStatus: **${status}**`,
             });

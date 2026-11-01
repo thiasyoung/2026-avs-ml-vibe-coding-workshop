@@ -13,6 +13,7 @@ This repository contains the reproducible workshop notebooks and their small, pr
 ## Scope and notebook conventions
 
 - Preserve the numbered workshop flow and use repository-relative paths.
+- Keep notebook filenames, first-cell titles, README labels, and overview references aligned. BP uses `00` acquisition, `01` Chemprop, `02` MoLFormer, `03` one-shot prompt, and `04` worked workflow, without a second number after `BP`. IR and HTEM use `00`–`03`; lettered examples belong to their parent step, not a new main-sequence number.
 - Keep participant-facing notebooks clear and concise. Prefer small, deterministic examples over expensive computations.
 - For notebook work, execute the named module's notebooks non-interactively when that is the requested outcome, preserve populated notebooks, and report any failed cell rather than silently skipping it.
 - Keep the IR data-carpentry notebook separate from the static IR training notebook. The training notebook consumes the carpentry output.
@@ -41,7 +42,9 @@ uv run --locked python -m unittest discover -s tests -v
 
 For a full workshop run, use the module's numbered notebook sequence and record the exact commands and outcome. Start with the smallest sequence that fulfills the task, but do not skip an explicitly requested acquisition, model download, training, or output-generation step.
 
-## Branch and pull-request policy
+## Shared main-branch policy
 
-- Work on the requester's `dev/<github-username>` branch; never commit directly to `main`.
-- The runner commits completed work directly to that development branch. Follow-up requests from the same collaborator reuse the branch.
+- Authorized Issue requests from all repository editors target the shared `main` branch, not a per-user development branch. Do not create or switch to `dev/<github-username>` for runner work.
+- The runner serializes authorized requests across users and checks out the latest main after acquiring its shared lock. Codex edits and tests the checkout; the workflow, not Codex, commits and pushes directly to main. No pull request or manual approval is required for ordinary runner work.
+- Never force-push, rewrite shared history, or overwrite external concurrent changes. If main advances during a run, publishing fails and the request must be retried against the updated main.
+- Existing development branches are not automatically merged or deleted. Legacy sync/prepare-merge commands only validate the main checkout.

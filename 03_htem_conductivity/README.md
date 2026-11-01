@@ -14,18 +14,19 @@ film properties and spectra are not prediction inputs.
 
 ## Notebook sequence
 
-1. [00 — Get data](00_HTEM_Get_Data_NREL.ipynb): collect compact HTEM process and
+- [00 — Get data](00_HTEM_Get_Data_NREL.ipynb): collect compact HTEM process and
    scalar records without retaining full spectra.
-2. [01 — Prepare data](01_HTEM_Process_Data_Carpentry.ipynb): complete cleansing,
+- [01 — Prepare data](01_HTEM_Process_Data_Carpentry.ipynb): complete cleansing,
    feature encoding, training-only preprocessing, and grouped data splitting.
-3. [02 — Build an emulator](02_HTEM_Process_Emulator_Vibe_Coding.ipynb): start with
+- [02 — Build an emulator](02_HTEM_Process_Emulator_Vibe_Coding.ipynb): start with
    linear Ridge regression, then use prompts to develop and evaluate experiments.
-4. Worked alternatives: [02a — Kernel Ridge](examples/02a_HTEM_Kernel_Ridge.ipynb),
-   [02b — Feed-forward network](examples/02b_HTEM_Feed_Forward_Network.ipynb),
-   [02c — Grid GNN](examples/02c_HTEM_Grid_GNN.ipynb), and
-   [02d — Random Forest](examples/02d_HTEM_Random_Forest.ipynb).
-5. [03 — Compare outcomes](03_HTEM_Compare_Architectures.ipynb): compare saved results,
+- [03 — Compare outcomes](03_HTEM_Compare_Architectures.ipynb): compare saved results,
    including test-set parity plots for both properties. This notebook does not train models.
+
+Worked alternatives to `02`: [02a — Kernel Ridge](examples/02a_HTEM_Kernel_Ridge.ipynb),
+[02b — Feed-forward network](examples/02b_HTEM_Feed_Forward_Network.ipynb),
+[02c — Grid GNN](examples/02c_HTEM_Grid_GNN.ipynb), and
+[02d — Random Forest](examples/02d_HTEM_Random_Forest.ipynb).
 
 ## Before running
 
