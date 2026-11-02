@@ -47,6 +47,10 @@ executed by Run All. Check acquisition flags before running a download notebook.
 
 ## Maintaining the summaries
 
+For a searchable browser version with code folded and saved results visible, use the
+[Quarto reading website](QUARTO_WEBSITE.md). It renders the existing notebooks without
+executing them; the VS Code/JupyterLab instructions above still apply to coding sessions.
+
 Curated headings and summaries live in `scripts/prepare_notebook_presentation.py`, in the
 `HEADINGS` and `NOTES` catalogs, in code-cell order for each notebook. Update the matching
 heading and paragraph whenever the code changes. After rebuilding

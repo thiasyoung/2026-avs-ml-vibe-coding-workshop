@@ -1,0 +1,46 @@
+/* Small presentation-only adjustments; notebook code and outputs stay unchanged. */
+:root {
+  --workshop-accent: #176685;
+}
+
+.quarto-title-block .subtitle {
+  color: var(--workshop-accent);
+}
+
+details.code-fold > summary {
+  color: var(--workshop-accent);
+  font-weight: 600;
+  margin-block: 0.6rem;
+}
+
+.cell-output-stdout pre,
+.cell-output-stderr pre {
+  max-height: 24rem;
+  overflow: auto;
+}
+
+.cell-output-display {
+  overflow-x: auto;
+}
+
+.cell-output-display img {
+  max-width: 100%;
+  height: auto;
+}
+
+.columns .column {
+  padding-right: 1rem;
+}
+
+@media print {
+  .cell-output-stdout pre,
+  .cell-output-stderr pre,
+  .cell-output-display {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .cell-output-display img {
+    break-inside: avoid;
+  }
+}

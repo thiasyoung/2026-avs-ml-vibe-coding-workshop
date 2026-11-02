@@ -133,7 +133,7 @@ Notebook 02 preserves IDs/XY beside predictions and displays one held-out librar
 ### Instructor-selected frozen chemical features
 
 The temporary instructor notebook
-[`scratch/HTEM_Feature_Selection_Study.ipynb`](../scratch/HTEM_Feature_Selection_Study.ipynb)
+[`scratch/HTEM_Feature_Selection_Study.ipynb`](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop/blob/main/scratch/HTEM_Feature_Selection_Study.ipynb)
 compares nine feature sets using fixed linear Ridge and Random Forest selectors.
 The study reads **only the archived training/validation data**, never test artifacts
 or scores. Whole-deposition/recipe splits, label masks, source/power slots and target

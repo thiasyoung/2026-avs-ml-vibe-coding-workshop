@@ -1,0 +1,61 @@
+---
+title: "Machine learning through vibe coding"
+subtitle: "2026 AVS Workshop"
+toc: false
+---
+
+Read the explanations and saved results, expand **Show Python code** when you want
+the details, then open the original notebooks in VS Code to experiment.
+
+Start with the [workshop roadmap](00_Workshop_Roadmap.ipynb) and
+[setup guide](SETUP_GUIDE.md). To run the examples, download or clone the
+[complete repository](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop),
+not just one notebook: the examples also use local helper scripts and prepared data.
+
+::: {.callout-note title="A reading view, not a live notebook"}
+These pages display the outputs last saved in each notebook. Publishing does not
+download data, train models, or refresh results. Blank practice cells are intentional;
+missing results are not filled in. Run the downloaded notebooks to generate new results.
+:::
+
+## Three workshop modules
+
+::: {.columns}
+::: {.column width="33%"}
+### 01 · Boiling point
+
+Predict boiling point from molecular structure. Compare a Chemprop graph neural
+network, frozen MoLFormer embeddings, and a prompt-built workflow.
+
+[Explore the module](01_boiling_point/README.md){.btn .btn-outline-primary}
+:::
+
+::: {.column width="33%"}
+### 02 · IR functional groups
+
+Explore how signal conversion, cleansing, padding, and resampling affect a fixed
+functional-group classifier. Keep the evaluation data unchanged.
+
+[Explore the module](02_ir_functional_groups/README.md){.btn .btn-outline-primary}
+:::
+
+::: {.column width="33%"}
+### 03 · HTEM process emulator
+
+Predict local thickness and conductivity from recipes and substrate positions.
+Experiment with algorithms using the same prepared features and splits.
+
+[Explore the module](03_htem_conductivity/README.md){.btn .btn-outline-primary}
+:::
+:::
+
+## Read, run, and compare
+
+- **Read:** use the sidebar or search to find a notebook; explanations and saved
+  figures remain visible while code is folded.
+- **Run:** use the notebook's source link or download the full repository, then follow
+  the setup guide and choose the workshop environment in VS Code.
+- **Compare:** change the intended part of the workflow and evaluate honestly. More
+  elaborate data preparation or a larger model is not guaranteed to improve predictions.
+- **Save a PDF:** use your browser's Print → Save as PDF. Expand any code you want
+  included before printing; the web view remains the interactive version.

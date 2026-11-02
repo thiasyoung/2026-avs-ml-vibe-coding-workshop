@@ -10,7 +10,7 @@ from IPython.core.inputtransformer2 import TransformerManager
 
 
 ROOT = Path(__file__).resolve().parents[2]
-EXCLUDED_PARTS = {".git", ".venv", ".ipynb_checkpoints", "archive", "outputs"}
+EXCLUDED_PARTS = {".git", ".venv", ".quarto", "_site", ".ipynb_checkpoints", "archive", "outputs"}
 
 
 def notebook_paths() -> list[Path]:

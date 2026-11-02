@@ -8,6 +8,14 @@ This repository is a concise workshop for vibe coding machine learning pipelines
 
 Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example folder at a time. Each sequence begins with executable acquisition code.
 
+## Read the workshop as a website
+
+The Quarto reading view provides searchable navigation, explanations and saved plots,
+with Python code folded until you expand it. Keep using the original notebooks in
+VS Code to run or edit the examples. Website publishing never reruns the notebooks.
+See [preview and GitHub Pages setup](docs/QUARTO_WEBSITE.md); the reading site is
+available only after Pages is activated and its first deployment succeeds.
+
 ## Notebook order
 
 Notebook numbering restarts at `00` in each module. BP runs from `00` to `04`;

@@ -6,6 +6,11 @@ __pycache__/
 # Jupyter creates these automatically
 .ipynb_checkpoints/
 
+# Quarto builds are published as Pages artifacts, not source commits.
+/_site/
+/.quarto/
+**/*.quarto_ipynb
+
 # Generated workshop artifacts are ignored by default. An isolated runner
 # output-migration step must select and stage only its intended deliverables.
 **/outputs/

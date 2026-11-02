@@ -1,0 +1,70 @@
+name: Publish workshop website
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Rendering untrusted PR content never receives publishing credentials or API keys.
+permissions:
+  contents: read
+
+concurrency:
+  group: workshop-website-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Render saved notebook outputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: '1.9.38'
+
+      - name: Set up Python for the static-site validator
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Render without executing notebook cells
+        run: quarto render --no-execute
+
+      - name: Check pages, links, downloads, and folded code
+        run: python scripts/ci/validate_website.py
+
+      - name: Ensure source notebooks were not rewritten
+        run: git diff --exit-code -- '*.ipynb'
+
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check Pages configuration
+        uses: actions/configure-pages@v5
+
+      - name: Publish the rendered site
+        id: deployment
+        uses: actions/deploy-pages@v4

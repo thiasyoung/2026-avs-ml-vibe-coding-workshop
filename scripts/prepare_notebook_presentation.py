@@ -13,7 +13,7 @@ from pathlib import Path
 import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDED = {".git", ".venv", ".ipynb_checkpoints", "archive", "outputs"}
+EXCLUDED = {".git", ".venv", ".quarto", "_site", ".ipynb_checkpoints", "archive", "outputs"}
 MARKER = "workshop_presentation"
 GUIDE = (
     "### Reading and presenting this notebook\n\n"
