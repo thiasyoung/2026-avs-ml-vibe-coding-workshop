@@ -33,6 +33,13 @@ def navigation_links(items: list) -> list[str]:
 
 
 class QuartoConfigurationTests(unittest.TestCase):
+    def test_homepage_heading_matches_the_workshop_website_title(self):
+        title = "How to Use AI to Vibe Code and Build a Scientific Machine Learning Pipeline"
+        homepage = (ROOT / "index.qmd").read_text(encoding="utf-8")
+        frontmatter = yaml.safe_load(homepage.split("---", 2)[1])
+        self.assertEqual(CONFIG["website"]["title"], title)
+        self.assertEqual(frontmatter["title"], title)
+
     def test_only_participant_pages_are_rendered_and_every_page_is_in_navigation(self):
         rendered = CONFIG["project"]["render"]
         expected = {p.relative_to(ROOT).as_posix() for p in site_check.page_sources()}

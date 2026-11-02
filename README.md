@@ -15,6 +15,10 @@ with Python code folded until you expand it. Keep using the original notebooks i
 VS Code to run or edit the examples. Website publishing never reruns the notebooks.
 See [preview and GitHub Pages setup](docs/QUARTO_WEBSITE.md); the reading site is
 available only after Pages is activated and its first deployment succeeds.
+In **Settings → Pages**, set **Source: GitHub Actions**, not **Deploy from a branch**.
+The branch-based publisher shows the README and raw notebook links instead of the
+Quarto tutorial pages. Run **Actions → Publish workshop website** after choosing
+the correct source.
 
 ## Notebook order
 

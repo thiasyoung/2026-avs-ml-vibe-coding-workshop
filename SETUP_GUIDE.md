@@ -195,7 +195,7 @@ For example:
 
 ### Path B (advanced users)— Containerized local-LLM agent workflow
 
-Use the separate local-agent repository: `<CONTAINERIZED_LOCAL_LLM_AGENT_REPOSITORY_URL>`. Follow its instructions to set up and run the containerized local-LLM agent, then use it with this same local workshop folder. The local-agent repository owns all container, model, and agent instructions.
+Use the separate local-agent repository: `https://github.com/ethanmick8/local_llm_avs_workshop_26`. Follow its instructions to set up and run the containerized local-LLM agent, then use it with this same local workshop folder. The local-agent repository owns all container, model, and agent instructions.
 
 ## Pre-work checklist
 

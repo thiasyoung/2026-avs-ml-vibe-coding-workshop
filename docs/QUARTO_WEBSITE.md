@@ -88,6 +88,34 @@ The expected address, once activated, is
 [the workshop reading website](https://thiasyoung.github.io/2026-avs-ml-vibe-coding-workshop/).
 See [GitHub's custom Pages workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
+## If the website looks like the README or notebooks open as raw files
+
+This usually means GitHub's default Jekyll publisher is serving the repository
+instead of the Quarto build. Jekyll does not render these notebooks into the
+configured tutorial pages. A successful **pages build and deployment** run does
+not mean **Publish workshop website** succeeded.
+
+1. Open **Settings → Pages → Build and deployment → Source** and select
+   **GitHub Actions**, **not Deploy from a branch**. Do not select main/root or
+   main/docs, add a Jekyll theme, or create another publishing workflow.
+2. Open **Actions → Publish workshop website → Run workflow**, select **main**,
+   and run it. Alternatively, rerun the existing failed workflow after correcting
+   the setting. Both **Render saved notebook outputs** and **Deploy to GitHub
+   Pages** must be green; a successful build alone has not published the site.
+3. Open the deployment URL and hard-refresh it (`Ctrl+Shift+R` on Windows/Linux,
+   `Cmd+Shift+R` on macOS). The homepage should say **How to Use AI to Vibe Code
+   and Build a Scientific Machine Learning Pipeline**, with a module sidebar and
+   search, not just **AVS workshop code**.
+4. Select a notebook in the sidebar. Its reading URL ends in `.html`, for example
+   `01_boiling_point/01_BP_Chemprop_GNN.html`. It should display explanations and
+   saved plots, with **Show Python code** controls that expand individual cells.
+   A `.ipynb` link is the original executable notebook, not the HTML reading page.
+
+If deployment fails at **Check Pages configuration**, check the Pages Source
+setting first. Do not enable notebook execution, change API secrets, or publish
+the source root to fix this symptom. The notebook reading pages are static HTML;
+they preserve the notebook's content but are not a live Jupyter editor.
+
 ## Updating and using it
 
 - Pushes to main rebuild/deploy. Pull requests into main build and validate only;

@@ -1,5 +1,5 @@
 ---
-title: "Machine learning through vibe coding"
+title: "How to Use AI to Vibe Code and Build a Scientific Machine Learning Pipeline"
 subtitle: "2026 AVS Workshop"
 toc: false
 ---
