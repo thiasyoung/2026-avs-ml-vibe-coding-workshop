@@ -22,6 +22,7 @@ jobs:
     outputs:
       run_codex: ${{ steps.request.outputs.run_codex }}
       issue_number: ${{ steps.request.outputs.issue_number }}
+      actor: ${{ steps.request.outputs.actor }}
       branch: ${{ steps.request.outputs.branch }}
       command: ${{ steps.request.outputs.command }}
     steps:
@@ -30,7 +31,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Authorize request for the shared main branch
+      - name: Authorize request for the user's development branch
         id: request
         uses: actions/github-script@v8
         env:
@@ -81,22 +82,23 @@ jobs:
               return;
             }
 
-            const branch = 'main';
-            await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
+            const branch = `dev/${actor.toLowerCase()}`;
 
             const redactCredentials = (value) => String(value || '').replace(
               /\b(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b/g,
               '[REDACTED]',
             );
-            // Legacy branch-management commands now validate main only.
-            const command = /^@codex\s+(sync with main|prepare merge)\s*[.!]?\s*$/i.test(text.trim())
-              ? 'validate_main' : 'development';
+            const special = /^@codex\s+(sync with main|prepare merge)\s*[.!]?\s*$/i.exec(text.trim());
+            const command = special
+              ? (special[1].toLowerCase() === 'sync with main' ? 'sync_with_main' : 'prepare_merge')
+              : 'development';
             const request = {
               issue_number: event.issue.number,
               issue_title: redactCredentials(event.issue.title),
               request: redactCredentials(text),
               actor,
               branch,
+              base_branch: 'main',
               event: context.eventName,
               command,
             };
@@ -107,6 +109,7 @@ jobs:
             );
             core.setOutput('run_codex', 'true');
             core.setOutput('issue_number', String(event.issue.number));
+            core.setOutput('actor', actor.toLowerCase());
             core.setOutput('branch', branch);
             core.setOutput('command', command);
 
@@ -128,32 +131,62 @@ jobs:
           retention-days: 1
 
   codex:
-    name: Run Codex and update main
+    name: Run Codex and publish development work
     needs: prepare
     if: needs.prepare.outputs.run_codex == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 300
     concurrency:
-      # Only authorized requests reach this shared lock. Each starts from the
-      # latest main after the preceding request has finished publishing.
-      group: codex-workshop-${{ github.repository }}-main
+      # Only authorized requests reach the lock for their own branch. Different
+      # users may work in parallel; follow-ups for one user wait their turn.
+      group: codex-workshop-${{ github.repository }}-${{ needs.prepare.outputs.branch }}
       queue: max
       cancel-in-progress: false
     permissions:
       contents: write
       issues: write
+      pull-requests: write
     env:
       ISSUE_NUMBER: ${{ needs.prepare.outputs.issue_number }}
       CODEX_BRANCH: ${{ needs.prepare.outputs.branch }}
+      CODEX_ACTOR: ${{ needs.prepare.outputs.actor }}
+      BASE_BRANCH: main
     steps:
-      - name: Check out the latest main branch
+      - name: Create or reuse the requester's development branch
+        id: development_branch
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const branch = process.env.CODEX_BRANCH;
+            if (branch !== `dev/${process.env.CODEX_ACTOR.toLowerCase()}`) {
+              throw new Error('Refusing an unexpected development branch.');
+            }
+            try {
+              await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              const source = await github.rest.git.getRef({ ...context.repo, ref: 'heads/main' });
+              try {
+                await github.rest.git.createRef({
+                  ...context.repo,
+                  ref: `refs/heads/${branch}`,
+                  sha: source.data.object.sha,
+                });
+              } catch (createError) {
+                if (createError.status !== 422) throw createError;
+                // Reuse a branch created concurrently only if it now exists.
+                await github.rest.git.getRef({ ...context.repo, ref: `heads/${branch}` });
+              }
+            }
+
+      - name: Check out the requester's development branch
         uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ needs.prepare.outputs.branch }}
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Record the starting main revision
+      - name: Record the starting development revision
         id: start
         shell: bash
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
@@ -168,6 +201,26 @@ jobs:
 
       - name: Create locked workshop environment
         run: uv sync --locked --no-install-project
+
+      - name: Bring development branch up to date with main
+        id: sync
+        if: needs.prepare.outputs.command == 'sync_with_main'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          trap 'git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch origin "$BASE_BRANCH"
+          if ! git merge --no-commit --no-ff FETCH_HEAD; then
+            if [ -z "$(git diff --name-only --diff-filter=U)" ]; then
+              echo "::error::Could not start the merge from main."
+              exit 1
+            fi
+            echo "::warning::Merge conflicts need resolution before publishing."
+          fi
 
       - name: Download request
         uses: actions/download-artifact@v7
@@ -198,7 +251,7 @@ jobs:
           prompt-file: .codex-agent-prompt.md
           output-schema-file: .github/codex/issue-result.schema.json
 
-      - name: Commit completed workshop work to main
+      - name: Commit completed workshop work to the development branch
         id: publish
         if: success() && steps.codex_run.outcome == 'success'
         shell: bash
@@ -206,9 +259,14 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           START_SHA: ${{ steps.start.outputs.sha }}
         run: |
-          if [ "$CODEX_BRANCH" != main ] || [ "$(git branch --show-current)" != main ] \
+          if [ "$CODEX_BRANCH" != "dev/${CODEX_ACTOR,,}" ] \
+             || [ "$(git branch --show-current)" != "$CODEX_BRANCH" ] \
              || [ "$(git rev-parse HEAD)" != "$START_SHA" ]; then
             echo "::error::Checkout changed unexpectedly; refusing to publish."
+            exit 1
+          fi
+          if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+            echo "::error::Unresolved merge conflicts remain; nothing was pushed."
             exit 1
           fi
           rm -f codex-agent-request.json .codex-agent-prompt.md
@@ -229,33 +287,72 @@ jobs:
               -size -50M -print0
           )
 
-          if git diff --cached --quiet; then
+          if git diff --cached --quiet && ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
             echo 'status=no_changes' >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m "codex: Issue #${ISSUE_NUMBER}"
-          # Other runner requests share the main lock, but a person may still
-          # push while Codex works. Never rebase untested changes or force-push.
+          # Other requests for this user share the branch lock, but a person
+          # may still push. Never rebase untested changes or force-push.
           trap 'git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"' EXIT
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git fetch origin "$CODEX_BRANCH"
           if [ "$(git rev-parse FETCH_HEAD)" != "$START_SHA" ]; then
-            echo "::error::main changed during this run. Nothing was pushed; submit the request again to use the latest main."
+            echo "::error::Development branch changed during this run. Nothing was pushed; submit the request again to use its latest revision."
             exit 1
           fi
           git push origin "HEAD:refs/heads/${CODEX_BRANCH}"
           echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo 'status=pushed' >> "$GITHUB_OUTPUT"
 
+      - name: Create merge pull request on request
+        id: merge_pr
+        if: success() && needs.prepare.outputs.command == 'prepare_merge' && (steps.publish.outputs.status == 'pushed' || steps.publish.outputs.status == 'no_changes')
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const head = process.env.CODEX_BRANCH;
+            if (head !== `dev/${process.env.CODEX_ACTOR.toLowerCase()}`) {
+              throw new Error('Refusing an unexpected pull-request branch.');
+            }
+            const openPulls = await github.rest.pulls.list({
+              ...context.repo,
+              state: 'open',
+              head: `${context.repo.owner}:${head}`,
+              base: process.env.BASE_BRANCH,
+              per_page: 1,
+            });
+            let pull = openPulls.data[0];
+            if (!pull) {
+              const comparison = await github.rest.repos.compareCommitsWithBasehead({
+                ...context.repo,
+                basehead: `${process.env.BASE_BRANCH}...${head}`,
+              });
+              if (comparison.data.ahead_by === 0) {
+                core.setOutput('status', 'no_difference');
+                return;
+              }
+              pull = (await github.rest.pulls.create({
+                ...context.repo,
+                title: `Workshop updates from ${head}`,
+                head,
+                base: process.env.BASE_BRANCH,
+                body: `Prepared by Codex in response to Issue #${process.env.ISSUE_NUMBER}. Review before merging.`,
+              })).data;
+            }
+            core.setOutput('url', pull.html_url);
+
       - name: Report result on Issue
         if: always()
         uses: actions/github-script@v8
         env:
-          STATUS: ${{ steps.publish.outputs.status || 'failed' }}
+          STATUS: ${{ steps.merge_pr.outcome == 'failure' && 'failed' || steps.publish.outputs.status || 'failed' }}
           BRANCH: ${{ needs.prepare.outputs.branch }}
           COMMIT_SHA: ${{ steps.publish.outputs.commit_sha || '' }}
+          PR_URL: ${{ steps.merge_pr.outputs.url || '' }}
+          PR_STATUS: ${{ steps.merge_pr.outputs.status || '' }}
           RAW_RESULT: ${{ steps.codex_run.outputs.final-message || '' }}
         with:
           script: |
@@ -264,7 +361,9 @@ jobs:
             let result = {};
             try { result = JSON.parse(process.env.RAW_RESULT); } catch (_) {}
             const summary = status === 'failed'
-              ? 'The request was not published to main. Check the workflow log for a run error, a newer main revision, or a branch-protection rejection. Retry the request after resolving the cause.'
+              ? (process.env.COMMIT_SHA
+                ? 'Changes were pushed to the development branch, but a later step failed. Check the workflow log before retrying the command.'
+                : 'The request was not published to the development branch. Check the workflow log for a run error, a newer branch revision, unresolved conflicts, or a branch-protection rejection. Retry after resolving the cause.')
               : result.summary || (status === 'pushed'
               ? 'Codex completed the requested work and committed the changes.'
               : status === 'no_changes'
@@ -277,8 +376,13 @@ jobs:
             const commit = process.env.COMMIT_SHA
               ? `\n\nCommit: https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${process.env.COMMIT_SHA}`
               : '';
+            const pullRequest = process.env.PR_URL
+              ? `\n\nMerge pull request: ${process.env.PR_URL}`
+              : process.env.PR_STATUS === 'no_difference'
+                ? '\n\nNo pull request was created: the development branch has no commits ahead of main.'
+                : '';
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: Number(process.env.ISSUE_NUMBER),
-              body: `## Codex workshop runner\n\n${summary}${tests}\n\nShared branch: [${branch}](${branchUrl})${commit}\n\nStatus: **${status}**`,
+              body: `## Codex workshop runner\n\n${summary}${tests}\n\nDevelopment branch: [${branch}](${branchUrl})${commit}${pullRequest}\n\nStatus: **${status}**\n\nThe runner never pushes directly to main or automatically merges.`,
             });

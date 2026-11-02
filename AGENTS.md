@@ -42,9 +42,9 @@ uv run --locked python -m unittest discover -s tests -v
 
 For a full workshop run, use the module's numbered notebook sequence and record the exact commands and outcome. Start with the smallest sequence that fulfills the task, but do not skip an explicitly requested acquisition, model download, training, or output-generation step.
 
-## Shared main-branch policy
+## Per-user development-branch policy
 
-- Authorized Issue requests from all repository editors target the shared `main` branch, not a per-user development branch. Do not create or switch to `dev/<github-username>` for runner work.
-- The runner serializes authorized requests across users and checks out the latest main after acquiring its shared lock. Codex edits and tests the checkout; the workflow, not Codex, commits and pushes directly to main. No pull request or manual approval is required for ordinary runner work.
-- Never force-push, rewrite shared history, or overwrite external concurrent changes. If main advances during a run, publishing fails and the request must be retried against the updated main.
-- Existing development branches are not automatically merged or deleted. Legacy sync/prepare-merge commands only validate the main checkout.
+- Authorized Issue requests target `dev/<github-username>` using the authenticated Issue/comment sender, never a username supplied in the text. Follow-up comments use the commenting user's branch. Stay on the branch checked out by the runner; do not switch to main or another user's branch.
+- A missing branch starts from the latest main; an existing branch is reused without resetting it. Requests for one branch are serialized, while different users may run in parallel. Codex edits and tests; the workflow, not Codex, commits and pushes. Ordinary development requires no pull request or manual approval.
+- Never push directly to main, force-push, rewrite history, or overwrite concurrent changes. If the development branch advances externally during a run, publishing fails and the request must be retried against its updated revision.
+- `@codex sync with main` merges main into the requester's development branch. Resolve straightforward conflicts, stage them, and leave the commit to the workflow; report conflicts needing human review without publishing them. `@codex prepare merge` validates that branch and asks the workflow to create or reuse a pull request into main. Never automatically merge or delete a development branch.
