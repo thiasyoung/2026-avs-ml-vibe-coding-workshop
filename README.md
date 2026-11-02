@@ -1,12 +1,22 @@
-# AVS workshop code
+# How to Use AI to Vibe Code and Build a Scientific Machine Learning Pipeline
 
-This repository is a concise workshop for vibe coding machine learning pipelines, consisting of three examples:
+**2026 AVS Workshop** — use a coding assistant to build a pipeline, investigate data
+quality, and test model ideas on three scientific datasets. You will work with
+Jupyter notebooks in VS Code; completed examples are available when you want a reference.
 
-1. molecular structure to boiling point (prompt-driven regression, with optional completed model references);
-2. IR spectrum to functional-group presence (multi-label classification; data carpentry focus); and
-3. HTEM deposition recipes and substrate XY to local thickness/conductivity maps (spatial process emulation; algorithm/architecture experimentation).
+## Start here
 
-Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example folder at a time. Each sequence begins with acquisition pre-work; prepared data lets the live session focus on the workshop exercises.
+1. Download or clone the **whole repository**, not individual notebooks: they use
+   local helpers and prepared data.
+2. Follow the [setup guide](SETUP_GUIDE.md), then run
+   [Check your installation](00_Test_Installation.ipynb) using the workshop `.venv` kernel.
+3. Read the [workshop roadmap](00_Workshop_Roadmap.ipynb), then follow the main
+   notebooks in each module below. The `00` acquisition notebooks are pre-work;
+   you do not need to repeat a full scrape during the session.
+
+Prefer to read first? Open the [workshop website](https://thiasyoung.github.io/2026-avs-ml-vibe-coding-workshop/)
+for searchable pages with expandable code and saved figures. Run and edit notebooks
+locally; the website is not a live Python session.
 
 > [!IMPORTANT]
 > **IR module: download the dataset before the workshop.**
@@ -14,57 +24,73 @@ Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example fo
 > Save it inside your cloned repository as `02_ir_functional_groups/outputs/nist_acquisition/ir_raw_checkpoint.parquet` (create the folders if needed).
 > Cloning or downloading the repository does **not** include this file. Using it avoids repeating the lengthy NIST acquisition.
 
-## Read the workshop as a website
+## Workshop modules
 
-The Quarto reading view uses the repository's existing notebooks and Markdown files,
-with searchable navigation, saved plots, and expandable code. Keep editing and running
-the original notebooks in VS Code; do not convert them or add HTML beside them.
-GitHub Actions builds the web-only HTML separately when publishing. No local render
-is needed, and website publishing never reruns the notebooks.
-See [preview and GitHub Pages setup](docs/QUARTO_WEBSITE.md); the reading site is
-available only after Pages is activated and its first deployment succeeds.
-In **Settings → Pages**, set **Source: GitHub Actions**, not **Deploy from a branch**.
-The branch-based publisher shows the README and raw notebook links instead of the
-Quarto tutorial pages. Run **Actions → Publish workshop website** after choosing
-the correct source.
-
-## Notebook order
-
-Notebook numbering restarts at `00` in each module. All three main paths run `00`–`02`.
-Completed references live in each module's `examples/` folder. Lettered examples such as `01a` or `02a`
-are alternatives to the corresponding numbered notebook, not additional main steps.
+Numbering restarts in each folder. Follow **00 → 01 → 02** for the main path;
+`examples/` contains optional references, not extra required steps.
 
 ### 01_boiling_point
 
-- [00 — Get data](01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb) — acquisition pre-work; reuse the prepared SMILES/BP data during the session.
-- [01 — Ten steps in prompts](01_boiling_point/01_Ten_Steps_in_Prompts.ipynb) — template for the machine-learning workflow.
-- [02 — Vibe-coding workbook](01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb) — copy and adapt the prompt, then have your assistant populate and execute the workbook.
+**Build a pipeline:** predict reported boiling point in kelvin from a molecule's SMILES string.
 
-Optional [BP examples](01_boiling_point/examples/README.md) hold Chemprop, MoLFormer,
-the one-shot prompt and completed workflow, and both downloadable prompt text files.
-These are references, not additional required workshop steps.
+- [00 — Get data](01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb) — acquisition and cleansing; use prepared data in the session.
+- [01 — Ten steps in prompts](01_boiling_point/01_Ten_Steps_in_Prompts.ipynb) — the workflow template.
+- [02 — Vibe-coding workbook](01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb) — adapt the prompt and ask your assistant to build and execute your pipeline.
+
+[Module guide](01_boiling_point/README.md) · [Optional examples](01_boiling_point/examples/README.md):
+Chemprop, frozen MoLFormer, and one-shot prompting/workflow references.
 
 ### 02_ir_functional_groups
 
-- [00 — Get data](02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb) — pre-work NIST acquisition of native IR spectra, SMILES, and functional-group labels.
-- [01 — Vibe-coding carpentry workbook](02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb) — edit one prompt and have your assistant examine, prepare and validate the trainer's input files.
-- [02 — Static training](02_ir_functional_groups/02_IR_Optimized_Training.ipynb) — static neural-network classifier for comparing prepared datasets on fixed evaluation splits.
+**Improve the data:** predict functional-group presence from IR spectra while keeping the classifier fixed.
 
-See [IR references](02_ir_functional_groups/examples/README.md) for the completed 01
-baseline, strategies 01a–01d and 03 comparison. The native IR checkpoint is required.
+- [00 — Get data](02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb) — acquire native spectra and labels, or reuse the release checkpoint.
+- [01 — Data-carpentry workbook](02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb) — investigate your hypothesis and generate uniform training data.
+- [02 — Static training](02_ir_functional_groups/02_IR_Optimized_Training.ipynb) — select your prepared dataset and measure its effect with the same model and holdouts.
+
+[Module guide](02_ir_functional_groups/README.md) · [Optional examples](02_ir_functional_groups/examples/README.md):
+a minimal baseline, four carpentry strategies, and their results comparison.
 
 ### 03_htem_conductivity
 
-- [00 — Get data](03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb) — HTEM acquisition of compact process conditions, substrate positions, and scalar properties without full spectra.
-- [01 — Prepare data](03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb) — completed preparation of shared chemistry/process features and grouped train/validation/test splits.
-- [02 — Vibe-coding workbook](03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb) — edit one prompt to build, execute and analyze model experiments on the fixed prepared data.
+**Improve the model:** predict thickness and conductivity at each substrate XY location from process inputs.
 
-Optional [HTEM references](03_htem_conductivity/examples/README.md) include the completed
-linear Ridge workflow, four alternative architectures and the 03 comparison notebook.
+- [00 — Get data](03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb) — compact process and scalar-property records, without full spectra.
+- [01 — Prepare data](03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb) — supplied preparation of shared features and grouped splits.
+- [02 — Model-experiment workbook](03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb) — develop and analyze model experiments using those fixed inputs.
 
-Predict thickness and conductivity at each substrate location from process settings and XY coordinates—not measured film properties or spectra. See the [HTEM module guide](03_htem_conductivity/README.md) for examples, spatial maps, and run instructions.
+[Module guide](03_htem_conductivity/README.md) · [Optional examples](03_htem_conductivity/examples/README.md):
+linear Ridge, kernel Ridge, a feed-forward network, a grid GNN, Random Forest, and comparison.
+
+## Work with the prompts
+
+The BP workbook uses the ten-step template. The IR and HTEM workbooks provide a
+starting approach plus blanks for your hypothesis, plan, vibe-coding strategy,
+effort priorities and budget. Edit their **EDITABLE** text freely; keep the
+**FIXED input/output contracts** intact. Copy the **whole prompt** into your coding
+assistant. Running a prompt-only notebook does not call an AI model.
+
+Ask the assistant to populate the workbook or create a separate notebook. Inspect
+its code, run its checks and save genuine results. Use validation data for decisions;
+reserve test data for final evaluation. More elaborate preparation or a larger model
+is not guaranteed to improve predictions.
+
+## Find your files
+
+- Module roots contain the main notebooks and their guide.
+- `examples/` contains optional worked notebooks, prompt text, and example-running scripts.
+- `lib/` in IR and HTEM contains reusable helpers; notebook setup cells locate them automatically.
+- `data/` contains supplied inputs and frozen references; `outputs/` holds generated runs.
+  IR reference carpentry datasets also use `examples/outputs/`.
+- Your exercises use `outputs/bp_workbook/`, `outputs/workshop_carpentry/` (IR), or
+  `outputs/htem_workbook/<unique_experiment_id>/` (HTEM), separate from reference runs.
+
+Saved notebook figures can be read without retraining. Model weights and full
+run folders are not all distributed: regenerating a comparison may require running
+its examples. Keep the complete folder layout when downloading the materials.
 
 ## Setup
+
 
 This is the workshop-content repository. Participants use UV and VS Code, then choose either Codex in VS Code or the separate containerized local-LLM agent workflow. See [SETUP_GUIDE.md](SETUP_GUIDE.md).
 
@@ -82,28 +108,23 @@ The project pins Python 3.11 in `.python-version`, declares all dependencies in 
 
 Run `00_Test_Installation.ipynb` or the command-line verifier before the workshop. The first run of the optional `01_boiling_point/examples/02_BP_Foundation_Model.ipynb` downloads the public MoLFormer checkpoint (about 188 MB); rehearse it once before the workshop or ensure the Hugging Face cache travels with the workshop computers.
 
-## Notes for presenters
+## Read explanations and outputs with code folded
 
-### Follow the workflow with code hidden
+Each code cell has a descriptive heading and a short **Code Summary:** explaining
+its purpose. In VS Code, open the Command Palette (`Ctrl+Shift+P` on Windows/Linux,
+`Cmd+Shift+P` on macOS) and run **Notebook: Collapse All Cell Inputs**. Leave outputs
+expanded; use **Expand All Cell Inputs** or expand one cell when you want to edit.
+VS Code may restore a previous view. JupyterLab uses the saved input-collapse hints
+and its left-hand cell collapser; GitHub's notebook preview may still show code.
+See [reading and notebook controls](docs/NOTEBOOK_PRESENTATION.md).
 
-Code Summary: Each notebook code cell has a descriptive heading and a concise paragraph
-beginning with "Code Summary: " immediately above it, explaining what the following cell
-does in the workshop. This includes worked examples and the instructor feature study,
-so you can follow the workflow with code hidden.
-Blank practice cells are identified as exercises, not completed work. Code and saved outputs
-are unchanged by this presentation update.
+The website shows saved outputs, not refreshed training runs. Expand **Show Python code**
+as needed, or use your browser's **Print → Save as PDF** for a static copy.
 
-For an explanations-and-results view in **VS Code**, open the Command Palette and run
-**Notebook: Collapse All Cell Inputs** (search `Collapse All Cell Inputs`). Run
-**Expand All Cell Inputs** to edit code again, or expand just the cell you want. Outputs
-remain visible. VS Code may restore a previous editor view, so use this command even if
-the notebook's input-collapse metadata is already set. JupyterLab uses the saved
-`jupyter.source_hidden` hints and also provides a left-hand cell collapser. GitHub's
-static notebook preview may still show code; hiding inputs is a reader view, not redaction.
-See [the notebook presentation guide](docs/NOTEBOOK_PRESENTATION.md).
+## For repository owners and contributors
 
-- Run each acquisition notebook before the workshop and retain its output. The IR scraper is intentionally a pre-work step; the workshop starts at the carpentry notebook with its downloaded data. The static IR trainer logs TensorBoard events, saves checkpoints every 25 epochs, restores the lowest eligible validation-loss weights, and writes test metrics and a summary plot. Its 2,000-epoch cap is a resource limit; run documentation records whether the robust stopping rule actually triggered.
-
-## Maintainer automation
-
-Trusted repository collaborators with write access can include `@codex` in an Issue or Issue comment to use the hosted Codex workshop runner. Requests create or reuse the sender's `dev/<username>` branch, never push directly to main, and queue per user while different users can work in parallel. The runner can set up the UV environment, download public data/models, execute notebooks, and commit populated notebooks and useful outputs. It replies on the Issue with results and branch/commit links. Use `@codex sync with main` to update your branch or `@codex prepare merge` to request a pull request; ordinary work needs no PR or manual approval. The runner never force-pushes or automatically merges. See [docs/GITHUB_CODEX_AGENT.md](docs/GITHUB_CODEX_AGENT.md) for activation, limits, and troubleshooting.
+Website publishing and runner administration are optional, not attendee setup:
+see [GitHub Pages instructions](docs/QUARTO_WEBSITE.md) and
+[the hosted Issue runner guide](docs/GITHUB_CODEX_AGENT.md). The runner uses each
+authorized collaborator's `dev/<username>` branch; changes reach the published
+workshop after merging into main.

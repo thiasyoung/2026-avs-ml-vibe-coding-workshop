@@ -21,7 +21,7 @@ then measure its effect using the same static neural network and fixed evaluatio
    their units, SMILES, and labels. This is pre-work, not the live workshop exercise.
 - [01 — Vibe-coding carpentry workbook](01_IR_Vibe_Coding_Data_Carpentry.ipynb): edit
    one opening prompt, then ask your coding assistant to implement, execute and check
-   the examination and preparation. The prompt specifies the complete training handoff.
+   the examination and preparation. The fixed input/output contract keeps its results compatible with notebook 02.
 - [02 — Static training](02_IR_Optimized_Training.ipynb): select a prepared dataset
    with `CARPENTRY_DIR`; train and evaluate the unchanged functional-group classifier.
 
@@ -43,7 +43,7 @@ Copy the entire prompt, including both sections, into your coding assistant.
 The workbook prompt asks the assistant to save `IR_train.parquet`,
 `IR_validation.parquet`, `IR_test.parquet`, `data_manifest.json` and `cleaning_audit.csv`
 under `outputs/workshop_carpentry/`, then point **only** notebook 02's `CARPENTRY_DIR`
-there and smoke-test its loader. It leaves model training to you. Each spectrum has
+there and smoke-test its loader. Then run notebook 02 to train the classifier. Each spectrum has
 500 finite values on the frozen grid, with the same ordered 12 binary labels.
 The worked baseline keeps using `outputs/carpentry/`, so your exercise does not
 overwrite the reference datasets or require changing the static model.

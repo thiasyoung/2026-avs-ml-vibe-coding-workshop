@@ -1,117 +1,123 @@
-# IR reference notebooks
+# IR carpentry examples
 
-The main module follows **00 acquisition → 01 prompt-only carpentry workbook →
-02 static training**. These completed notebooks are optional references:
+Use these references while developing the main
+[01 data-carpentry workbook](../01_IR_Vibe_Coding_Data_Carpentry.ipynb).
+They illustrate different hypotheses, not a required sequence or guaranteed improvements.
 
-- [01: minimal baseline](01_IR_Vibe_Coding_Data_Carpentry.ipynb) — the previous
-  completed main notebook; writes the reference dataset to `../outputs/carpentry/`.
-- **01a–01d** below — four independent hypotheses for better preparation.
-- [03: compare results](03_IR_Compare_Carpentry.ipynb) — the previous main comparison;
-  reads compatible saved model runs for the baseline and four worked strategies.
+## Choose a reference
 
-The participant workbook writes `../outputs/workshop_carpentry/` separately. Running
-these references does not populate that workbook or compare arbitrary student variants.
-The reference baseline replaces its own `../outputs/carpentry/` when rerun.
+- [01 — Minimal baseline](01_IR_Vibe_Coding_Data_Carpentry.ipynb): a complete
+  preparation/save/reload pattern; writes `../outputs/carpentry/`.
+- **01a–01d** below: independent alternatives starting from the same native data,
+  not from one another's outputs.
+- [03 — Compare reference results](03_IR_Compare_Carpentry.ipynb): reads compatible
+  saved classifier runs for the baseline and four strategies. It does not discover
+  arbitrary participant experiments.
 
-For the complete reference demonstration, run IR 00 (checkpoint reload by default),
-the completed **01 in this folder**, then these four
-independent examples. They start from the same native records, not from each other's
-outputs. Every example contains an examination prompt, executed audit, a repair
-hypothesis and implementation, and a final saved/reloaded uniform-data acceptance check.
+The baseline uses recorded numerical coordinates/signals without distinguishing
+absorbance from transmittance. It rejects malformed, nonfinite or incomplete
+records, linearly interpolates to the reference grid and min-max normalizes each
+signal. The alternatives investigate assumptions that this simple approach ignores.
 
-The completed **01 baseline is deliberately naïve**: use recorded numeric coordinates and
-signals as-is, reject malformed/nonfinite/incomplete records, linearly resize to the
-reference grid and min-max normalize each signal. It does not discuss or distinguish
-absorbance from transmittance. It is not secretly corrupted to force a bad score.
-The examples explicitly investigate the measurement assumptions that baseline ignores.
+| Example | What it changes |
+| --- | --- |
+| [01a — Omit transmittance](01a_IR_Omit_Transmittance.ipynb) | Keep absorbance only; convert coordinates explicitly, require full coverage, interpolate, and deduplicate canonical molecules while quarantining contradictory labels. |
+| [01b — Convert transmittance](01b_IR_Convert_Transmittance.ipynb) | Convert transmittance to absorbance, require full coverage, interpolate, and check labels against documented SMARTS. |
+| [01c — Padding and quality](01c_IR_Padding_and_Quality.ipynb) | Convert signals, retain spectra with at least 80% coverage, pad boundaries, and filter above the training-only 99.5th-percentile adjacent-point jump. |
+| [01d — Resampling and balancing](01d_IR_Resampling_and_Balancing.ipynb) | Convert/pad, bin-average to 250 points then upsample to 500, and cap rare-category oversampling at three presentations per original observation. |
 
-| Example | Signal/bounds/resampling policy | Additional cleansing hypothesis | `CARPENTRY_DIR` in IR 02 |
-| --- | --- | --- | --- |
-| [01a: omit transmittance](01a_IR_Omit_Transmittance.ipynb) | Absorbance only; explicit coordinate conversion; trim/full coverage; linear up/downsampling | Canonical-molecule deduplication; quarantine contradictory duplicate labels | `examples/outputs/01a_omit_transmittance` |
-| [01b: convert transmittance](01b_IR_Convert_Transmittance.ipynb) | Explicit transmittance-to-absorbance conversion; trim/full coverage; linear up/downsampling | Check/correct labels against the documented SMARTS | `examples/outputs/01b_convert_transmittance` |
-| [01c: padding and quality](01c_IR_Padding_and_Quality.ipynb) | Conversion; trim/interpolate; explicitly pad boundary regions when at least 80% is measured | Filter above the training-only 99.5th-percentile adjacent-point jump | `examples/outputs/01c_padding_and_quality` |
-| [01d: resampling and balancing](01d_IR_Resampling_and_Balancing.ipynb) | Conversion/padding; bin-average to 250 measured-region points, then upsample to the common 500-point interface | Capped rare-category oversampling; at most three presentations per original observation | `examples/outputs/01d_resampling_and_balancing` |
+Every alternative includes an examination prompt, audit, implementation and
+uniform-data check. Review missing/nonbinary labels, NaN/Inf, unit categories,
+invalid/duplicate molecules, coverage and statistical tails before deciding on a repair.
+Unusual chemistry is not automatically an error; a SMARTS check may find no corrections.
 
-All four examine missing/nonbinary categories, NaN/Inf inside arrays, unit categories,
-invalid/duplicate molecular identities, native lengths, coverage and statistical tails.
-Unusual chemistry is not automatically an error. Label checks may legitimately make
-zero corrections. Sharp real peaks or padding edges may trigger the quality filter.
-All retained native spectra are denser than 500 points. Example 01d deliberately
-tests a lower-resolution 250-point representation and then upsamples it to the common
-interface, making both operations visible. It loses detail, may hurt accuracy, and
-creates no new measured resolution. Padding assumes no absorption in
-unmeasured regions and is not an observation. Oversampling repeats existing examples,
-alters co-occurring class frequencies and combines with the static classifier's class
-weights. None of these choices is guaranteed to help prediction.
+Padding assumes no absorption outside measured support; it is not a measurement.
+Resampling to 250 points loses detail, and upsampling adds no measured resolution.
+All retained native spectra in these examples are denser than 500 points.
+A jump filter can reject real peaks or padding boundaries. Oversampling repeats
+existing observations, changes co-occurring label frequencies and combines with
+the classifier's class weights. Inspect outcomes rather than assuming these choices help.
 
-## Uniform training interface and fixed evaluation
+## Select a dataset in notebook 02
 
-Every example ends with the same prepared training schema, including 500 finite
-normalized `IR` values, the same ordered 500-point `wavenumber` grid and 12 binary
-target columns. `padded_points`, `measured_fraction`, `source_points` and
-`resampling_action` are audit metadata, never ML features. The outputs include:
+Set `CARPENTRY_DIR` in the main
+[02 classifier](../02_IR_Optimized_Training.ipynb) to one module-relative directory:
 
-- `IR_train.parquet`, `IR_validation.parquet`, `IR_test.parquet`;
-- `data_manifest.json`, `cleaning_audit.csv`, examination tables and plots.
+- Baseline: `outputs/carpentry`.
+- 01a: `examples/outputs/01a_omit_transmittance`.
+- 01b: `examples/outputs/01b_convert_transmittance`.
+- 01c: `examples/outputs/01c_padding_and_quality`.
+- 01d: `examples/outputs/01d_resampling_and_balancing`.
+- Your workbook: `outputs/workshop_carpentry`.
 
-Keep `../data/frozen_evaluation/` in Git. Both reference files contain 975 spectra;
-the original validation/test Parquets and hashes are preserved byte-for-byte. All
-native observations of held-out molecular identities are excluded before any training
-carpentry. No balancing, filtering, resampling or threshold decision uses test scores.
-IR 02 rejects changed reference copies, labels or grids. Do not delete/recreate the
-benchmark while trying different policies. Changing its grid requires a separate
-benchmark version, not a different test transformation for each strategy.
+Each directory contains `IR_train.parquet`, `IR_validation.parquet`,
+`IR_test.parquet`, `data_manifest.json` and `cleaning_audit.csv`.
+Every retained training spectrum has 500 finite normalized `IR` values, the ordered
+500-point `wavenumber` grid and 12 binary labels. Coverage/padding/resampling columns
+are audit metadata, not extra model features.
 
-## Execute and compare
+Keep `../data/frozen_evaluation/` unchanged. Validation and test each contain
+975 spectra; their files, hashes, labels, grid and ordering stay byte-identical
+across attempts. Exclude all native observations of held-out molecules before
+training carpentry. Do not recreate the benchmark or use test scores to choose
+filters, balancing or thresholds.
 
-The runnable scripts and strategy registry live here in `examples/`; shared
-preparation, examination and validation functions live in `../lib/`.
+## Run the optional reference comparison
 
-From the repository root, prepare everything, train five complete models with the
-unchanged IR 02 settings, and execute/populate `examples/03_IR_Compare_Carpentry.ipynb`:
+Use the [workshop environment](../../SETUP_GUIDE.md) and download the native IR
+checkpoint first. Read the saved outputs without rerunning if you only need a reference.
+A complete reproduction trains five models and may take substantially longer
+than the live carpentry exercise.
+
+Batch scripts and the strategy registry are in this folder; shared preparation,
+examination and validation functions are in `../lib/`.
+
+### Prepare, train and compare all five references
+
+Code Summary: Reuses the native checkpoint, prepares the reference datasets, trains the unchanged classifier and populates reference 03.
+
+From the repository root:
 
 ```bash
 uv run --locked python 02_ir_functional_groups/examples/run_carpentry_comparison.py --prepare
 ```
 
-The batch executes the completed `examples/01` reference, never the prompt-only main
-01. It selects each reference dataset explicitly even if your trainer currently points
-to the workbook output. When saving the reference-baseline run into IR 02, it also
-sets that notebook's selector back to `outputs/carpentry` so code and saved results
-agree. Select `outputs/workshop_carpentry` again to resume the participant experiment.
-IR 00 uses the existing native checkpoint with live collection disabled by default;
-no redownload is needed. The native checkpoint is required: already normalized
-rehearsal arrays are not silently substituted. To prepare and loader-smoke-test just
-the four examples without model fitting, run:
+The batch runs IR 00 with live collection disabled, the completed 01 **in this folder**,
+then 01a–01d. It does not populate the main prompt-only workbook. The native checkpoint
+is required; normalized rehearsal data cannot substitute for it.
+
+**This command updates saved reference notebooks and outputs.** It populates main
+IR 02 with the baseline run and resets its selector to `outputs/carpentry`.
+Choose `outputs/workshop_carpentry` again to resume your own exercise.
+Executed per-option training copies go under `../outputs/carpentry_comparison/`.
+
+### Prepare and check the four alternatives without training
+
+Code Summary: Executes 01a–01d and smoke-tests their output files with the actual static trainer loader.
 
 ```bash
 uv run --locked python 02_ir_functional_groups/examples/run_examples.py
 ```
 
-IR 02 reads only `IR` features. All fits use the same seed, architecture, AdamW with
-initial/maximum LR `1e-5`, cosine annealing with warm restarts and the existing robust
-20-epoch validation-slope stopping rule. Each fit restores its validation-selected
-checkpoint and saves history, predictions, metrics, weights and plots. The batch
-populates IR 02 with its real baseline run and saves executed per-option copies under
-`outputs/carpentry_comparison/`, executed with the IR module as working directory.
-IR 03 selects current matching data/model hashes, displays a summary table and figure,
-and marks stale or missing results explicitly. `strategies.py` is the single active
-list used by preparation, training and comparison; old output directories are ignored.
+### Verify a completed comparison
 
-Report the actual scores, including regressions and ties. These are bundled strategies
-and single seeded fits, not causal estimates or uncertainty intervals. Validation F1
-uses validation-tuned thresholds. Different stopping times can confound the comparison;
-IR 03 reports both selected epochs and total epochs run. Do not choose a winner by
-repeatedly consulting test scores.
-
-After a complete batch, independently verify the actual selected weights, reloaded
-predictions, metric calculations, early-stop/selection decisions, matching settings,
-input schemas and populated notebooks:
+Code Summary: Checks selected weights, reloaded predictions, metrics, stopping decisions, input schemas and populated notebooks.
 
 ```bash
 uv run --locked python 02_ir_functional_groups/examples/verify_carpentry_comparison.py
 ```
 
-The six superseded notebooks were moved to `archive/before_consolidation/` for local
-recovery; that ignored archive is not part of the active workshop or batch. Old model
-outputs were retained for provenance, not reused as results of the new examples.
+## Interpret the results
+
+All fits use only `IR` features with the same seed, architecture and settings:
+AdamW, initial/maximum LR `1e-5`, cosine annealing with warm restarts, and the robust
+20-epoch validation-slope stopping rule. Each restores its validation-selected
+checkpoint and saves real history, predictions, metrics and plots.
+`strategies.py` lists the active alternatives; other output folders are ignored.
+
+Reference 03 accepts only current matching data/model hashes and settings, and
+marks stale or missing runs explicitly. It reports selected epochs and total
+epochs because different stopping times can affect the comparison.
+Validation F1 uses validation-tuned thresholds. These are bundled strategies and
+single seeded fits, not causal estimates or uncertainty intervals. Report gains,
+ties and regressions; do not repeatedly consult test scores to choose a winner.

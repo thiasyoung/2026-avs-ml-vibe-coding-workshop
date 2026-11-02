@@ -32,9 +32,9 @@ the methods are not claimed to be globally best on this dataset.
   00_BP_Get_Data_NISTChemPy_v2.ipynb   # acquisition pre-work
   01_Ten_Steps_in_Prompts.ipynb       # workflow template
   02_BP_Vibe_Coding_Workbook.ipynb    # hands-on prompt and workspace
-  data/                             # packaged data fallback
-  outputs/                          # acquired data and generated results
-  examples/                           # optional demos and prompt text files
+  data/                            # packaged data fallback
+  outputs/                         # acquired data and generated results
+  examples/                        # optional demos and prompt text files
 ```
 
 Keep shared data and generated artifacts at the module root, not inside `examples/`.

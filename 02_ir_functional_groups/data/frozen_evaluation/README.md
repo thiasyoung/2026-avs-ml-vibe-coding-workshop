@@ -2,9 +2,9 @@
 
 Keep these files in the workshop repository, including both Parquets and
 `evaluation_contract.json`. They are approximately 8.6 MB together and allow
-collaborators and GitHub runners to use the same evaluation task.
+all participants to use the same evaluation task.
 
-These are the pre-existing validation and test files, preserved byte-for-byte.
+These are the fixed validation and test files used for every carpentry comparison.
 Each contains 975 spectra on the original shared 500-point grid from 600.88402
 to 3846 cm^-1. They retain the original per-spectrum min-max normalization.
 The contract records both SHA-256 hashes, ordered labels and grid.
@@ -21,5 +21,5 @@ or split was ideal. It does not retroactively replace legacy validation/test
 membership with the newer canonical-grouped splitting scheme. If you intentionally
 change the reference grid, eligible measurements or reference processing, create
 a new benchmark version and rerun every comparison; do not silently replace this
-reference during an ordinary carpentry attempt. On installations with no reference
-and no legacy holdouts, IR 01 can initialize a grouped reference once.
+reference during an ordinary carpentry attempt. If files are missing, restore them
+from the repository rather than initializing new splits in your workbook.

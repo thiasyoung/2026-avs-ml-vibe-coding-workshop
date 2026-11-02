@@ -1,6 +1,6 @@
 # Shared frozen HTEM feature matrices
 
-Instructor-selected representation: **curated composition descriptors + frozen
+Shared workshop representation: **curated composition descriptors + frozen
 ALIGNN reference-crystal embeddings + reference DOS**, plus the existing recipe,
 source/power pairing, physical XY and local-temperature inputs.
 
@@ -8,8 +8,8 @@ source/power pairing, physical XY and local-temperature inputs.
 - Whole-deposition/identical-recipe training/validation/test splits are unchanged.
 - `X` is the model input; `y` contains two standardized log10 targets, with
   `y_mask` distinguishing observed labels. Missing targets are never imputed.
-- IDs, physical XY and legacy-evaluation flags remain metadata beside the arrays;
-  IDs and label-availability masks are not model features.
+- Physical XY is included in the inputs and retained beside predictions for mapping.
+  IDs, label-availability masks and legacy-evaluation flags are metadata, not features.
 - Imputation, scaling, categorical vocabularies and target scaling use training
   data only. Reference-crystal PCA was fitted on unique active training compositions.
 - All five architectures load these exact matrices when generated preparation is
@@ -25,6 +25,6 @@ The instructor study selected features on the existing grouped validation data,
 not test results. Its modest gain is not independently statistically established.
 Reference crystals/DOS do not identify actual source-target or film phases.
 
-Keep this folder and its companion reference/specification files in Git. Do not
+Keep this folder and its companion reference/specification files unchanged. Do not
 regenerate features separately inside an architecture notebook. A deliberate new
 feature specification requires rerunning preparation, all five models and comparison.

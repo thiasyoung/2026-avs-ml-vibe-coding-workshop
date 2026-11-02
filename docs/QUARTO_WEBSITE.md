@@ -11,6 +11,11 @@ is no need to convert notebooks manually, add HTML pages to Git, or render local
 Quarto does require HTML for a browser-based website, but that generated output is
 a separate deployment artifact, not a replacement for the repository's notebooks.
 
+This guide is for repository owners and contributors. Attendees can open the
+[reading website](https://thiasyoung.github.io/2026-avs-ml-vibe-coding-workshop/)
+and follow [SETUP_GUIDE.md](../SETUP_GUIDE.md) to run notebooks; they do not need
+to install Quarto or configure GitHub Pages.
+
 ## What gets published
 
 The explicit list in `_quarto.yml` includes the getting-started notebooks, setup
@@ -19,11 +24,12 @@ instructor scratch work, archives, generated notebook copies, datasets, model
 weights, and the local environment. Notebook downloads are byte-for-byte copies
 of the source files, not newly executed notebooks.
 
-The BP sidebar follows the live path: `00` acquisition pre-work, `01` ten-step
-template, then `02` vibe-coding practice. Its nested **Examples** section contains
-the optional neural and one-shot demonstrations. The examples guide also links to
-the two plain-text prompts, published as unchanged downloads from `examples/`.
-Shared datasets and `outputs/` remain excluded from the website.
+Each module's sidebar follows its `00`–`02` main path, with completed references
+nested under **Examples (optional)**. BP focuses on the full pipeline, IR on
+carpentry with a fixed classifier, and HTEM on model experiments with fixed prepared
+features. The BP examples guide links to two unchanged plain-text prompt downloads.
+Shared helpers in `lib/`, datasets and generated `outputs/` are not reading pages;
+attendees download the full repository and the IR release asset to execute the work.
 
 Both `execute.enabled: false` and the workflow's `--no-execute` prevent acquisition,
 Python commands, and training from running during publishing. Saved outputs are
@@ -133,13 +139,31 @@ setting first. Do not enable notebook execution, change API secrets, or publish
 the source root to fix this symptom. The notebook reading pages are static HTML;
 they preserve the notebook's content but are not a live Jupyter editor.
 
+## If navigation still shows the old folder structure
+
+The current sidebar has three main notebooks (`00` → `01` → `02`) per module,
+with completed references nested under **Examples (optional)**. Shared helpers
+in `lib/` are not website pages.
+
+1. Commit and push the notebook moves, `_quarto.yml`, and guide updates to **main**
+   (merge your development branch first if needed). Local edits alone do not update Pages.
+2. Open **Actions → Publish workshop website → Run workflow**, choose **main**,
+   and check that the new run uses your latest commit. Rerunning an old run uses
+   its old commit and can rebuild the obsolete navigation.
+3. Wait for both build and deployment to succeed, then hard-refresh the site.
+   Confirm that the sidebar includes **HTEM → 02 · Model-experiment workbook**
+   and that BP model links contain `/examples/`.
+
+Do not move the notebooks back, add another publishing workflow, or enable notebook
+execution to fix stale navigation. The existing workflow rebuilds from source;
+it does not need model training or an AI API key.
+
 ## Updating and using it
 
 - Pushes to main rebuild/deploy. Pull requests into main build and validate only;
   they cannot deploy the site. Dev-branch work is not the published workshop until
   it is merged into main. This does not change the Issue-triggered Codex workflow.
-- The website is built independently of Codex and uses no OpenAI API calls; the
-  separate Codex startup failure does not block a normal Pages build.
+- Website publishing is independent of the Issue runner and uses no AI API calls.
 - Students can read in the browser, expand code, and download the repository for
   execution in VS Code. The site is not a notebook server or a Python runtime.
   Individual notebooks need their helper files and datasets from the repository.

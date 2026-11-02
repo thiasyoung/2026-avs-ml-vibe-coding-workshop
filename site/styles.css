@@ -7,6 +7,19 @@
   color: var(--workshop-accent);
 }
 
+/* Keep the long workshop title and repository paths readable on small screens. */
+.quarto-title h1.title {
+  font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+  line-height: 1.2;
+}
+
+p > code,
+li > code,
+td > code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 details.code-fold > summary {
   color: var(--workshop-accent);
   font-weight: 600;

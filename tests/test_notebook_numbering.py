@@ -114,7 +114,7 @@ class NotebookNumberingTests(unittest.TestCase):
         # HTEM examples/comparison deliberately stay out of the participant roadmap.
         for module, count in (("01_boiling_point", 3), ("02_ir_functional_groups", 3),
                               ("03_htem_conductivity", 3)):
-            references = re.findall(rf"`({module}/[^`]+\.ipynb)`", text)
+            references = re.findall(rf"\]\(({module}/[^)]+\.ipynb)\)", text)
             with self.subTest(module=module):
                 self.assertEqual([Path(path).name.split("_", 1)[0] for path in references],
                                  [f"{index:02d}" for index in range(count)])

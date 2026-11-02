@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 
@@ -39,6 +40,35 @@ class QuartoConfigurationTests(unittest.TestCase):
         frontmatter = yaml.safe_load(homepage.split("---", 2)[1])
         self.assertEqual(CONFIG["website"]["title"], title)
         self.assertEqual(frontmatter["title"], title)
+
+    def test_module_navigation_separates_main_workbooks_from_optional_examples(self):
+        sidebar = CONFIG["website"]["sidebar"]["contents"]
+        for module in site_check.MODULES:
+            with self.subTest(module=module):
+                section = next(item for item in sidebar if item.get("href") == f"{module}/README.md")
+                main = [item["href"] for item in section["contents"]
+                        if item.get("href", "").endswith(".ipynb")]
+                expected = sorted(p.relative_to(ROOT).as_posix()
+                                  for p in (ROOT / module).glob("*.ipynb"))
+                self.assertEqual(main, expected)
+                self.assertEqual([Path(path).name[:2] for path in main], ["00", "01", "02"])
+                examples = [item for item in section["contents"] if "contents" in item]
+                self.assertEqual(len(examples), 1)
+                self.assertEqual(examples[0]["section"], "Examples (optional)")
+                self.assertEqual(examples[0]["href"], f"{module}/examples/README.md")
+                notebooks = [path for path in navigation_links(examples[0]["contents"])
+                             if path.endswith(".ipynb")]
+                expected_examples = sorted(p.relative_to(ROOT).as_posix()
+                                           for p in (ROOT / module / "examples").glob("*.ipynb"))
+                self.assertEqual(sorted(notebooks), expected_examples)
+
+    def test_homepage_local_page_links_are_in_the_reading_site(self):
+        homepage = (ROOT / "index.qmd").read_text(encoding="utf-8")
+        links = re.findall(r"\]\(([^)]+)\)", homepage)
+        rendered = set(CONFIG["project"]["render"])
+        for link in links:
+            if not link.startswith(("https://", "http://", "#")):
+                self.assertIn(link.split("#", 1)[0], rendered, link)
 
     def test_only_participant_pages_are_rendered_and_every_page_is_in_navigation(self):
         rendered = CONFIG["project"]["render"]

@@ -1,9 +1,9 @@
-# HTEM technical notes and run history
+# HTEM reference details and run history
 
-For the concise participant overview and notebook sequence, see the
-[module README](README.md). This document preserves implementation details,
-feature provenance, limitations, and dated results; historical runs are not the
-current model comparison.
+Start with the [module guide](README.md) for the workshop path. This optional
+reference covers feature provenance, reproducibility, memory requirements and
+limitations. Dated run history is background, not a substitute for the current
+comparison in `examples/03_HTEM_Compare_Architectures.ipynb`.
 
 Predict **local thickness and conductivity versus substrate position** from a deposition recipe and a requested substrate grid. A substrate is not reduced to one average row. Each location has a `(sample_library_id, position)` key and its own XY inputs and outputs.
 

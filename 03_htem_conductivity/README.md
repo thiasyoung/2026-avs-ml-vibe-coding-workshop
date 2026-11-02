@@ -22,8 +22,8 @@ film properties and spectra are not prediction inputs.
    then ask your coding assistant to populate and execute baseline, experiment,
    analysis, evaluation and saved-model inference steps using the supplied data.
 
-Optional [completed references in examples/](examples/README.md) include the original
-02 linear Ridge workflow, alternatives 02a–02d, and the original 03 architecture comparison.
+Optional [completed references in examples/](examples/README.md) include the completed
+02 linear Ridge workflow, alternatives 02a–02d, and the 03 architecture comparison.
 They are reference points, not additional main workshop steps.
 
 Reusable download, chemistry, preparation, graph and evaluation helpers live in

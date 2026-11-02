@@ -14,8 +14,8 @@ scores as your own results.
 | [Prompt 1 · Request a prompt](one_shot_prompt_1.txt) | Download the initial request used to ask a coding assistant for a fuller workflow specification. |
 | [Prompt 2 · Full specification](one_shot_prompt_2.txt) | Download the detailed one-shot implementation and execution request. |
 
-The neural examples illustrate advanced/SOTA-inspired approaches; no claim is made
-that these configurations are state of the art on this dataset. Reference numbering
+The neural examples illustrate graph learning and pretrained molecular embeddings;
+they are not guaranteed to outperform simpler models on this dataset. Reference numbering
 is separate from the main `00` → `01` → `02` workshop sequence.
 The live exercise uses the short opening prompt in the main 02 workbook; these
 longer prompts and completed demonstrations are optional reference material.
@@ -30,7 +30,7 @@ When copying a prompt into an assistant, open the repository root (`workshop cod
 as its workspace: paths inside the prompts are relative to that root. The text
 files open as plain text on the reading website; copy or download them from here.
 
-Existing demonstration outputs are retained. Rerunning training may take time and
+Read the saved demonstration outputs without training. Rerunning may take time and
 replace that reference's generated artifacts; it is not required to read the
 examples. Record your own data source, split policy, and validation results before
 comparing approaches, and keep the test set sealed until modeling choices are fixed.

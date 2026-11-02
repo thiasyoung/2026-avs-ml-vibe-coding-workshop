@@ -13,7 +13,6 @@ analysis references while developing your own model experiment.
 | [02d: Random Forest](02d_HTEM_Random_Forest.ipynb) | Nonlinear tree ensemble fit on each property's observed labels. |
 | [03: architecture comparison](03_HTEM_Compare_Architectures.ipynb) | Checks and compares the five saved reference runs without training. |
 
-The original completed 02 and 03 were moved here with their saved outputs unchanged.
 All references locate the HTEM module from the repository, module or examples folder;
 data and generated outputs stay at the module root, not in this folder.
 
@@ -22,12 +21,14 @@ then 03. Each uses the same checksummed prepared matrices, features, label masks
 whole-deposition/recipe splits. Missing or stale results are errors, not silently
 substituted scores. Exact kernel Ridge can require several GiB of memory.
 
-Shared functions live in `../lib/`; setup cells keep the original import names so
-saved models still reload. See the [helper relocation notes](../TECHNICAL_NOTES.md#helper-layout-and-saved-result-compatibility)
-for checksum compatibility and Windows line endings.
+Shared functions live in `../lib/` and are loaded by each notebook's setup cell.
+You can read saved figures without fitting a model. To rerun 03, first generate
+all five compatible model runs; saved weights and run folders are not all supplied
+with a repository download. See [technical notes](../TECHNICAL_NOTES.md) for
+execution commands, checksums and troubleshooting.
 
 Reference runs write `../outputs/htem_architectures/<registered_experiment_id>/` and
-replace that reference model's artifacts when rerun. Student workbook results instead
+replace that reference model's artifacts when rerun. Your workbook results instead
 belong under `../outputs/htem_workbook/<unique_experiment_id>/`. The reference comparison
 does not automatically discover custom workbook runs; compare them in your workbook.
 

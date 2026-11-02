@@ -4,13 +4,18 @@ subtitle: "2026 AVS Workshop"
 toc: false
 ---
 
-Read the explanations and saved results, expand **Show Python code** when you want
-the details, then open the original notebooks in VS Code to experiment.
+Build a scientific ML workflow with a coding assistant, then test what changes
+when you improve the data or the model. Read the explanations and saved results here;
+expand **Show Python code** when you want the implementation.
 
-Start with the [workshop roadmap](00_Workshop_Roadmap.ipynb) and
-[setup guide](SETUP_GUIDE.md). To run the examples, download or clone the
-[complete repository](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop),
-not just one notebook: the examples also use local helper scripts and prepared data.
+## Get ready
+
+1. Follow the [setup guide](SETUP_GUIDE.md), including Git, UV, VS Code and your coding-assistant options.
+2. Download or clone the [complete repository](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop),
+   then run [Check your installation](00_Test_Installation.ipynb) in its `.venv` kernel.
+3. Open the [workshop roadmap](00_Workshop_Roadmap.ipynb). Each module's main path
+   is **00 → 01 → 02**; acquisition is pre-work, and nested **Examples (optional)**
+   are references rather than extra session steps.
 
 ::: {.callout-important title="IR module: download the dataset before the workshop"}
 The repository does **not** include the native IR data. Open
@@ -21,53 +26,53 @@ inside your cloned repository; create the folders if needed. This avoids repeati
 the lengthy NIST scrape. See the [IR module guide](02_ir_functional_groups/README.md).
 :::
 
-::: {.callout-note title="A reading view, not a live notebook"}
-These pages display the outputs last saved in each notebook. Publishing does not
-download data, train models, or refresh results. Blank practice cells are intentional;
-missing results are not filled in. Run the downloaded notebooks to generate new results.
+## Three ways to practice
+
+| Module | Your hands-on focus | Supplied starting point |
+| --- | --- | --- |
+| **01 · Boiling point** | Build and evaluate a SMILES-to-boiling-point pipeline. | Prepared molecular data, a ten-step prompting template and optional completed models. |
+| **02 · IR functional groups** | Examine and clean spectra; compare preparation choices. | Native spectra, frozen holdouts and a fixed classifier. |
+| **03 · HTEM process emulator** | Test algorithms, architectures and hyperparameters. | Prepared process/source/XY features, grouped splits and optional reference models. |
+
+### 01 · Build a boiling-point pipeline
+
+Review the ten-step template, then adapt the prompt in the workbook. Ask your
+assistant to generate, execute and explain a pipeline. Chemprop, MoLFormer and
+one-shot workflows are available as references, not prescribed solutions.
+
+[Open the BP module](01_boiling_point/README.md){.btn .btn-outline-primary}
+
+### 02 · Investigate IR data quality
+
+Edit the carpentry workbook's starting plan and your hypothesis. Explore label
+representation, units, signal types and spectral coverage, then produce the
+uniform input files for notebook 02. Keep the classifier and holdouts fixed so
+you can examine the effect of your preparation.
+
+[Open the IR module](02_ir_functional_groups/README.md){.btn .btn-outline-primary}
+
+### 03 · Experiment with an HTEM model
+
+Use the supplied data preparation to predict thickness and conductivity at
+individual substrate locations. Edit the model-workbook prompt to test an idea,
+compare it with a baseline, and inspect both prediction errors and spatial maps.
+
+[Open the HTEM module](03_htem_conductivity/README.md){.btn .btn-outline-primary}
+
+## Use the workbooks
+
+In IR and HTEM, **EDITABLE** includes the suggested workflow as well as blanks
+for your hypothesis, plan, coding strategy, effort priorities and budget.
+Only **FIXED input/output contracts** must stay unchanged. Copy the entire prompt
+into your coding assistant; a prompt-only notebook does not run an AI by itself.
+
+Download the whole repository rather than a single notebook: IR and HTEM use
+shared helpers in `lib/`, and examples also rely on module data. Your workbooks
+save separate outputs so you can keep completed references intact.
+
+::: {.callout-note title="Read here; run in VS Code"}
+These pages show the outputs last saved in the notebooks. They are not a live
+Jupyter session, and publishing does not scrape data or train models. Some examples
+need model downloads, training time or extra memory when rerun; see their module guides.
+For a PDF, use your browser's **Print → Save as PDF**, expanding any code you want included.
 :::
-
-## Three workshop modules
-
-::: {.columns}
-::: {.column width="33%"}
-### 01 · Boiling point
-
-Predict boiling point from SMILES using prepared data. Review the ten-step template,
-then prompt your assistant to populate and run the workbook. Completed demos and
-prompt downloads are optional examples.
-
-[Explore the module](01_boiling_point/README.md){.btn .btn-outline-primary}
-:::
-
-::: {.column width="33%"}
-### 02 · IR functional groups
-
-Use one editable prompt to examine and prepare IR data, then run a fixed classifier.
-Completed examples illustrate signal conversion, cleansing and resampling with the
-same evaluation data.
-
-[Explore the module](02_ir_functional_groups/README.md){.btn .btn-outline-primary}
-:::
-
-::: {.column width="33%"}
-### 03 · HTEM process emulator
-
-Predict local thickness and conductivity from recipes and substrate positions.
-Edit the workbook prompt to develop and analyze model experiments using the same
-prepared features and splits; completed models are optional references.
-
-[Explore the module](03_htem_conductivity/README.md){.btn .btn-outline-primary}
-:::
-:::
-
-## Read, run, and compare
-
-- **Read:** use the sidebar or search to find a notebook; explanations and saved
-  figures remain visible while code is folded.
-- **Run:** use the notebook's source link or download the full repository, then follow
-  the setup guide and choose the workshop environment in VS Code.
-- **Compare:** change the intended part of the workflow and evaluate honestly. More
-  elaborate data preparation or a larger model is not guaranteed to improve predictions.
-- **Save a PDF:** use your browser's Print → Save as PDF. Expand any code you want
-  included before printing; the web view remains the interactive version.
