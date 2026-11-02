@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 MODULE = Path(__file__).resolve().parents[1] / "03_htem_conductivity"
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import htem_chemistry as chemistry
 import htem_features as frozen
 import htem_feature_study as study
@@ -154,7 +154,7 @@ class FrozenFeatureTests(unittest.TestCase):
         self.assertNotIn("study.run_study(", code)
 
     def test_every_architecture_reuses_frozen_preparation(self):
-        names = [MODULE / "02_HTEM_Process_Emulator_Vibe_Coding.ipynb", *sorted((MODULE / "examples").glob("02*.ipynb"))]
+        names = sorted((MODULE / "examples").glob("02*.ipynb"))
         self.assertEqual(len(names), 5)
         for path in names:
             notebook = json.loads(path.read_text(encoding="utf-8"))

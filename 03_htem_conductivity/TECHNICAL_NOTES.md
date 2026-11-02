@@ -72,25 +72,54 @@ runs are historical, not current dataset sizes or the current partial-label nume
 
 - `00_HTEM_Get_Data_NREL.ipynb`: broad public acquisition, compact scalar/process records only.
 - `01_HTEM_Process_Data_Carpentry.ipynb`: completed spatial data preparation and leakage-safe splits.
-- `02_HTEM_Process_Emulator_Vibe_Coding.ipynb`: the default **linear Ridge regression** (`Ridge(alpha=10)`, not unregularized OLS or kernel ridge), with model-experiment prompts, evaluation, parity/maps, and saved-model inference.
-- `03_HTEM_Compare_Architectures.ipynb`: a short table/error chart and a test-parity panel for each algorithm and property. Thickness is in µm, conductivity in log10(S/cm); shared property limits and all points expose poor predictions rather than clipping them. It does not train or change data; the workshop default stays linear regardless of the validation ranking.
+- `02_HTEM_Vibe_Coding_Workbook.ipynb`: one editable/fixed prompt asking a coding assistant to populate and execute baseline, experiment, validation analysis, final evaluation and saved-model inference steps. Participants change models, not the supplied features or splits; custom artifacts go under `outputs/htem_workbook/<unique_experiment_id>/`.
+
+Completed references now live in `examples/`:
+
+- `examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb`: the original **linear Ridge regression** (`Ridge(alpha=10)`, not unregularized OLS or kernel ridge), with evaluation, parity/maps, and saved-model inference.
+- `examples/03_HTEM_Compare_Architectures.ipynb`: a short table/error chart and a test-parity panel for each reference algorithm and property. Thickness is in µm, conductivity in log10(S/cm); shared property limits and all points expose poor predictions rather than clipping them. It does not train, alter data or automatically compare custom workbook runs.
 
 Worked alternatives to `02`: `examples/02a_HTEM_Kernel_Ridge.ipynb`, `02b_HTEM_Feed_Forward_Network.ipynb`, `02c_HTEM_Grid_GNN.ipynb`, and `02d_HTEM_Random_Forest.ipynb` are independent nonlinear/architecture alternatives on exactly the same prepared problem.
 
-Run top-to-bottom with the workshop UV environment/VS Code kernel. From the repository root:
+Run the main 00–02 sequence with the workshop UV environment/VS Code kernel; the new
+02 starts with a prompt, not executable model code. To reproduce the optional completed
+reference runs instead, use these commands from the repository root:
 
 ```powershell
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb
-uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
+uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=2400 03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/examples/02c_HTEM_Grid_GNN.ipynb
 uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb
-uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb
+uv run --locked python -m nbconvert --execute --to notebook --inplace --ExecutePreprocessor.timeout=1800 03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb
 ```
 
-For an architecture comparison, run **01 once**, then 02/02a/02b/02c/02d and 03 without regenerating preparation. Each algorithm notebook works independently from the module, repository, or `examples` folder. After a deliberate preparation change, rerun all five model notebooks before comparing again.
+For a reference architecture comparison, run **01 once**, then examples/02/02a/02b/02c/02d
+and examples/03 without regenerating preparation. Each algorithm notebook works from
+the module, repository, or `examples` folder. Existing reference outputs remain
+checkable after the verified helper relocation described below; historical
+registry filename labels identify these references in `examples/`. After a deliberate
+preparation change, rerun all five model references before comparing again.
+
+### Helper layout and saved-result compatibility
+
+Reusable Python helpers now live in `lib/`. Notebook setup cells add that directory
+to the import path but retain bare names such as `htem_experiments`, preserving
+the module names embedded in saved models. Data and output locations did not move.
+
+Three fingerprinted helpers needed only resource-path updates. `lib/htem_paths.py`
+maps the exact SHA-256 hashes of those reviewed relocation-only revisions to their
+original provenance hashes; all other source changes still get a different hash
+and fail the existing stale-artifact checks. Tests reconstruct each original
+source revision and verify its hash. This does not recertify new features or models,
+and saved manifests, data, weights and result fingerprints have not been edited.
+
+`.gitattributes` preserves LF endings for these helpers, including the byte-hashed
+evaluation helper. This also prevents the previous Windows CRLF/LF mismatch for
+unchanged evaluations. Never edit saved fingerprints or extend compatibility
+aliases for algorithm changes; rerun preparation and all models after such changes.
 
 ## Algorithm examples and fair comparison
 
@@ -104,7 +133,7 @@ For an architecture comparison, run **01 once**, then 02/02a/02b/02c/02d and 03 
 
 Kernel ridge uses a [`KernelRidge`](https://scikit-learn.org/1.6/modules/kernel_ridge.html) subclass with the full RBF kernel and the checked CG solver described above, not a linear kernel, Nyström approximation, or subsampling. The supplied grid is alpha `[0.1, 1, 10]` and gamma `[0.1, 1, 10] / encoded_feature_count`. The same training-encoded feature matrix and target scaling are reused; there is no new preprocessing. The solver promotes those unchanged values to float64 to avoid dense-kernel numerical roundoff, including batch-size-dependent predictions. The selected candidate remains trained on training data only, not training plus validation. Its dense training kernel scales quadratically in sample count, and fit/search time includes **all nine trials**, unlike the single supplied MLP/GNN fits. These are illustrative, unequal search budgets—not exhaustive optimization.
 
-The shared `htem_experiments.py` handles physical-unit evaluation, per-point identities, fixed full-grid maps, model saving/reloading, and strict comparison. Every run records preparation/array/preprocessing/evaluation-code fingerprints and output checksums. Notebook 03 rejects missing, stale, changed, or mismatched runs, including different actual targets, point ordering, or map examples. It shows train/validation/test standardized MSE, per-target test errors, validation score, and fit/search time. Rank by validation, not test; a single seed/holdout is not evidence of statistically significant superiority.
+The shared `lib/htem_experiments.py` handles physical-unit evaluation, per-point identities, fixed full-grid maps, model saving/reloading, and strict comparison. Every run records preparation/array/preprocessing/evaluation-code fingerprints and output checksums. Notebook 03 rejects missing, stale, changed, or mismatched runs, including different actual targets, point ordering, or map examples. It shows train/validation/test standardized MSE, per-target test errors, validation score, and fit/search time. Rank by validation, not test; a single seed/holdout is not evidence of statistically significant superiority.
 
 All five algorithms predict thickness and conductivity at the same labeled locations, and map the same held-out deposition's full grid. The graph may use additional **unlabeled geometry nodes**, never additional labels or measured inputs. Each notebook ends with its own reloadable `predict_substrate(recipe, grid, spacing_mm=None)` function; 02 uses linear Ridge, 02a KRR, 02b its MLP, 02c its GNN, and 02d its forests. The reference reload check is done before editing the recipe, so a deliberate new recipe is not incorrectly compared against the unchanged prediction.
 
@@ -244,7 +273,7 @@ uv pip install --python 03_htem_conductivity/outputs/htem_feature_study/extracto
 ```
 
 The builder reuses the pinned JARVIS DOS archive in ignored outputs (run
-`htem_source_dos.py` first if missing), downloads immutable-revision Magpie/MEGNet
+`lib/htem_source_dos.py` first if missing), downloads immutable-revision Magpie/MEGNet
 tables and the pinned 48 MB official ALIGNN formation-energy archive, and records
 checksums, versions, graph parameters and coverage. Its legacy training checkpoint
 contains optimizer objects, so it is deserialized **only in the instructor extractor**
@@ -289,7 +318,7 @@ spatial gradient**. No measured HTEM film spectrum, structure or optical/electri
 Reproduce the independent reference acquisition/extraction from the repository root:
 
 ```powershell
-uv run --locked python 03_htem_conductivity/htem_source_dos.py
+uv run --locked python 03_htem_conductivity/lib/htem_source_dos.py
 ```
 
 This streams a pinned **155 MB** public archive into ignored
@@ -321,7 +350,7 @@ Notebook 01 displays the coverage table and saves `outputs/htem_prepared/materia
 
 ## Graph connectivity on each deposition's grid
 
-`examples/02c_HTEM_Grid_GNN.ipynb` uses the node-regression GNN in `htem_graph.py`, using the existing PyTorch dependency (no PyTorch Geometric installation). The current eligible depositions have 11-by-4 grids, but the implementation derives topology from coordinates and supports other grid dimensions; it never reshapes by position number.
+`examples/02c_HTEM_Grid_GNN.ipynb` uses the node-regression GNN in `lib/htem_graph.py`, using the existing PyTorch dependency (no PyTorch Geometric installation). The current eligible depositions have 11-by-4 grids, but the implementation derives topology from coordinates and supports other grid dimensions; it never reshapes by position number.
 
 - Each **deposition is a separate graph**, with one node at each known planned substrate location. Node inputs are the same train-encoded recipe settings, absolute XY, and local-temperature profile used by the other models.
 - Edges join adjacent horizontal/vertical coordinate levels in both directions. No diagonals, cross-deposition edges, graph-level property pooling, or measured-label smoothing are used. Edge inputs are signed dx, signed dy, and distance, divided by a fixed 10 mm reference length.

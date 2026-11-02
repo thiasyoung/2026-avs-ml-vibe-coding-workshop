@@ -11,7 +11,7 @@ import pandas as pd
 import torch
 
 MODULE = Path(__file__).resolve().parents[1] / "03_htem_conductivity"
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import htem_workshop as htem
 import htem_graph as graph
 

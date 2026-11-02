@@ -14,7 +14,9 @@ import pandas as pd
 import htem_source_dos as dos
 import htem_features as frozen_features
 
-REFERENCE = Path(__file__).with_name("data") / "htem_chemistry_reference.json"
+from htem_paths import MODULE_DIR, source_sha256
+
+REFERENCE = MODULE_DIR / "data/htem_chemistry_reference.json"
 SOURCE_PROPERTIES = [
     "present", "formula_known", "element_count", "composition_entropy",
     "mean_atomic_number", "mean_atomic_mass_u", "mean_electronegativity",
@@ -46,9 +48,9 @@ def dos_reference_data():
 
 def reference_fingerprint():
     return {"reference_sha256": hashlib.sha256(REFERENCE.read_bytes()).hexdigest(),
-            "featurizer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "featurizer_sha256": source_sha256(__file__),
             "dos_reference_sha256": hashlib.sha256(dos.REFERENCE.read_bytes()).hexdigest(),
-            "dos_featurizer_sha256": hashlib.sha256(Path(dos.__file__).read_bytes()).hexdigest(),
+            "dos_featurizer_sha256": source_sha256(dos.__file__),
             **frozen_features.fingerprint()}
 
 

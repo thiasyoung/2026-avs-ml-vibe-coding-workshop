@@ -2,11 +2,13 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import sys
 
 import numpy as np
 import pandas as pd
 
-SUPPORT = Path(__file__).resolve().parents[1] / '02_ir_functional_groups/examples/ir_example_support.py'
+SUPPORT = Path(__file__).resolve().parents[1] / '02_ir_functional_groups/lib/ir_example_support.py'
+sys.path.insert(0, str(SUPPORT.parent))
 spec = importlib.util.spec_from_file_location('ir_example_support', SUPPORT)
 support = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(support)

@@ -14,8 +14,8 @@ import torch
 from sklearn.metrics import f1_score
 from torch import nn
 
-MODULE = Path(__file__).resolve().parent
-sys.path.insert(0, str(MODULE))
+MODULE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(MODULE / 'lib'))
 sys.path.insert(0, str(MODULE / 'examples'))
 from ir_carpentry import LABELS, validate_frozen_evaluation, sha256_file
 from ir_example_support import validate_tables
@@ -107,10 +107,10 @@ def main():
         check_notebook(MODULE / f'outputs/carpentry_comparison/02_executed_{data.name}.ipynb')
         print(f"PASS {name}: rows={len(tables['train'])}, selected/run epochs={results['best_epoch']}/{len(h)}, test macro F1={macro:.4f}")
     check_notebook(MODULE / '00_IR_Get_Data_NISTChemPy_v2.ipynb')
-    check_notebook(MODULE / '01_IR_Vibe_Coding_Data_Carpentry.ipynb')
+    check_notebook(MODULE / 'examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb')
     for s in STRATEGIES:
         check_notebook(MODULE / 'examples' / s['notebook'])
-    check_notebook(MODULE / '03_IR_Compare_Carpentry.ipynb')
+    check_notebook(MODULE / 'examples/03_IR_Compare_Carpentry.ipynb')
     assert (MODULE / 'outputs/carpentry_comparison/comparison.png').stat().st_size > 1000
     print('PASS all five genuine fits, selected weights, predictions, uniform inputs, fixed holdouts and populated notebooks.')
 

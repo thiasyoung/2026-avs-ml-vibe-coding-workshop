@@ -18,15 +18,30 @@ film properties and spectra are not prediction inputs.
    scalar records without retaining full spectra.
 - [01 — Prepare data](01_HTEM_Process_Data_Carpentry.ipynb): complete cleansing,
    feature encoding, training-only preprocessing, and grouped data splitting.
-- [02 — Build an emulator](02_HTEM_Process_Emulator_Vibe_Coding.ipynb): start with
-   linear Ridge regression, then use prompts to develop and evaluate experiments.
-- [03 — Compare outcomes](03_HTEM_Compare_Architectures.ipynb): compare saved results,
-   including test-set parity plots for both properties. This notebook does not train models.
+- [02 — Vibe-coding workbook](02_HTEM_Vibe_Coding_Workbook.ipynb): edit one prompt,
+   then ask your coding assistant to populate and execute baseline, experiment,
+   analysis, evaluation and saved-model inference steps using the supplied data.
 
-Worked alternatives to `02`: [02a — Kernel Ridge](examples/02a_HTEM_Kernel_Ridge.ipynb),
-[02b — Feed-forward network](examples/02b_HTEM_Feed_Forward_Network.ipynb),
-[02c — Grid GNN](examples/02c_HTEM_Grid_GNN.ipynb), and
-[02d — Random Forest](examples/02d_HTEM_Random_Forest.ipynb).
+Optional [completed references in examples/](examples/README.md) include the original
+02 linear Ridge workflow, alternatives 02a–02d, and the original 03 architecture comparison.
+They are reference points, not additional main workshop steps.
+
+Reusable download, chemistry, preparation, graph and evaluation helpers live in
+`lib/`. Notebook setup cells load them automatically from the repository, module,
+or examples folder. Data and output paths remain at this module's root.
+
+## Using the workbook
+
+Edit the starting approach and the blanks for your hypothesis, plan, vibe-coding
+strategy, effort priorities and compute/search budget. Baseline, training and analysis
+methods are editable suggestions. Only the **FIXED input/output contracts** stay
+unchanged; copy the whole block into your coding assistant. Notebook 01 supplies the
+shared features and grouped splits; the exercise changes models, not preparation.
+
+Workbook results go under `outputs/htem_workbook/<unique_experiment_id>/`, with separate
+baseline and experiment artifacts. Supplied reference runs remain under
+`outputs/htem_architectures/`; the reference 03 compares those registered runs, not
+arbitrary participant experiments. The generated workbook handles its own comparison.
 
 ## Before running
 
@@ -35,7 +50,8 @@ kernel in VS Code. Run each notebook top-to-bottom. Compact acquisition snapshot
 frozen feature matrices are included; external feature-extraction packages are not
 needed for normal workshop use.
 
-For a full comparison, run 01 once, then 02 and all four alternatives, and finally 03.
+For the optional reference comparison, run 01 once, then the completed 02 and all four
+alternatives in `examples/`, and finally `examples/03`.
 Keep the prepared data unchanged between models. Training can use the distributed
 frozen matrices if generated preparation is absent; stale generated data are rejected.
 The exact-kernel example requires several GiB of RAM and more time than the simple baseline.

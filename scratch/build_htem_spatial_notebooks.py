@@ -33,12 +33,17 @@ setup = code('''
     import pandas as pd
     import matplotlib.pyplot as plt
     from IPython.display import display
-    HERE = Path.cwd()
-    if not (HERE / 'htem_workshop.py').exists():
-        HERE = HERE / '03_htem_conductivity'
-    if not (HERE / 'htem_workshop.py').exists():
-        raise FileNotFoundError('Open this notebook from the workshop root or HTEM module folder.')
-    sys.path.insert(0, str(HERE))
+    HERE = None
+    for parent in [Path.cwd(), *Path.cwd().parents]:
+        for candidate in [parent, parent / '03_htem_conductivity']:
+            if (candidate / 'lib/htem_workshop.py').is_file():
+                HERE = candidate.resolve()
+                break
+        if HERE is not None:
+            break
+    if HERE is None:
+        raise FileNotFoundError('Open from the workshop, HTEM module, or its examples folder.')
+    sys.path.insert(0, str(HERE / 'lib'))
     import htem_workshop as htem
     plt.rcParams.update({'figure.dpi': 110, 'axes.spines.top': False, 'axes.spines.right': False})
     SEED = 42
@@ -235,7 +240,7 @@ save('01_HTEM_Process_Data_Carpentry.ipynb', [
     Reference: [Kaundinya et al., DOS/ALIGNN (2022)](https://doi.org/10.1007/s11837-022-05199-y).
     The compact, checksummed reference summaries ship with the repository; no new packages/API keys
     are needed for preparation or training. To reproduce the external download and extraction, run
-    `uv run --locked python 03_htem_conductivity/htem_source_dos.py` from the repository root.
+    `uv run --locked python 03_htem_conductivity/lib/htem_source_dos.py` from the repository root.
     The 155 MB raw reference archive stays in ignored outputs, not the distributed dataset.
 
     ### Instructor-selected frozen features: your experiment changes the model
@@ -296,7 +301,7 @@ save('01_HTEM_Process_Data_Carpentry.ipynb', [
     `scratch/build_htem_feature_candidates.py` (see the module README for the exact commands).
     The instructor smoke-tests this same function against a cached real structure/vector.
 
-    DOS shape reduction/aggregation is implemented in the linked, runnable `htem_source_dos.py`;
+    DOS shape reduction/aggregation is implemented in the linked, runnable `lib/htem_source_dos.py`;
     the supplied compact summaries avoid shipping full spectra. Neither reference pathway uses
     measured HTEM film information. Unknown references remain missing, not guessed.
     '''),

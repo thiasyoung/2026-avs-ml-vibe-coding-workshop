@@ -8,7 +8,7 @@ import nbformat as nbf
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DESTINATION = ROOT / "01_boiling_point" / "04_BP_One_Shot_Workflow.ipynb"
+DESTINATION = ROOT / "01_boiling_point" / "examples" / "04_BP_One_Shot_Workflow.ipynb"
 
 
 def markdown(source: str):
@@ -65,11 +65,11 @@ from sklearn.model_selection import train_test_split
 WORKFLOW_STARTED = time.perf_counter()
 
 def find_repository_root() -> Path:
-    """Work when Jupyter starts from the repository root or this module folder."""
-    for candidate in [Path.cwd(), Path.cwd().parent]:
+    """Work from the repository root, BP module, or examples folder."""
+    for candidate in [Path.cwd(), *Path.cwd().parents]:
         if (candidate / '01_boiling_point').exists() and (candidate / 'pyproject.toml').exists():
             return candidate.resolve()
-    raise FileNotFoundError('Start from the workshop repository root or 01_boiling_point.')
+    raise FileNotFoundError('Start Jupyter inside the workshop repository.')
 
 REPO = find_repository_root()
 MODULE = REPO / '01_boiling_point'
@@ -682,7 +682,7 @@ manifest = {
     'software': {'python': sys.version, 'platform': platform.platform(), 'pandas': pd.__version__, 'numpy': np.__version__,
                  'scikit_learn': sklearn.__version__, 'rdkit': rdkit.__version__},
     'reproduce': [
-        'uv run --locked jupyter nbconvert --to notebook --execute --inplace 01_boiling_point/04_BP_One_Shot_Workflow.ipynb --ExecutePreprocessor.timeout=600',
+        'uv run --locked jupyter nbconvert --to notebook --execute --inplace 01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb --ExecutePreprocessor.timeout=600',
         'uv run --locked python scripts/ci/validate_notebooks.py',
     ],
     'test_set_access': 'Step 10 only, after selected_configuration.json was written',

@@ -65,6 +65,9 @@ class QuartoConfigurationTests(unittest.TestCase):
                         "Anchor downloads at the project root, not a recursive basename search")
         downloads = {(ROOT / path.lstrip("/")).resolve() for path in resources if path.endswith(".ipynb")}
         self.assertEqual(downloads, set(site_check.notebook_sources()))
+        prompts = {(ROOT / path.lstrip("/")).resolve() for path in resources if path.endswith(".txt")}
+        self.assertEqual(prompts, set(site_check.prompt_sources()))
+        self.assertFalse(any("/extras/" in path for path in resources))
         self.assertEqual(site_check.SITE_PATH, "/" + CONFIG["website"]["site-url"].split(".io/", 1)[1])
 
     def test_pages_build_cannot_execute_notebooks_or_publish_from_a_pr(self):
@@ -120,6 +123,12 @@ class WebsiteValidatorTests(unittest.TestCase):
             output.write_text(html if source.suffix == ".ipynb" else '<a href="https://example.com">External</a>',
                               encoding="utf-8")
         (site / notebook.name).write_bytes(notebook.read_bytes())
+        for source in site_check.prompt_sources(sources):
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text("Example prompt; never executed by the website.", encoding="utf-8")
+            download = site / source.relative_to(sources)
+            download.parent.mkdir(parents=True, exist_ok=True)
+            download.write_bytes(source.read_bytes())
         (site / "saved.png").write_bytes(b"saved figure")
         (site / "search.json").write_text('[{"title":"Demo"}]', encoding="utf-8")
         return sources, site
@@ -135,6 +144,19 @@ class WebsiteValidatorTests(unittest.TestCase):
                 sources, site = self.fixture(Path(directory))
                 (site / name).unlink()
                 self.assertTrue(site_check.validate_site(site, sources))
+
+    def test_missing_or_changed_prompt_download_is_reported(self):
+        for changed in (False, True):
+            with self.subTest(changed=changed), tempfile.TemporaryDirectory() as directory:
+                sources, site = self.fixture(Path(directory))
+                source = site_check.prompt_sources(sources)[0]
+                download = site / source.relative_to(sources)
+                if changed:
+                    download.write_text("Outdated prompt", encoding="utf-8")
+                else:
+                    download.unlink()
+                errors = site_check.validate_site(site, sources)
+                self.assertTrue(any("prompt download" in e.lower() for e in errors), errors)
 
     def test_expanded_or_missing_code_and_missing_outputs_are_reported(self):
         for text in ('<details class="code-fold" open></details>', '<p>Code and outputs missing</p>'):

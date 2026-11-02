@@ -7,9 +7,9 @@ CONTEXT AND FILES
 Start from the workshop repository root (the folder named "workshop code"). Read AGENTS.md, README.md, pyproject.toml, and the relevant boiling-point notebooks before making changes.
 
 The formatting and workflow reference is:
-  00_Ten_Steps_in_Prompts.ipynb
+  01_boiling_point/01_Ten_Steps_in_Prompts.ipynb
 
-Inspect that template. Preserve its ten numbered step names, their order, blue section headings (#1D4E89), orange subsection headings (#B05E27), and short explanations interleaved with manageable code cells. Adapt its reaction-conversion content to boiling-point regression. Its instruction to wait for a separate prompt at each step belongs to the original classroom exercise; for this request, populate and execute every step autonomously. Keep Step 0 as a brief "Conditioning the Coding Assistant" introduction, separate from Steps 1-10.
+Inspect that template. Preserve its ten numbered step names, their order, blue section headings (#1D4E89), orange subsection headings (#B05E27), and short explanations interleaved with manageable code cells. Use its boiling-point examples as guidance. Its instruction to wait for a separate prompt at each step belongs to the step-by-step exercise; for this request, populate and execute every step autonomously. Keep Step 0 as a brief "Conditioning the Coding Assistant" introduction, separate from Steps 1-10.
 
 Use this prepared input if present:
   01_boiling_point/outputs/nist_acquisition/NIST_BP_SMILES.parquet
@@ -17,7 +17,7 @@ Use this prepared input if present:
 Its acquisition notebook and adjacent NIST_BP_SMILES_cleaning_audit.csv document BP in kelvin. Inspect the actual file and provenance rather than hard-coding its row count. If it is absent, use the prepared fallback at 01_boiling_point/data/CompoundData.parquet after checking its units and provenance. Select one source explicitly; do not silently combine the files. The only model input supplied by a user is SMILES, and the target is BP. Derive every predictive feature from SMILES; existing identifiers, measured properties, and stored 3-D structures are not additional inputs. In particular, calculate molecular weight from SMILES if you use it.
 
 Create:
-  01_boiling_point/04_BP_One_Shot_Workflow.ipynb
+  01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb
 
 Save supporting artifacts under:
   01_boiling_point/outputs/bp_one_shot_2/

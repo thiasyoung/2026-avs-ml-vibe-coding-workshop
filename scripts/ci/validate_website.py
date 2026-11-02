@@ -28,10 +28,16 @@ def notebook_sources(root: Path = ROOT) -> list[Path]:
     return sorted(paths)
 
 
+def prompt_sources(root: Path = ROOT) -> list[Path]:
+    return [root / "01_boiling_point/examples" / f"one_shot_prompt_{n}.txt" for n in (1, 2)]
+
+
 def page_sources(root: Path = ROOT) -> list[Path]:
     return [root / "index.qmd", root / "SETUP_GUIDE.md", *notebook_sources(root),
             *(root / module / "README.md" for module in MODULES),
+            root / "01_boiling_point/examples/README.md",
             root / "02_ir_functional_groups/examples/README.md",
+            root / "03_htem_conductivity/examples/README.md",
             root / "03_htem_conductivity/TECHNICAL_NOTES.md"]
 
 
@@ -110,6 +116,16 @@ def validate_site(site: Path, root: Path = ROOT) -> list[str]:
         if any("image/png" in o.get("data", {}) for o in outputs) and not page.image_count:
             errors.append(f"Saved plots are absent: {relative}")
 
+    for source in prompt_sources(root):
+        relative = source.relative_to(root)
+        download = site / relative
+        if not source.is_file():
+            errors.append(f"Missing prompt source: {relative}")
+        elif not download.is_file():
+            errors.append(f"Missing prompt download: {relative}")
+        elif download.read_bytes() != source.read_bytes():
+            errors.append(f"Prompt download differs from the original: {relative}")
+
     for html in site.rglob("*.html"):
         for reference in Page(html.read_text(encoding="utf-8")).references:
             try:
@@ -143,7 +159,8 @@ def main() -> int:
     if errors:
         print("Website validation failed:", *(f"- {error}" for error in errors), sep="\n")
         return 1
-    print(f"Validated {len(page_sources())} pages and {len(notebook_sources())} unchanged notebook downloads; "
+    print(f"Validated {len(page_sources())} pages, {len(notebook_sources())} unchanged notebook downloads, "
+          f"and {len(prompt_sources())} unchanged prompt downloads; "
           "local links, folded code, saved outputs, and search passed.")
     return 0
 

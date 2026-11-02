@@ -13,10 +13,18 @@ need no changes. Archived notebooks and generated output copies are excluded.
 ## Notebook numbering
 
 Use the filename prefix, not a separately numbered list, to identify a notebook.
-The [BP sequence](../01_boiling_point/README.md) is `00` acquisition, `01` Chemprop,
-`02` MoLFormer, `03` one-shot prompt, and `04` worked workflow. The
-[IR](../02_ir_functional_groups/README.md) and [HTEM](../03_htem_conductivity/README.md)
-sequences run `00`–`03`; their lettered examples are alternatives to an existing step.
+The [BP sequence](../01_boiling_point/README.md) is `00` acquisition, `01` ten-step
+template, and `02` prompt-driven workbook. Acquisition is pre-work; the live exercise
+uses 01 as a template and asks an assistant to populate 02. Its
+[examples](../01_boiling_point/examples/README.md) hold four optional notebook references,
+numbered separately `01`–`04`, plus the two one-shot prompt text files. The
+[IR](../02_ir_functional_groups/README.md) sequence runs `00`–`02`, with a prompt-only
+01 workbook and a static 02 trainer. Its completed 01, alternatives 01a–01d and 03
+comparison are [optional references](../02_ir_functional_groups/examples/README.md).
+[HTEM](../03_htem_conductivity/README.md) also runs `00`–`02`: completed preparation
+in 01 and a prompt-only model-development workbook in 02. Its completed 02, alternatives
+02a–02d and 03 comparison are [optional references](../03_htem_conductivity/examples/README.md).
+Lettered examples are alternatives to an existing step.
 First-cell titles must match the filename prefix. See the
 [workshop roadmap](../00_Workshop_Roadmap.ipynb) for the participant path.
 

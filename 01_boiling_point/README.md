@@ -2,38 +2,60 @@
 
 ## Objective
 
-Predict a molecule's reported boiling point from its **SMILES string**, then learn how
-to build, evaluate, and question a complete machine-learning workflow. Compare a
-Chemprop graph neural network with a frozen MoLFormer encoder plus a small regression
-network, and use prompts to develop another approach.
+Use prompts to build, evaluate, and question a machine-learning workflow that predicts
+a molecule's reported boiling point from its **SMILES string**. Develop your own
+approach using the ten-step template and the completed implementations in `examples/` as
+optional references rather than required exercises.
 
 Inputs are molecular structures only; boiling point is the target, not a feature.
 The model notebooks report temperatures and prediction errors in **kelvin**.
 
 ## Notebook sequence
 
-- [00 — Get data](00_BP_Get_Data_NISTChemPy_v2.ipynb): acquire NIST records, validate
-   molecular identities and kelvin values, and save a cleansed SMILES/BP table.
-- [01 — Chemprop GNN](01_BP_Chemprop_GNN.ipynb): train a molecular graph model,
-   inspect training/validation loss, evaluate predictions, and try a new SMILES.
-- [02 — Foundation model](02_BP_Foundation_Model.ipynb): freeze MoLFormer embeddings
-   and train a feed-forward head using the same molecular splits as 01.
-- [03 — One-shot prompt](03_BP_One_Shot_Vibe_Coding.ipynb): specify a complete
-   prediction workflow for a coding assistant. This notebook contains prompts, not training code.
-- [04 — Worked one-shot workflow](04_BP_One_Shot_Workflow.ipynb): review a completed
-   descriptor/fingerprint and tree-model example, including experiments and saved-model inference.
+- [00 — Get data](00_BP_Get_Data_NISTChemPy_v2.ipynb): acquisition pre-work, not a
+   live exercise. Collect or reclean NIST records into a SMILES/BP table in kelvin.
+- [01 — Ten steps in prompts](01_Ten_Steps_in_Prompts.ipynb): review the template
+   and the ten-step workflow before the hands-on exercise.
+- [02 — Vibe-coding workbook](02_BP_Vibe_Coding_Workbook.ipynb): copy and adapt the
+   opening prompt, then ask your assistant to populate and execute this workbook.
+
+The [examples reference library](examples/README.md) contains the Chemprop GNN,
+frozen MoLFormer, full one-shot prompt, completed one-shot workflow, and the two
+`one_shot_prompt_*.txt` files. Consult these as needed; they are not additional live
+steps. Their `01`–`04` labels identify references, not the main workshop order, and
+the methods are not claimed to be globally best on this dataset.
+
+## Folder layout
+
+```text
+01_boiling_point/
+  00_BP_Get_Data_NISTChemPy_v2.ipynb   # acquisition pre-work
+  01_Ten_Steps_in_Prompts.ipynb       # workflow template
+  02_BP_Vibe_Coding_Workbook.ipynb    # hands-on prompt and workspace
+  data/                             # packaged data fallback
+  outputs/                          # acquired data and generated results
+  examples/                           # optional demos and prompt text files
+```
+
+Keep shared data and generated artifacts at the module root, not inside `examples/`.
 
 ## Before running
 
 Follow the [workshop setup guide](../SETUP_GUIDE.md) and select the workshop `.venv`
-kernel in VS Code. Run each notebook top-to-bottom from its module folder.
+kernel in VS Code. During the session, read 01 and copy the prompt in 02 into your
+coding assistant; running the prompt-only notebook itself does not call an LLM.
+Review the generated code and its real outputs. You can customize the prompt to
+create a separate notebook instead, or work interactively one step at a time.
 
 Notebook 00 can cleanse an existing acquisition Parquet without repeating the long
 download. Full live collection is optional pre-work; one illustrative NIST fetch still
-requires internet. Model notebooks prefer `outputs/nist_acquisition/NIST_BP_SMILES.parquet`
+requires internet. The workbook and reference notebooks prefer `outputs/nist_acquisition/NIST_BP_SMILES.parquet`
 when present and otherwise use `data/CompoundData.parquet`. Keep the data source and
-split settings unchanged when comparing 01 and 02. MoLFormer downloads its public
-checkpoint on first use; allow time for this before the session.
+split settings unchanged for fair comparisons. Notebook 02 contains a single editable
+prompt, not prewritten training code. It asks the assistant to fill out 02 and save
+artifacts under `outputs/bp_workbook/`; use separate destinations for independent
+attempts. Choose any relevant references from `examples/`.
+Optional MoLFormer execution downloads its public checkpoint on first use.
 
 ## What to take away
 

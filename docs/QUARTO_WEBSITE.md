@@ -4,6 +4,13 @@ Quarto turns the existing Markdown and Jupyter notebooks into a searchable websi
 Code is folded behind **Show Python code**; explanations, tables, and saved plots
 remain visible. The original notebooks remain the executable source of truth.
 
+Use the repository in its existing form: edit and commit `.ipynb`, Markdown, and
+Quarto configuration files, then push to main. The existing GitHub Actions workflow
+builds the reading website on its runner and publishes the result to Pages. There
+is no need to convert notebooks manually, add HTML pages to Git, or render locally.
+Quarto does require HTML for a browser-based website, but that generated output is
+a separate deployment artifact, not a replacement for the repository's notebooks.
+
 ## What gets published
 
 The explicit list in `_quarto.yml` includes the getting-started notebooks, setup
@@ -12,6 +19,12 @@ instructor scratch work, archives, generated notebook copies, datasets, model
 weights, and the local environment. Notebook downloads are byte-for-byte copies
 of the source files, not newly executed notebooks.
 
+The BP sidebar follows the live path: `00` acquisition pre-work, `01` ten-step
+template, then `02` vibe-coding practice. Its nested **Examples** section contains
+the optional neural and one-shot demonstrations. The examples guide also links to
+the two plain-text prompts, published as unchanged downloads from `examples/`.
+Shared datasets and `outputs/` remain excluded from the website.
+
 Both `execute.enabled: false` and the workflow's `--no-execute` prevent acquisition,
 Python commands, and training from running during publishing. Saved outputs are
 displayed as they stand; an unexecuted notebook does not acquire invented plots.
@@ -19,7 +32,11 @@ To update a result, run and save that notebook using the workshop environment,
 review its outputs, then commit it. A working website does not prove the models
 were rerun or their results improved. See [Quarto's notebook rendering guidance](https://quarto.org/docs/computations/python.html).
 
-## Preview locally (Windows, macOS, or Linux)
+## Optional local preview (Windows, macOS, or Linux)
+
+Skip this section for the normal GitHub-only publishing workflow. Local rendering
+is only for an explicitly requested preview or troubleshooting session; it can
+briefly create intermediate HTML beside source files before moving it into `_site/`.
 
 Install the separate [Quarto CLI](https://quarto.org/docs/download/). The CI build
 is pinned to **1.9.38**; use that version to reproduce it. Quarto is not a Python
@@ -107,7 +124,7 @@ not mean **Publish workshop website** succeeded.
    and Build a Scientific Machine Learning Pipeline**, with a module sidebar and
    search, not just **AVS workshop code**.
 4. Select a notebook in the sidebar. Its reading URL ends in `.html`, for example
-   `01_boiling_point/01_BP_Chemprop_GNN.html`. It should display explanations and
+   `01_boiling_point/examples/01_BP_Chemprop_GNN.html`. It should display explanations and
    saved plots, with **Show Python code** controls that expand individual cells.
    A `.ipynb` link is the original executable notebook, not the HTML reading page.
 

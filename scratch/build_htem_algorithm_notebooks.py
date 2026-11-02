@@ -28,13 +28,13 @@ import joblib
 HERE = None
 for parent in [Path.cwd(), *Path.cwd().parents]:
     for candidate in [parent, parent / '03_htem_conductivity']:
-        if (candidate / 'htem_experiments.py').exists():
+        if (candidate / 'lib/htem_experiments.py').exists():
             HERE = candidate
             break
     if HERE is not None: break
 if HERE is None:
     raise FileNotFoundError('Open from the workshop, HTEM module, or its examples folder.')
-sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE / 'lib'))
 import htem_workshop as htem
 import htem_experiments as exp
 ctx = exp.load_context(HERE)  # Validate and reuse notebook 01; NEVER redo preparation/splitting.
@@ -245,7 +245,7 @@ def build(selected=None):
         nbf.write(notebook, path)
         print('Built', name)
 
-    save('02_HTEM_Process_Emulator_Vibe_Coding.ipynb', model_cells(
+    save('examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb', model_cells(
         'linear_ridge', '02 · Linear regression: default process emulator',
         'The default is **linear Ridge regression**, `Ridge(alpha=10)`: a linear model with L2 regularization, not kernel ridge and not unregularized OLS.',
         'Establish a simple regularized linear baseline. Expose the L2 penalty, explain the assumptions, and analyze where a nonlinear or graph model might help.',
@@ -326,7 +326,7 @@ def build(selected=None):
         print(f'Fitted {len(model.estimators_)} forests in {fit_seconds:.1f} seconds.')
         '''))
 
-    save('03_HTEM_Compare_Architectures.ipynb', [md('''
+    save('examples/03_HTEM_Compare_Architectures.ipynb', [md('''
     # 03 · Compare HTEM algorithms on identical prepared data
 
     Run `02` and `examples/02a`, `02b`, `02c`, `02d` first. This short notebook **does not train or alter data**.

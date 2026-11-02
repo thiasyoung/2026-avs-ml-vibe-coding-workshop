@@ -10,9 +10,9 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULES = {
-    "01_boiling_point": ("BP", 5),
-    "02_ir_functional_groups": ("IR", 4),
-    "03_htem_conductivity": ("HTEM", 4),
+    "01_boiling_point": ("BP", 3),
+    "02_ir_functional_groups": ("IR", 3),
+    "03_htem_conductivity": ("HTEM", 3),
 }
 
 
@@ -43,8 +43,21 @@ class NotebookNumberingTests(unittest.TestCase):
             relative = path.relative_to(ROOT)
             marker, _ = MODULES[relative.parts[0]]
             with self.subTest(notebook=str(relative)):
+                if relative.as_posix() == "01_boiling_point/01_Ten_Steps_in_Prompts.ipynb":
+                    continue  # The BP-specific prompting guide keeps its descriptive filename.
                 self.assertRegex(path.name, rf"^\d{{2}}[a-z]?_{marker}_[A-Za-z].*\.ipynb$")
                 if len(relative.parts) == 3:
+                    if relative.parts[:2] == ("01_boiling_point", "examples"):
+                        self.assertRegex(path.name, r"^0[1-4]_BP_")
+                        continue
+                    if relative.parts[:2] == ("02_ir_functional_groups", "examples") and path.name in {
+                        "01_IR_Vibe_Coding_Data_Carpentry.ipynb", "03_IR_Compare_Carpentry.ipynb"
+                    }:
+                        continue  # Completed references retain their original step numbers.
+                    if relative.parts[:2] == ("03_htem_conductivity", "examples") and path.name in {
+                        "02_HTEM_Process_Emulator_Vibe_Coding.ipynb", "03_HTEM_Compare_Architectures.ipynb"
+                    }:
+                        continue
                     self.assertEqual(relative.parts[1], "examples")
                     prefix = path.name.split("_", 1)[0]
                     self.assertRegex(prefix, r"^\d{2}[a-z]$")
@@ -66,7 +79,9 @@ class NotebookNumberingTests(unittest.TestCase):
             ROOT / "SETUP_GUIDE.md", ROOT / "AGENTS.md",
             *(ROOT / "docs").rglob("*.md"),
             *(ROOT / name / "README.md" for name in MODULES),
-            module / "README.md", *module.glob("*.txt"), *module.glob("*.ipynb"),
+            module / "README.md", module / "examples/README.md",
+            *module.glob("*.txt"), *module.glob("examples/*.txt"),
+            *module.glob("*.ipynb"), *module.glob("examples/*.ipynb"),
             ROOT / "scripts/prepare_notebook_presentation.py",
             ROOT / "scratch/build_bp_one_shot_notebook.py",
             ROOT / "scratch/build_critiques_and_assumptions_pdf.py",
@@ -78,7 +93,8 @@ class NotebookNumberingTests(unittest.TestCase):
                 text = "\n".join(source_text(cell) for cell in json.loads(text)["cells"])
             for name in re.findall(r"\d{2}_BP_[A-Za-z0-9_]+\.ipynb", text):
                 with self.subTest(document=str(path.relative_to(ROOT)), reference=name):
-                    self.assertTrue((module / name).is_file(), f"Broken BP reference: {name}")
+                    self.assertTrue((module / name).is_file() or (module / "examples" / name).is_file(),
+                                    f"Broken BP reference: {name}")
 
     def test_readme_sequence_labels_use_the_actual_notebook_numbers(self):
         root_text = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -96,7 +112,7 @@ class NotebookNumberingTests(unittest.TestCase):
         notebook = json.loads((ROOT / "00_Workshop_Roadmap.ipynb").read_text(encoding="utf-8"))
         text = "\n".join(source_text(cell) for cell in notebook["cells"])
         # HTEM examples/comparison deliberately stay out of the participant roadmap.
-        for module, count in (("01_boiling_point", 5), ("02_ir_functional_groups", 4),
+        for module, count in (("01_boiling_point", 3), ("02_ir_functional_groups", 3),
                               ("03_htem_conductivity", 3)):
             references = re.findall(rf"`({module}/[^`]+\.ipynb)`", text)
             with self.subTest(module=module):
@@ -109,6 +125,9 @@ class NotebookNumberingTests(unittest.TestCase):
         paths = [ROOT / "README.md", ROOT / "SETUP_GUIDE.md",
                  ROOT / "docs/NOTEBOOK_PRESENTATION.md",
                  ROOT / "03_htem_conductivity/TECHNICAL_NOTES.md",
+                 ROOT / "01_boiling_point/examples/README.md",
+                 ROOT / "02_ir_functional_groups/examples/README.md",
+                 ROOT / "03_htem_conductivity/examples/README.md",
                  *(ROOT / module / "README.md" for module in MODULES)]
         for path in paths:
             for target in re.findall(r"\]\(([^)]+)\)", path.read_text(encoding="utf-8")):

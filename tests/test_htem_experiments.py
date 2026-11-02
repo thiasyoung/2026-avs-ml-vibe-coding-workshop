@@ -16,7 +16,7 @@ from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor
 
 MODULE = Path(__file__).resolve().parents[1] / "03_htem_conductivity"
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import htem_workshop as htem
 import htem_graph as gnn
 import htem_experiments as exp
@@ -238,25 +238,27 @@ class HTEMExperimentTests(unittest.TestCase):
                 exp.evaluate_and_save(ctx, self.models["linear_ridge"], "linear_ridge", {}, .1)
 
     def test_default_notebook_is_linear_and_comparison_does_not_fit_models(self):
-        default = nbformat.read(MODULE / exp.EXPERIMENTS["linear_ridge"][1], 4)
+        # Registry filename labels are historical; every completed reference is
+        # now in examples/. Keep evaluation code unchanged so saved hashes remain valid.
+        default = nbformat.read(MODULE / "examples" / Path(exp.EXPERIMENTS["linear_ridge"][1]).name, 4)
         default_code = "\n".join(c.source for c in default.cells if c.cell_type == "code")
         self.assertIn("fit_observed_regressors(Ridge(alpha=ALPHA)", default_code)
         self.assertNotIn("fit_kernel_ridge(", default_code)
         self.assertNotIn("fit_graph_model(", default_code)
-        comparison = nbformat.read(MODULE / "03_HTEM_Compare_Architectures.ipynb", 4)
+        comparison = nbformat.read(MODULE / "examples/03_HTEM_Compare_Architectures.ipynb", 4)
         comparison_code = "\n".join(c.source for c in comparison.cells if c.cell_type == "code")
         self.assertIn("collect_comparison", comparison_code)
         self.assertNotIn(".fit(", comparison_code)
         self.assertNotIn("prepare(", comparison_code)
         for _, relative in exp.EXPERIMENTS.values():
-            self.assertTrue((MODULE / relative).exists())
+            self.assertTrue((MODULE / "examples" / Path(relative).name).exists())
 
     def test_comparison_parity_has_all_test_points_and_shared_property_limits(self):
         import matplotlib
         matplotlib.use('Agg')
         import matplotlib.pyplot as plt
         from unittest.mock import patch
-        notebook = nbformat.read(MODULE / '03_HTEM_Compare_Architectures.ipynb', 4)
+        notebook = nbformat.read(MODULE / 'examples/03_HTEM_Compare_Architectures.ipynb', 4)
         source = next(c.source for c in notebook.cells
                       if c.cell_type == 'code' and c.source.startswith('# Test-set parity:'))
         with tempfile.TemporaryDirectory() as output, patch.object(plt, 'show'):

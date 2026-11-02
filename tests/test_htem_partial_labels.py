@@ -11,7 +11,7 @@ import torch
 from sklearn.linear_model import Ridge
 
 MODULE = Path(__file__).resolve().parents[1] / '03_htem_conductivity'
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import htem_workshop as h
 import htem_experiments as exp
 from test_htem_process_emulator import example_record

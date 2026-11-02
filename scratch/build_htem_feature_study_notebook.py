@@ -36,9 +36,9 @@ cells = [
     import pandas as pd
     import matplotlib.pyplot as plt
     from IPython.display import display
-    ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / '03_htem_conductivity/htem_feature_study.py').exists())
+    ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents] if (p / '03_htem_conductivity/lib/htem_feature_study.py').exists())
     MODULE = ROOT / '03_htem_conductivity'
-    sys.path.insert(0, str(MODULE))
+    sys.path.insert(0, str(MODULE / 'lib'))
     import htem_feature_study as study
     plt.rcParams.update({'figure.dpi': 110, 'axes.spines.top': False, 'axes.spines.right': False})
     display(pd.DataFrame([{'candidate': name, 'added_blocks': ', '.join(blocks) or 'none'}

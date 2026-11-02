@@ -61,7 +61,7 @@ NOTES: dict[str, list[str]] = {
         "Collects missing measurements with checkpoints and a failure log, or reloads the existing raw dataset. Original SMILES and kelvin measurements are preserved before cleaning.",
         "Cleans cached measurements without downloading them again, checks molecular structures and plausible temperatures, and combines repeated structures by median boiling point. Saves a two-column SMILES/BP table in kelvin and an audit; range checks alone cannot confirm ambiguous source units.",
     ],
-    "01_boiling_point/01_BP_Chemprop_GNN.ipynb": [
+    "01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb": [
         "Loads boiling points in kelvin, creates the molecular splits shared with the foundation-model example, and configures Chemprop training. Molecular graphs derived from SMILES are the only inputs.",
         "Trains Chemprop in 20-epoch segments, carrying forward weights but not optimizer state. Stopping checks require rising validation-loss trends both before and after removing the five highest losses, with validation loss above training loss. Saves the lowest eligible segment checkpoint, with a documented fallback.",
         "Plots the combined training and validation loss histories, marks the selected checkpoint, and uses that checkpoint to predict boiling points for all three splits.",
@@ -69,7 +69,7 @@ NOTES: dict[str, list[str]] = {
         "Predicts the boiling point in kelvin for an editable SMILES string using the selected final model. The example input is ethanol, written as CCO.",
         "This optional practice cell is blank and ready for a follow-up question or calculation.",
     ],
-    "01_boiling_point/02_BP_Foundation_Model.ipynb": [
+    "01_boiling_point/examples/02_BP_Foundation_Model.ipynb": [
         "Loads the same molecular splits as Chemprop and configures a frozen MoLFormer encoder with a small feed-forward regression head. Training uses cosine warm restarts and the robust 20-epoch stopping rule; boiling points remain in kelvin.",
         "Loads the pretrained MoLFormer encoder and converts SMILES into fixed embeddings without updating the encoder. Embedding and target scaling are fitted on training data only; the first run downloads the model.",
         "Trains the regression head using AdamW, MSE, and cosine warm restarts. Stopping requires rising raw and outlier-trimmed validation trends with validation loss above training loss. Restores the lowest eligible validation-loss weights, or the documented fallback if no epoch qualifies.",
@@ -78,7 +78,7 @@ NOTES: dict[str, list[str]] = {
         "Predicts a boiling point in kelvin for an editable SMILES string using the frozen encoder, training-fitted scaling, and restored regression head.",
         "This optional practice cell is blank and ready for another prediction or analysis.",
     ],
-    "01_boiling_point/04_BP_One_Shot_Workflow.ipynb": [
+    "01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb": [
         "Locates the boiling-point dataset, sets a reproducible seed, and creates experiment folders. Acquired NIST data is preferred over the packaged fallback, and inputs will be derived only from SMILES.",
         "Audits molecular identities, missing targets, molecular components, charges, and temperature ranges before modeling. Temperature bounds flag suspicious records but cannot establish their source units.",
         "Displays flagged records and boiling-point disagreements among repeated molecular structures so questionable measurements can be examined before cleaning.",
@@ -103,7 +103,7 @@ NOTES: dict[str, list[str]] = {
         "Reloads the native-spectrum checkpoint and previews coordinate units, signal units, and example arrays without normalizing or reshaping the spectra.",
         "Checks that the acquired table contains molecular identifiers, SMILES, native arrays, units, and functional-group labels before data carpentry in notebook 01.",
     ],
-    "02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
+    "02_ir_functional_groups/examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
         "Loads native spectra, separates the frozen validation/test molecules from the training pool, and previews the fixed 500-point reference grid for a minimal preparation baseline.",
         "Uses the recorded numeric signals directly, retains spectra covering the full reference range, and linearly resamples them to a common grid. Each spectrum is min–max normalized, then plotted alongside preparation counts.",
         "Saves the baseline training data, unchanged evaluation tables, and a manifest. Reloading checks uniform finite inputs, binary labels, and separated molecular identities before training in notebook 02.",
@@ -115,7 +115,7 @@ NOTES: dict[str, list[str]] = {
         "Selects classification thresholds on validation data, evaluates the restored model on the test set, and plots training histories and functional-group scores. Saves the model, scaling, thresholds, predictions, and metrics for comparison.",
         "Classifies an uploaded CSV or Parquet spectrum using the trained model. Signals must already match the chosen carpentry preparation; this helper only regrids and scales them, rejecting spectra that do not cover the required coordinate range.",
     ],
-    "02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb": [
+    "02_ir_functional_groups/examples/03_IR_Compare_Carpentry.ipynb": [
         "Locates the baseline and four worked carpentry outputs and sets the comparison folder. Training is off by default; enabling TRAIN_ALL runs the same static trainer for every option.",
         "Checks completed runs for compatible datasets, frozen holdouts, and training settings, then compares scores, sample counts, and stopping information. Missing or stale results are flagged. Each strategy combines several changes, so score differences cannot isolate a single cleansing step.",
         "Plots overall and per-functional-group test F1 for compatible runs, showing both improvements and regressions from the different data-preparation strategies.",
@@ -134,7 +134,7 @@ NOTES: dict[str, list[str]] = {
         "Checks separated recipe/library groups, material-class coverage, available labels, and frozen evaluation identities. Rare classes have documented split exceptions; missing labels remain masked, and full substrate grids are kept separately for spatial modeling.",
         "Plots training-property distributions, flags statistical outliers for review without removing them automatically, and counts independent libraries per material category to highlight sparse coverage.",
     ],
-    "03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb": [
+    "03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb": [
         "Loads verified results from five models trained on the shared features, without retraining. Compares expanded test observations and the original paired holdout separately, with model ranking based on validation performance.",
         "Compares validation error, test thickness error, and test conductivity error in separate panels. Each panel uses its own scale and units, with lower error indicating better performance.",
         "Plots test predictions against measured thickness and log conductivity for each algorithm using shared axes and the same available labels. Results come from verified saved predictions, not refitted models.",
@@ -185,7 +185,7 @@ HTEM_CURVES = (
     "Plots training/validation loss and learning-rate histories, marks the restored validation-minimum model, and reports why training stopped. "
     "Reaching the epoch limit alone does not demonstrate convergence."
 )
-NOTES["03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
+NOTES["03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
     HTEM_SETUP,
     "Fits a separate linear Ridge model for each property's observed training labels as the workshop baseline. This non-neural model has no epoch-based training history; the prompts guide subsequent model experiments.",
     HTEM_EVALUATE, HTEM_MAP, HTEM_INFER,
@@ -243,7 +243,7 @@ HEADINGS: dict[str, list[str]] = {
         "Collect or reload raw boiling points",
         "Clean and export boiling-point data",
     ],
-    "01_boiling_point/01_BP_Chemprop_GNN.ipynb": [
+    "01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb": [
         "Prepare molecular splits and configure Chemprop",
         "Train Chemprop and select a checkpoint",
         "Plot loss histories and generate predictions",
@@ -251,7 +251,7 @@ HEADINGS: dict[str, list[str]] = {
         "Predict boiling point from a SMILES string",
         "Optional practice: extend the prediction analysis",
     ],
-    "01_boiling_point/02_BP_Foundation_Model.ipynb": [
+    "01_boiling_point/examples/02_BP_Foundation_Model.ipynb": [
         "Prepare shared splits and configure the regression head",
         "Generate frozen MoLFormer embeddings",
         "Train the regression head and restore selected weights",
@@ -260,7 +260,7 @@ HEADINGS: dict[str, list[str]] = {
         "Predict with the frozen encoder and trained head",
         "Optional practice: explore another prediction",
     ],
-    "01_boiling_point/04_BP_One_Shot_Workflow.ipynb": [
+    "01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb": [
         "Locate the dataset and organize the experiment",
         "Audit molecular identities and boiling-point values",
         "Inspect flagged records and repeated measurements",
@@ -285,7 +285,7 @@ HEADINGS: dict[str, list[str]] = {
         "Preview recorded units and spectral arrays",
         "Verify the acquisition table before carpentry",
     ],
-    "02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
+    "02_ir_functional_groups/examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb": [
         "Load native spectra and reserve evaluation molecules",
         "Create the minimal uniform-spectrum baseline",
         "Save and validate the baseline training dataset",
@@ -297,7 +297,7 @@ HEADINGS: dict[str, list[str]] = {
         "Select thresholds and evaluate functional-group predictions",
         "Classify an uploaded prepared spectrum",
     ],
-    "02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb": [
+    "02_ir_functional_groups/examples/03_IR_Compare_Carpentry.ipynb": [
         "Locate carpentry experiments and configure the comparison",
         "Validate completed runs and assemble their results",
         "Compare overall and per-group classification scores",
@@ -316,7 +316,7 @@ HEADINGS: dict[str, list[str]] = {
         "Check split coverage, label masks, and full grids",
         "Examine training distributions and material coverage",
     ],
-    "03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb": [
+    "03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb": [
         "Verify and assemble saved architecture results",
         "Compare validation and test errors by property",
         "Plot held-out parity across all architectures",
@@ -348,7 +348,7 @@ HTEM_RESULT_HEADINGS = [
     "Reconstruct measured and predicted substrate maps",
     "Reload the model and predict an editable process grid",
 ]
-HEADINGS["03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
+HEADINGS["03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb"] = [
     "Load the shared process features and spatial splits",
     "Fit the linear Ridge process-emulator baseline",
     *HTEM_RESULT_HEADINGS,
@@ -377,6 +377,30 @@ HEADINGS["03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb"] = [
     *HTEM_RESULT_HEADINGS,
 ]
 
+
+# The BP guide adapts the generic practice template to the prepared local dataset.
+BP_GUIDE = "01_boiling_point/01_Ten_Steps_in_Prompts.ipynb"
+NOTES[BP_GUIDE] = list(NOTES["00_Ten_Steps_in_Prompts.ipynb"])
+NOTES[BP_GUIDE][0] = (
+    "Locates the prepared BP Parquet, preferring the existing NIST acquisition over the packaged fallback, "
+    "and previews SMILES and boiling points in kelvin without downloading data."
+)
+NOTES[BP_GUIDE][14] = (
+    "This blank practice cell is for selecting finalists using validation results only; "
+    "the test set stays sealed until optimization is finished in Step 9."
+)
+NOTES[BP_GUIDE][9] = (
+    "This blank practice cell is for verifying the saved molecule-disjoint splits and "
+    "training-only preprocessing, without creating new assignments to improve a score."
+)
+NOTES[BP_GUIDE][15] = (
+    "This blank practice cell is for producing training/validation figures and preparing final "
+    "test-evaluation plots, which must wait until the model is frozen after Step 9."
+)
+HEADINGS[BP_GUIDE] = list(HEADINGS["00_Ten_Steps_in_Prompts.ipynb"])
+HEADINGS[BP_GUIDE][0] = "Load the prepared boiling-point dataset"
+HEADINGS[BP_GUIDE][9] = "Practice: verify the frozen molecular splits"
+HEADINGS[BP_GUIDE][14] = "Practice: analyze validation finalists"
 
 def notebook_paths(root: Path = ROOT) -> list[Path]:
     return sorted(p for p in root.rglob("*.ipynb") if not EXCLUDED.intersection(p.relative_to(root).parts))

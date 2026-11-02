@@ -10,30 +10,36 @@ project:
     - 00_Ten_Steps_in_Prompts.ipynb
     - 01_boiling_point/README.md
     - 01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb
-    - 01_boiling_point/01_BP_Chemprop_GNN.ipynb
-    - 01_boiling_point/02_BP_Foundation_Model.ipynb
-    - 01_boiling_point/03_BP_One_Shot_Vibe_Coding.ipynb
-    - 01_boiling_point/04_BP_One_Shot_Workflow.ipynb
+    - 01_boiling_point/01_Ten_Steps_in_Prompts.ipynb
+    - 01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb
+    - 01_boiling_point/examples/README.md
+    - 01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb
+    - 01_boiling_point/examples/02_BP_Foundation_Model.ipynb
+    - 01_boiling_point/examples/03_BP_One_Shot_Vibe_Coding.ipynb
+    - 01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb
     - 02_ir_functional_groups/README.md
     - 02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb
     - 02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb
     - 02_ir_functional_groups/02_IR_Optimized_Training.ipynb
-    - 02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb
     - 02_ir_functional_groups/examples/README.md
+    - 02_ir_functional_groups/examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb
     - 02_ir_functional_groups/examples/01a_IR_Omit_Transmittance.ipynb
     - 02_ir_functional_groups/examples/01b_IR_Convert_Transmittance.ipynb
     - 02_ir_functional_groups/examples/01c_IR_Padding_and_Quality.ipynb
     - 02_ir_functional_groups/examples/01d_IR_Resampling_and_Balancing.ipynb
+    - 02_ir_functional_groups/examples/03_IR_Compare_Carpentry.ipynb
     - 03_htem_conductivity/README.md
     - 03_htem_conductivity/TECHNICAL_NOTES.md
     - 03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb
     - 03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb
-    - 03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
-    - 03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb
+    - 03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb
+    - 03_htem_conductivity/examples/README.md
+    - 03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
     - 03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb
     - 03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb
     - 03_htem_conductivity/examples/02c_HTEM_Grid_GNN.ipynb
     - 03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb
+    - 03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb
   resources:
     - /docs/data_sources/nist_webbook_boiling_point.png
     - /docs/data_sources/nist_webbook_ir.png
@@ -44,26 +50,32 @@ project:
     - /00_Test_Installation.ipynb
     - /00_Ten_Steps_in_Prompts.ipynb
     - /01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb
-    - /01_boiling_point/01_BP_Chemprop_GNN.ipynb
-    - /01_boiling_point/02_BP_Foundation_Model.ipynb
-    - /01_boiling_point/03_BP_One_Shot_Vibe_Coding.ipynb
-    - /01_boiling_point/04_BP_One_Shot_Workflow.ipynb
+    - /01_boiling_point/01_Ten_Steps_in_Prompts.ipynb
+    - /01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb
+    - /01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb
+    - /01_boiling_point/examples/02_BP_Foundation_Model.ipynb
+    - /01_boiling_point/examples/03_BP_One_Shot_Vibe_Coding.ipynb
+    - /01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb
+    - /01_boiling_point/examples/one_shot_prompt_1.txt
+    - /01_boiling_point/examples/one_shot_prompt_2.txt
     - /02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb
     - /02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb
     - /02_ir_functional_groups/02_IR_Optimized_Training.ipynb
-    - /02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb
+    - /02_ir_functional_groups/examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb
     - /02_ir_functional_groups/examples/01a_IR_Omit_Transmittance.ipynb
     - /02_ir_functional_groups/examples/01b_IR_Convert_Transmittance.ipynb
     - /02_ir_functional_groups/examples/01c_IR_Padding_and_Quality.ipynb
     - /02_ir_functional_groups/examples/01d_IR_Resampling_and_Balancing.ipynb
+    - /02_ir_functional_groups/examples/03_IR_Compare_Carpentry.ipynb
     - /03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb
     - /03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb
-    - /03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
-    - /03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb
+    - /03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb
+    - /03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
     - /03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb
     - /03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb
     - /03_htem_conductivity/examples/02c_HTEM_Grid_GNN.ipynb
     - /03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb
+    - /03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb
 
 website:
   title: "How to Use AI to Vibe Code and Build a Scientific Machine Learning Pipeline"
@@ -100,30 +112,41 @@ website:
           - href: 00_Test_Installation.ipynb
             text: Check your installation
           - href: 00_Ten_Steps_in_Prompts.ipynb
-            text: Ten steps in prompts
+            text: Generic ten-step template
       - section: "01 · Boiling point"
         href: 01_boiling_point/README.md
         contents:
           - href: 01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb
-            text: "00 · Get data"
-          - href: 01_boiling_point/01_BP_Chemprop_GNN.ipynb
-            text: "01 · Chemprop GNN"
-          - href: 01_boiling_point/02_BP_Foundation_Model.ipynb
-            text: "02 · Frozen MoLFormer"
-          - href: 01_boiling_point/03_BP_One_Shot_Vibe_Coding.ipynb
-            text: "03 · One-shot prompt"
-          - href: 01_boiling_point/04_BP_One_Shot_Workflow.ipynb
-            text: "04 · Worked workflow"
+            text: "00 · Acquisition (pre-work)"
+          - href: 01_boiling_point/01_Ten_Steps_in_Prompts.ipynb
+            text: "01 · Ten-step template"
+          - href: 01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb
+            text: "02 · Vibe-coding practice"
+          - section: Examples · optional demos and prompts
+            href: 01_boiling_point/examples/README.md
+            contents:
+              - href: 01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb
+                text: "01 · Chemprop GNN"
+              - href: 01_boiling_point/examples/02_BP_Foundation_Model.ipynb
+                text: "02 · Frozen MoLFormer"
+              - href: 01_boiling_point/examples/03_BP_One_Shot_Vibe_Coding.ipynb
+                text: "03 · Full one-shot prompt"
+              - href: 01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb
+                text: "04 · Completed one-shot workflow"
       - section: "02 · IR functional groups"
         href: 02_ir_functional_groups/README.md
         contents:
           - href: 02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb
             text: "00 · Get data"
           - href: 02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb
-            text: "01 · Examine and prepare"
-          - section: Worked carpentry examples
+            text: "01 · Vibe-coding carpentry workbook"
+          - href: 02_ir_functional_groups/02_IR_Optimized_Training.ipynb
+            text: "02 · Static training"
+          - section: Examples · completed preparation and comparison
             href: 02_ir_functional_groups/examples/README.md
             contents:
+              - href: 02_ir_functional_groups/examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb
+                text: "01 · Completed minimal baseline"
               - href: 02_ir_functional_groups/examples/01a_IR_Omit_Transmittance.ipynb
                 text: "01a · Omit transmittance"
               - href: 02_ir_functional_groups/examples/01b_IR_Convert_Transmittance.ipynb
@@ -132,10 +155,8 @@ website:
                 text: "01c · Padding and quality"
               - href: 02_ir_functional_groups/examples/01d_IR_Resampling_and_Balancing.ipynb
                 text: "01d · Resampling and balancing"
-          - href: 02_ir_functional_groups/02_IR_Optimized_Training.ipynb
-            text: "02 · Static training"
-          - href: 02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb
-            text: "03 · Compare results"
+              - href: 02_ir_functional_groups/examples/03_IR_Compare_Carpentry.ipynb
+                text: "03 · Compare reference results"
       - section: "03 · HTEM process emulator"
         href: 03_htem_conductivity/README.md
         contents:
@@ -143,10 +164,13 @@ website:
             text: "00 · Get data"
           - href: 03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb
             text: "01 · Prepare data"
-          - href: 03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
-            text: "02 · Build an emulator"
-          - section: Worked architecture examples
+          - href: 03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb
+            text: "02 · Vibe-coding model experiments"
+          - section: Examples · completed models and comparison
+            href: 03_htem_conductivity/examples/README.md
             contents:
+              - href: 03_htem_conductivity/examples/02_HTEM_Process_Emulator_Vibe_Coding.ipynb
+                text: "02 · Completed linear Ridge baseline"
               - href: 03_htem_conductivity/examples/02a_HTEM_Kernel_Ridge.ipynb
                 text: "02a · Kernel Ridge"
               - href: 03_htem_conductivity/examples/02b_HTEM_Feed_Forward_Network.ipynb
@@ -155,8 +179,8 @@ website:
                 text: "02c · Grid GNN"
               - href: 03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb
                 text: "02d · Random Forest"
-          - href: 03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb
-            text: "03 · Compare outcomes"
+              - href: 03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb
+                text: "03 · Compare reference architectures"
           - href: 03_htem_conductivity/TECHNICAL_NOTES.md
             text: Technical notes
   page-footer:

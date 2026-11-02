@@ -15,8 +15,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE = ROOT / "03_htem_conductivity"
-sys.path.insert(0, str(MODULE))
-spec = importlib.util.spec_from_file_location("htem_workshop", MODULE / "htem_workshop.py")
+sys.path.insert(0, str(MODULE / 'lib'))
+spec = importlib.util.spec_from_file_location("htem_workshop", MODULE / "lib/htem_workshop.py")
 htem = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(htem)
 

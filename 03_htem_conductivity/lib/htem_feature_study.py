@@ -23,7 +23,7 @@ from threadpoolctl import threadpool_limits
 
 import htem_chemistry as chemistry
 
-MODULE = Path(__file__).resolve().parent
+MODULE = Path(__file__).resolve().parents[1]
 ARCHIVE = MODULE / "archive/pre_feature_study_2026_10_21"
 STUDY = MODULE / "outputs/htem_feature_study"
 REFERENCE = MODULE / "data/htem_feature_candidates.json"

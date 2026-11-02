@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 MODULE = Path(__file__).resolve().parents[1] / "03_htem_conductivity"
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import htem_source_dos as dos
 import htem_chemistry as chemistry
 import htem_workshop as htem

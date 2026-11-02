@@ -2,17 +2,25 @@
 
 This repository is a concise workshop for vibe coding machine learning pipelines, consisting of three examples:
 
-1. molecular structure to boiling point (regression; Chemprop GNN and a frozen foundation-model comparison);
+1. molecular structure to boiling point (prompt-driven regression, with optional completed model references);
 2. IR spectrum to functional-group presence (multi-label classification; data carpentry focus); and
 3. HTEM deposition recipes and substrate XY to local thickness/conductivity maps (spatial process emulation; algorithm/architecture experimentation).
 
-Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example folder at a time. Each sequence begins with executable acquisition code.
+Start with `00_Workshop_Roadmap.ipynb`, then work within one numbered example folder at a time. Each sequence begins with acquisition pre-work; prepared data lets the live session focus on the workshop exercises.
+
+> [!IMPORTANT]
+> **IR module: download the dataset before the workshop.**
+> Open [Workshop data v1](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop/releases/tag/workshop-data-v1), expand **Assets**, and download **ir_raw_checkpoint.parquet** (about 196 MB), not a **Source code** archive.
+> Save it inside your cloned repository as `02_ir_functional_groups/outputs/nist_acquisition/ir_raw_checkpoint.parquet` (create the folders if needed).
+> Cloning or downloading the repository does **not** include this file. Using it avoids repeating the lengthy NIST acquisition.
 
 ## Read the workshop as a website
 
-The Quarto reading view provides searchable navigation, explanations and saved plots,
-with Python code folded until you expand it. Keep using the original notebooks in
-VS Code to run or edit the examples. Website publishing never reruns the notebooks.
+The Quarto reading view uses the repository's existing notebooks and Markdown files,
+with searchable navigation, saved plots, and expandable code. Keep editing and running
+the original notebooks in VS Code; do not convert them or add HTML beside them.
+GitHub Actions builds the web-only HTML separately when publishing. No local render
+is needed, and website publishing never reruns the notebooks.
 See [preview and GitHub Pages setup](docs/QUARTO_WEBSITE.md); the reading site is
 available only after Pages is activated and its first deployment succeeds.
 In **Settings → Pages**, set **Source: GitHub Actions**, not **Deploy from a branch**.
@@ -22,35 +30,37 @@ the correct source.
 
 ## Notebook order
 
-Notebook numbering restarts at `00` in each module. BP runs from `00` to `04`;
-IR and HTEM run from `00` to `03`. Lettered examples such as `01a` or `02a`
+Notebook numbering restarts at `00` in each module. All three main paths run `00`–`02`.
+Completed references live in each module's `examples/` folder. Lettered examples such as `01a` or `02a`
 are alternatives to the corresponding numbered notebook, not additional main steps.
 
 ### 01_boiling_point
 
-- [00 — Get data](01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb) — NIST acquisition of a new table containing SMILES and boiling point.
-- [01 — Chemprop GNN](01_boiling_point/01_BP_Chemprop_GNN.ipynb) — GNN regression demo.
-- [02 — Foundation model](01_boiling_point/02_BP_Foundation_Model.ipynb) — frozen foundation-model comparison.
-- [03 — One-shot prompt](01_boiling_point/03_BP_One_Shot_Vibe_Coding.ipynb) — prompt-driven baseline.
-- [04 — Worked one-shot workflow](01_boiling_point/04_BP_One_Shot_Workflow.ipynb) — completed prediction workflow.
+- [00 — Get data](01_boiling_point/00_BP_Get_Data_NISTChemPy_v2.ipynb) — acquisition pre-work; reuse the prepared SMILES/BP data during the session.
+- [01 — Ten steps in prompts](01_boiling_point/01_Ten_Steps_in_Prompts.ipynb) — template for the machine-learning workflow.
+- [02 — Vibe-coding workbook](01_boiling_point/02_BP_Vibe_Coding_Workbook.ipynb) — copy and adapt the prompt, then have your assistant populate and execute the workbook.
+
+Optional [BP examples](01_boiling_point/examples/README.md) hold Chemprop, MoLFormer,
+the one-shot prompt and completed workflow, and both downloadable prompt text files.
+These are references, not additional required workshop steps.
 
 ### 02_ir_functional_groups
 
 - [00 — Get data](02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb) — pre-work NIST acquisition of native IR spectra, SMILES, and functional-group labels.
-- [01 — Examine and prepare](02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb) — simple baseline for prompt-driven data examination and carpentry.
+- [01 — Vibe-coding carpentry workbook](02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb) — edit one prompt and have your assistant examine, prepare and validate the trainer's input files.
 - [02 — Static training](02_ir_functional_groups/02_IR_Optimized_Training.ipynb) — static neural-network classifier for comparing prepared datasets on fixed evaluation splits.
-- [03 — Compare results](02_ir_functional_groups/03_IR_Compare_Carpentry.ipynb) — comparison of the baseline and worked carpentry results.
 
-See [worked examples 01a–01d](02_ir_functional_groups/examples/README.md) for example cleansing strategies and run instructions. The native IR checkpoint is required.
+See [IR references](02_ir_functional_groups/examples/README.md) for the completed 01
+baseline, strategies 01a–01d and 03 comparison. The native IR checkpoint is required.
 
 ### 03_htem_conductivity
 
 - [00 — Get data](03_htem_conductivity/00_HTEM_Get_Data_NREL.ipynb) — HTEM acquisition of compact process conditions, substrate positions, and scalar properties without full spectra.
 - [01 — Prepare data](03_htem_conductivity/01_HTEM_Process_Data_Carpentry.ipynb) — completed preparation of shared chemistry/process features and grouped train/validation/test splits.
-- [02 — Build an emulator](03_htem_conductivity/02_HTEM_Process_Emulator_Vibe_Coding.ipynb) — prompt-guided model experiments, starting with linear Ridge regression.
-- [03 — Compare outcomes](03_htem_conductivity/03_HTEM_Compare_Architectures.ipynb) — comparison of model errors, with test-set parity plots.
+- [02 — Vibe-coding workbook](03_htem_conductivity/02_HTEM_Vibe_Coding_Workbook.ipynb) — edit one prompt to build, execute and analyze model experiments on the fixed prepared data.
 
-Worked alternatives to `02`: `examples/02a–02d` use kernel Ridge, a feed-forward network, a grid GNN, and Random Forest on the same prepared data.
+Optional [HTEM references](03_htem_conductivity/examples/README.md) include the completed
+linear Ridge workflow, four alternative architectures and the 03 comparison notebook.
 
 Predict thickness and conductivity at each substrate location from process settings and XY coordinates—not measured film properties or spectra. See the [HTEM module guide](03_htem_conductivity/README.md) for examples, spatial maps, and run instructions.
 
@@ -70,7 +80,7 @@ uv run --locked python test_environment.py
 
 The project pins Python 3.11 in `.python-version`, declares all dependencies in `pyproject.toml`, and commits the tested `uv.lock`. The virtual environment is created locally as `.venv` and is ignored by Git. Open the notebooks in VS Code and select the Python interpreter inside `.venv` as the notebook kernel.
 
-Run `00_Test_Installation.ipynb` or the command-line verifier before the workshop. The first run of `01_boiling_point/02_BP_Foundation_Model.ipynb` downloads the public MoLFormer checkpoint (about 188 MB); rehearse it once before the workshop or ensure the Hugging Face cache travels with the workshop computers.
+Run `00_Test_Installation.ipynb` or the command-line verifier before the workshop. The first run of the optional `01_boiling_point/examples/02_BP_Foundation_Model.ipynb` downloads the public MoLFormer checkpoint (about 188 MB); rehearse it once before the workshop or ensure the Hugging Face cache travels with the workshop computers.
 
 ## Notes for presenters
 

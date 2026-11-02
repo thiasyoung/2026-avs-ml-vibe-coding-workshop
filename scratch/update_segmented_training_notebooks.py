@@ -31,7 +31,7 @@ def write_notebook(path: Path, notebook: dict) -> None:
 
 
 def update_chemprop() -> None:
-    path = ROOT / "01_boiling_point" / "01_BP_Chemprop_GNN.ipynb"
+    path = ROOT / "01_boiling_point" / "examples" / "01_BP_Chemprop_GNN.ipynb"
     notebook = json.loads(path.read_text(encoding="utf-8"))
 
     replace_cell(
@@ -78,10 +78,14 @@ def update_chemprop() -> None:
         METRICS = ['mae', 'rmse', 'r2']
         # Chemprop's Noam-like schedule runs inside each 20-epoch weight-transfer segment.
         WARMUP_EPOCHS, INIT_LR, MAX_LR, FINAL_LR = 3, 1e-5, 3e-4, 1e-5
-        ACQUIRED_DATA_FILE = Path('outputs/nist_acquisition/NIST_BP_SMILES.parquet')
-        PACKAGED_DATA_FILE = Path('data/CompoundData.parquet')
+        REPO = next((p for p in [Path.cwd(), *Path.cwd().parents] if (p / 'pyproject.toml').is_file() and (p / '01_boiling_point').is_dir()), None)
+        if REPO is None:
+            raise FileNotFoundError('Start Jupyter inside the workshop repository.')
+        MODULE = REPO / '01_boiling_point'
+        ACQUIRED_DATA_FILE = MODULE / 'outputs/nist_acquisition/NIST_BP_SMILES.parquet'
+        PACKAGED_DATA_FILE = MODULE / 'data/CompoundData.parquet'
         DATA_FILE = ACQUIRED_DATA_FILE if ACQUIRED_DATA_FILE.exists() else PACKAGED_DATA_FILE
-        OUTPUT = Path('outputs/bp_chemprop')
+        OUTPUT = MODULE / 'outputs/bp_chemprop'
         FIGURES = OUTPUT / 'figures'
         OUTPUT.mkdir(parents=True, exist_ok=True)
         FIGURES.mkdir(parents=True, exist_ok=True)
@@ -513,7 +517,7 @@ def update_chemprop() -> None:
 
 
 def update_foundation() -> None:
-    path = ROOT / "01_boiling_point" / "02_BP_Foundation_Model.ipynb"
+    path = ROOT / "01_boiling_point" / "examples" / "02_BP_Foundation_Model.ipynb"
     notebook = json.loads(path.read_text(encoding="utf-8"))
 
     replace_cell(
@@ -597,10 +601,14 @@ def update_foundation() -> None:
         if not 0 <= TRIMMED_SLOPE_EXCLUDED_POINTS < VALIDATION_SLOPE_WINDOW - 1:
             raise ValueError('TRIMMED_SLOPE_EXCLUDED_POINTS must leave at least two points for a slope.')
 
-        ACQUIRED_DATA_FILE = Path('outputs/nist_acquisition/NIST_BP_SMILES.parquet')
-        PACKAGED_DATA_FILE = Path('data/CompoundData.parquet')
+        REPO = next((p for p in [Path.cwd(), *Path.cwd().parents] if (p / 'pyproject.toml').is_file() and (p / '01_boiling_point').is_dir()), None)
+        if REPO is None:
+            raise FileNotFoundError('Start Jupyter inside the workshop repository.')
+        MODULE = REPO / '01_boiling_point'
+        ACQUIRED_DATA_FILE = MODULE / 'outputs/nist_acquisition/NIST_BP_SMILES.parquet'
+        PACKAGED_DATA_FILE = MODULE / 'data/CompoundData.parquet'
         DATA_FILE = ACQUIRED_DATA_FILE if ACQUIRED_DATA_FILE.exists() else PACKAGED_DATA_FILE
-        OUTPUT = Path('outputs/bp_molformer')
+        OUTPUT = MODULE / 'outputs/bp_molformer'
         FIGURES = OUTPUT / 'figures'
         OUTPUT.mkdir(parents=True, exist_ok=True)
         FIGURES.mkdir(parents=True, exist_ok=True)

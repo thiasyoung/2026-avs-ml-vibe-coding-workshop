@@ -298,7 +298,7 @@ if __name__ == "__main__":
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--refresh", action="store_true")
     args = parser.parse_args()
-    here = Path(__file__).resolve().parent
+    here = Path(__file__).resolve().parents[1]
     download_htem(here / "outputs/htem_acquisition/htem_process_raw.parquet",
                   here / "outputs/htem_acquisition/compact_http_cache_v2",
                   workers=args.workers, refresh=args.refresh)

@@ -12,6 +12,15 @@ Start with the [workshop roadmap](00_Workshop_Roadmap.ipynb) and
 [complete repository](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop),
 not just one notebook: the examples also use local helper scripts and prepared data.
 
+::: {.callout-important title="IR module: download the dataset before the workshop"}
+The repository does **not** include the native IR data. Open
+[Workshop data v1 → Assets](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop/releases/tag/workshop-data-v1)
+and download **ir_raw_checkpoint.parquet** (about 196 MB), not **Source code**.
+Save it at `02_ir_functional_groups/outputs/nist_acquisition/ir_raw_checkpoint.parquet`
+inside your cloned repository; create the folders if needed. This avoids repeating
+the lengthy NIST scrape. See the [IR module guide](02_ir_functional_groups/README.md).
+:::
+
 ::: {.callout-note title="A reading view, not a live notebook"}
 These pages display the outputs last saved in each notebook. Publishing does not
 download data, train models, or refresh results. Blank practice cells are intentional;
@@ -24,8 +33,9 @@ missing results are not filled in. Run the downloaded notebooks to generate new 
 ::: {.column width="33%"}
 ### 01 · Boiling point
 
-Predict boiling point from molecular structure. Compare a Chemprop graph neural
-network, frozen MoLFormer embeddings, and a prompt-built workflow.
+Predict boiling point from SMILES using prepared data. Review the ten-step template,
+then prompt your assistant to populate and run the workbook. Completed demos and
+prompt downloads are optional examples.
 
 [Explore the module](01_boiling_point/README.md){.btn .btn-outline-primary}
 :::
@@ -33,8 +43,9 @@ network, frozen MoLFormer embeddings, and a prompt-built workflow.
 ::: {.column width="33%"}
 ### 02 · IR functional groups
 
-Explore how signal conversion, cleansing, padding, and resampling affect a fixed
-functional-group classifier. Keep the evaluation data unchanged.
+Use one editable prompt to examine and prepare IR data, then run a fixed classifier.
+Completed examples illustrate signal conversion, cleansing and resampling with the
+same evaluation data.
 
 [Explore the module](02_ir_functional_groups/README.md){.btn .btn-outline-primary}
 :::
@@ -43,7 +54,8 @@ functional-group classifier. Keep the evaluation data unchanged.
 ### 03 · HTEM process emulator
 
 Predict local thickness and conductivity from recipes and substrate positions.
-Experiment with algorithms using the same prepared features and splits.
+Edit the workbook prompt to develop and analyze model experiments using the same
+prepared features and splits; completed models are optional references.
 
 [Explore the module](03_htem_conductivity/README.md){.btn .btn-outline-primary}
 :::

@@ -11,7 +11,7 @@ MODULE = ROOT / "03_htem_conductivity"
 for site in [ROOT / ".venv/Lib/site-packages", ROOT / ".venv/lib/python3.11/site-packages"]:
     if site.exists():
         sys.path.append(str(site))
-sys.path.insert(0, str(MODULE))
+sys.path.insert(0, str(MODULE / 'lib'))
 import numpy as np
 import torch
 from alignn.models.alignn import ALIGNN, ALIGNNConfig

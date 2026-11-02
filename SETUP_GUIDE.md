@@ -142,6 +142,19 @@ Open the cloned or extracted workshop folder in VS Code using **File → Open Fo
 The folder you open must contain `pyproject.toml`, `uv.lock`, and `test_environment.py`.
 You can also run `code .` from that folder if the VS Code command is available.
 
+### Required download for the IR module
+
+> [!IMPORTANT]
+> The repository clone does **not** include the native IR dataset.
+> Open [Workshop data v1 → Assets](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop/releases/tag/workshop-data-v1)
+> and download **ir_raw_checkpoint.parquet** (about 196 MB), not a **Source code** archive.
+> Create `02_ir_functional_groups/outputs/nist_acquisition/` inside the workshop repository
+> and place the file there unchanged. Its full repository-relative path must be
+> `02_ir_functional_groups/outputs/nist_acquisition/ir_raw_checkpoint.parquet`.
+
+This is the raw starting point for IR notebook 01. No archive extraction, data conversion,
+or repeat of the long NIST scrape is needed. See the [IR module guide](02_ir_functional_groups/README.md).
+
 ## 4. Create and verify the UV environment
 
 Use **Terminal → New Terminal** in VS Code. At the root of this workshop folder, run
@@ -178,10 +191,20 @@ Open the Command Palette with **Ctrl+Shift+P** on Windows/Linux or **Cmd+Shift+P
 The notebook's printed executable should point into this workshop's `.venv`.
 
 After the installation check, open the [workshop roadmap](00_Workshop_Roadmap.ipynb).
-Follow the filename numbers in each module: [BP `00`–`04`](01_boiling_point/README.md),
-[IR `00`–`03`](02_ir_functional_groups/README.md), or
-[HTEM `00`–`03`](03_htem_conductivity/README.md). Lettered examples are alternatives
+Follow the filename numbers in each module: [BP `00`–`02`](01_boiling_point/README.md),
+[IR `00`–`02`](02_ir_functional_groups/README.md), or
+[HTEM `00`–`02`](03_htem_conductivity/README.md). Lettered examples are alternatives
 to their numbered step. The module guides explain the acquisition pre-work and live exercises.
+
+For BP, `00` is acquisition pre-work. In the session, use `01` as the ten-step
+template and copy the prompt from `02` into your assistant to populate and execute
+the workbook. The BP `examples/` folder holds optional demonstrations and prompt text
+files; it is not an additional required sequence.
+
+For HTEM, notebook 01 supplies completed preparation. In `02_HTEM_Vibe_Coding_Workbook.ipynb`,
+edit the experiment choices and copy the entire prompt into your assistant to generate
+and execute the model-development workflow. Completed models and the comparison live
+in the HTEM `examples/` folder.
 
 ## 6. Select a coding-agent workflow
 
@@ -191,7 +214,7 @@ Install the OpenAI **Codex** extension for VS Code, open the Codex view, and sig
 
 For example:
 
-> Inspect `02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb` and explain the checks applied before writing the model-ready dataset.
+> Open `02_ir_functional_groups/01_IR_Vibe_Coding_Data_Carpentry.ipynb`, adapt its opening prompt, and use it to populate and execute the examination/carpentry workbook. Validate the saved input files using the static 02 trainer's loader before model training.
 
 ### Path B (advanced users)— Containerized local-LLM agent workflow
 

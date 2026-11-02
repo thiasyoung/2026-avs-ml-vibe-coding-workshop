@@ -2,7 +2,6 @@
 import hashlib
 import json
 import shutil
-import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -11,7 +10,6 @@ import pandas as pd
 from IPython.display import display
 from rdkit import Chem
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ir_carpentry import validate_frozen_evaluation, native_arrays
 
 LABELS = ['Vinylic', 'Arene', 'Alcohol', 'Ether', 'Amine', 'Nitrile',
@@ -132,7 +130,7 @@ def cleanse_training(train, mode):
 def module_directory():
     for parent in [Path.cwd(), *Path.cwd().parents]:
         for candidate in (parent, parent / '02_ir_functional_groups'):
-            if (candidate / '01_IR_Vibe_Coding_Data_Carpentry.ipynb').is_file():
+            if (candidate / 'lib/ir_carpentry.py').is_file():
                 return candidate.resolve()
     raise FileNotFoundError('Open the workshop repository, IR module, or examples folder.')
 
@@ -168,7 +166,7 @@ def load_inputs(module):
     baseline = module / 'outputs/carpentry'
     manifest_file = baseline / 'data_manifest.json'
     if not manifest_file.exists() or not all((baseline / f'IR_{s}.parquet').exists() for s in ('train', 'validation', 'test')):
-        raise FileNotFoundError('Run main 01_IR_Vibe_Coding_Data_Carpentry.ipynb first to freeze comparison splits.')
+        raise FileNotFoundError('Run examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb first to prepare the reference baseline.')
     manifest = json.loads(manifest_file.read_text(encoding='utf-8'))
     if manifest['labels'] != LABELS:
         raise ValueError('Baseline labels differ from the examples; review the label contract.')
@@ -317,7 +315,7 @@ def save_example(tables, grid, output, module, source_path, audit, strategy, cho
     validate_tables({n: pd.read_parquet(output / f'IR_{n}.parquet') for n in tables}, grid)
     validate_frozen_evaluation(module, output, grid)
     print('PASS: reload, finite arrays, binary labels, positive classes, no training/holdout molecule overlap.')
-    print('PASS: validation/test Parquets are byte-identical to main IR 01.')
+    print('PASS: validation/test Parquets are byte-identical to the frozen reference.')
     print('Rows:', {name: len(frame) for name, frame in tables.items()})
     print('Actions:', pd.Series([a['reason'] for a in audit], dtype='object').value_counts().to_dict())
     print('Saved:', output.relative_to(module))

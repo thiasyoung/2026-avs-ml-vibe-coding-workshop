@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 MODULE = Path(__file__).resolve().parents[1] / '02_ir_functional_groups'
-spec = importlib.util.spec_from_file_location('ir_native_contract', MODULE / 'ir_carpentry.py')
+spec = importlib.util.spec_from_file_location('ir_native_contract', MODULE / 'lib/ir_carpentry.py')
 carpentry = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(carpentry)
 
@@ -32,7 +32,7 @@ class NativeCarpentryTests(unittest.TestCase):
         self.assertEqual(actions, ['as_recorded_no_unit_handling'])
 
     def test_baseline_does_not_discuss_or_branch_on_signal_representations(self):
-        notebook = json.loads((MODULE / '01_IR_Vibe_Coding_Data_Carpentry.ipynb').read_text(encoding='utf-8'))
+        notebook = json.loads((MODULE / 'examples/01_IR_Vibe_Coding_Data_Carpentry.ipynb').read_text(encoding='utf-8'))
         source = '\n'.join(''.join(c['source']) for c in notebook['cells']).lower()
         self.assertNotIn('transmittance', source)
         self.assertNotIn('absorbance', source)

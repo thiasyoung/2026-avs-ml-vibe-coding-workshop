@@ -30,7 +30,9 @@ SHAPE_FIELDS = ["centroid_eV", "width_eV", "occupied_fraction", "near_fermi_frac
 DOS_PROPERTIES = ["reference_dos_known", "reference_dos_records",
                   *["reference_dos_" + field for field in SHAPE_FIELDS],
                   "reference_dos_near_fermi_range", "reference_dos_mean_bin_std"]
-REFERENCE = Path(__file__).with_name("data") / "htem_source_dos_reference.json"
+from htem_paths import MODULE_DIR
+
+REFERENCE = MODULE_DIR / "data/htem_source_dos_reference.json"
 
 
 def iter_json_array(stream, chunk_size=1 << 20):
@@ -217,5 +219,5 @@ def build_reference(catalog, cache, output=REFERENCE):
 
 
 if __name__ == "__main__":
-    module = Path(__file__).resolve().parent
+    module = MODULE_DIR
     build_reference(module / "data/htem_spatial_libraries.parquet", module / "outputs/htem_source_reference_cache")

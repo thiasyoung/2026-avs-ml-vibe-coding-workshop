@@ -12,7 +12,9 @@ from pathlib import Path
 
 import numpy as np
 
-DATA = Path(__file__).with_name("data")
+from htem_paths import MODULE_DIR, source_sha256
+
+DATA = MODULE_DIR / "data"
 SPECIFICATION = DATA / "htem_feature_selection.json"
 TABLE = DATA / "htem_frozen_source_features.json"
 
@@ -78,6 +80,6 @@ def fingerprint():
     # reference cannot silently pass model reload/prepared-data checks.
     return {"frozen_feature_spec_sha256": digest(SPECIFICATION),
             "frozen_source_features_sha256": digest(TABLE),
-            "frozen_feature_code_sha256": digest(__file__),
+            "frozen_feature_code_sha256": source_sha256(__file__),
             "feature_element_reference_sha256": digest(DATA / "htem_feature_element_reference.json"),
             "feature_candidates_sha256": digest(DATA / "htem_feature_candidates.json")}

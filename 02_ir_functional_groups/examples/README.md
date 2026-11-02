@@ -1,11 +1,25 @@
-# Four worked IR data-carpentry examples
+# IR reference notebooks
 
-Run IR 00 (checkpoint reload by default), the main IR 01 baseline, then these four
+The main module follows **00 acquisition → 01 prompt-only carpentry workbook →
+02 static training**. These completed notebooks are optional references:
+
+- [01: minimal baseline](01_IR_Vibe_Coding_Data_Carpentry.ipynb) — the previous
+  completed main notebook; writes the reference dataset to `../outputs/carpentry/`.
+- **01a–01d** below — four independent hypotheses for better preparation.
+- [03: compare results](03_IR_Compare_Carpentry.ipynb) — the previous main comparison;
+  reads compatible saved model runs for the baseline and four worked strategies.
+
+The participant workbook writes `../outputs/workshop_carpentry/` separately. Running
+these references does not populate that workbook or compare arbitrary student variants.
+The reference baseline replaces its own `../outputs/carpentry/` when rerun.
+
+For the complete reference demonstration, run IR 00 (checkpoint reload by default),
+the completed **01 in this folder**, then these four
 independent examples. They start from the same native records, not from each other's
 outputs. Every example contains an examination prompt, executed audit, a repair
 hypothesis and implementation, and a final saved/reloaded uniform-data acceptance check.
 
-The main **01 baseline is deliberately naïve**: use recorded numeric coordinates and
+The completed **01 baseline is deliberately naïve**: use recorded numeric coordinates and
 signals as-is, reject malformed/nonfinite/incomplete records, linearly resize to the
 reference grid and min-max normalize each signal. It does not discuss or distinguish
 absorbance from transmittance. It is not secretly corrupted to force a bad score.
@@ -50,13 +64,21 @@ benchmark version, not a different test transformation for each strategy.
 
 ## Execute and compare
 
+The runnable scripts and strategy registry live here in `examples/`; shared
+preparation, examination and validation functions live in `../lib/`.
+
 From the repository root, prepare everything, train five complete models with the
-unchanged IR 02 settings, and execute/populate IR 03:
+unchanged IR 02 settings, and execute/populate `examples/03_IR_Compare_Carpentry.ipynb`:
 
 ```bash
-uv run --locked python 02_ir_functional_groups/run_carpentry_comparison.py --prepare
+uv run --locked python 02_ir_functional_groups/examples/run_carpentry_comparison.py --prepare
 ```
 
+The batch executes the completed `examples/01` reference, never the prompt-only main
+01. It selects each reference dataset explicitly even if your trainer currently points
+to the workbook output. When saving the reference-baseline run into IR 02, it also
+sets that notebook's selector back to `outputs/carpentry` so code and saved results
+agree. Select `outputs/workshop_carpentry` again to resume the participant experiment.
 IR 00 uses the existing native checkpoint with live collection disabled by default;
 no redownload is needed. The native checkpoint is required: already normalized
 rehearsal arrays are not silently substituted. To prepare and loader-smoke-test just
@@ -87,7 +109,7 @@ predictions, metric calculations, early-stop/selection decisions, matching setti
 input schemas and populated notebooks:
 
 ```bash
-uv run --locked python 02_ir_functional_groups/verify_carpentry_comparison.py
+uv run --locked python 02_ir_functional_groups/examples/verify_carpentry_comparison.py
 ```
 
 The six superseded notebooks were moved to `archive/before_consolidation/` for local

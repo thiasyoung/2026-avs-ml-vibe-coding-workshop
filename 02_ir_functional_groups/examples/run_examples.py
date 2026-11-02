@@ -5,12 +5,14 @@ Only examples are saved in place; IR 02 is smoke-tested in memory without traini
 """
 from pathlib import Path
 import json
+import re
 import sys
 
 import nbformat
 from jupyter_client import KernelManager
 from nbclient import NotebookClient
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'lib'))
 from ir_example_support import sha256_file
 from strategies import STRATEGIES
 
@@ -29,6 +31,14 @@ def execute(notebook, working_directory):
     NotebookClient(notebook, timeout=600, kernel_name='python3',
                    kernel_manager_class=EnvironmentKernelManager,
                    resources={'metadata': {'path': str(working_directory)}}).execute()
+
+
+def select_dataset(loader, directory):
+    """Select one explicit dataset even after a participant edits IR 02's selector."""
+    selector = r'''(?m)^CARPENTRY_DIR\s*=\s*Path\((['"])[^'"\n]+\1\)'''
+    if len(re.findall(selector, loader)) != 1:
+        raise ValueError('IR 02 must contain exactly one CARPENTRY_DIR = Path(...) selector.')
+    return re.sub(selector, lambda match: f"CARPENTRY_DIR = Path('{Path(directory).as_posix()}')", loader, count=1)
 
 
 def main():
@@ -55,7 +65,7 @@ def main():
         trainer = nbformat.read(MODULE / '02_IR_Optimized_Training.ipynb', as_version=4)
         loader = next(cell.source for cell in trainer.cells if cell.cell_type == 'code')
         relative = output.relative_to(MODULE).as_posix()
-        loader = loader.replace("CARPENTRY_DIR = Path('outputs/carpentry')", f"CARPENTRY_DIR = Path('{relative}')", 1)
+        loader = select_dataset(loader, relative)
         smoke_cells.append(nbformat.v4.new_code_cell(loader + f"\nprint('PASS IR 02 loader/scaler: {prefix}')"))
         print(f'PASS {prefix}: executed and holdout hashes identical.', flush=True)
         print('  rows:', manifest['rows'], flush=True)
