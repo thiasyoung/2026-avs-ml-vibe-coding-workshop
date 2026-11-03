@@ -1,5 +1,7 @@
 # HTEM spatial process-emulator workshop
 
+![Module 3: predicting electronic conductivity from deposition process inputs](../docs/module_logos/HTEM.png)
+
 ## Objective
 
 Predict **thickness and conductivity at each substrate location** from deposition

@@ -1,5 +1,7 @@
 # IR functional-group workshop
 
+![Module 2: identifying molecular functional groups from IR spectra](../docs/module_logos/FTIR.png)
+
 > [!IMPORTANT]
 > **Download the IR data before starting this module.**
 > From [Workshop data v1 → Assets](https://github.com/thiasyoung/2026-avs-ml-vibe-coding-workshop/releases/tag/workshop-data-v1), download **ir_raw_checkpoint.parquet** (about 196 MB), not **Source code**.

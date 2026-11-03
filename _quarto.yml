@@ -41,6 +41,9 @@ project:
     - 03_htem_conductivity/examples/02d_HTEM_Random_Forest.ipynb
     - 03_htem_conductivity/examples/03_HTEM_Compare_Architectures.ipynb
   resources:
+    - /docs/module_logos/BP.png
+    - /docs/module_logos/FTIR.png
+    - /docs/module_logos/HTEM.png
     - /docs/data_sources/nist_webbook_boiling_point.png
     - /docs/data_sources/nist_webbook_ir.png
     - /docs/data_sources/htem_database.png

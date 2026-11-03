@@ -5,6 +5,7 @@ import re
 import unittest
 
 import numpy as np
+import yaml
 from PIL import Image
 from bs4 import BeautifulSoup
 from nbconvert.filters.markdown import markdown2html
@@ -54,6 +55,30 @@ class DataSourceImageTests(unittest.TestCase):
                 thumbnail = np.asarray(image.convert("RGB").resize((140, 90)))
                 self.assertGreater(float(thumbnail.std()), 15.)
                 self.assertGreater(len(np.unique(thumbnail.reshape(-1, 3), axis=0)), 100)
+
+
+class ModuleLogoTests(unittest.TestCase):
+    def test_module_readmes_show_the_matching_logo_immediately_after_the_title(self):
+        resources = yaml.safe_load((ROOT / "_quarto.yml").read_text(encoding="utf-8"))["project"]["resources"]
+        for module, filename in (("01_boiling_point", "BP.png"),
+                                 ("02_ir_functional_groups", "FTIR.png"),
+                                 ("03_htem_conductivity", "HTEM.png")):
+            with self.subTest(module=module):
+                readme = ROOT / module / "README.md"
+                text = readme.read_text(encoding="utf-8")
+                self.assertRegex(text, r"^# .+\n\n!\[")
+                rendered = BeautifulSoup(markdown2html(text), "html.parser")
+                heading = rendered.find("h1")
+                image = heading.find_next_sibling().find("img")
+                self.assertIsNotNone(image)
+                self.assertTrue(image.get("alt"))
+                image_path = (readme.parent / image["src"]).resolve()
+                self.assertEqual(image_path, ROOT / "docs/module_logos" / filename)
+                self.assertIn(f"/docs/module_logos/{filename}", resources)
+                with Image.open(image_path) as logo:
+                    self.assertEqual(logo.format, "PNG")
+                    self.assertGreater(logo.width, logo.height)
+                    logo.verify()
 
 
 if __name__ == "__main__":

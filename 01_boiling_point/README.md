@@ -1,5 +1,7 @@
 # Boiling-point prediction workshop
 
+![Module 1: predicting boiling point from molecular structure](../docs/module_logos/BP.png)
+
 ## Objective
 
 Use prompts to build, evaluate, and question a machine-learning workflow that predicts
