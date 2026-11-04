@@ -24,7 +24,7 @@ See the [official PyTorch notice](https://pytorch.org/blog/pytorch2-2/).
 
 Install:
 
-- [Visual Studio Code](https://code.visualstudio.com/)
+- [Visual Studio Code](https://code.visualstudio.com/download)
 - The Microsoft **Python** extension for VS Code
 - The Microsoft **Jupyter** extension for VS Code
 - [UV](https://docs.astral.sh/uv/getting-started/installation/)
