@@ -80,11 +80,12 @@ class NotebookNumberingTests(unittest.TestCase):
             *(ROOT / "docs").rglob("*.md"),
             *(ROOT / name / "README.md" for name in MODULES),
             module / "README.md", module / "examples/README.md",
-            *module.glob("*.txt"), *module.glob("examples/*.txt"),
-            *module.glob("*.ipynb"), *module.glob("examples/*.ipynb"),
+            module / "examples/prompt_iteration/README.md",
+            *module.glob("*.txt"), *module.glob("examples/**/*.txt"),
+            *module.glob("*.ipynb"), *module.glob("examples/**/*.ipynb"),
             ROOT / "scripts/prepare_notebook_presentation.py",
-            ROOT / "scratch/build_bp_one_shot_notebook.py",
-            ROOT / "scratch/build_critiques_and_assumptions_pdf.py",
+            # scratch/build_bp_one_shot_notebook.py and build_critiques_and_assumptions_pdf.py
+            # document the retired 04 one-shot notebook and are intentionally not checked.
             ROOT / "scratch/update_segmented_training_notebooks.py",
         ]
         for path in paths:
@@ -93,7 +94,8 @@ class NotebookNumberingTests(unittest.TestCase):
                 text = "\n".join(source_text(cell) for cell in json.loads(text)["cells"])
             for name in re.findall(r"\d{2}_BP_[A-Za-z0-9_]+\.ipynb", text):
                 with self.subTest(document=str(path.relative_to(ROOT)), reference=name):
-                    self.assertTrue((module / name).is_file() or (module / "examples" / name).is_file(),
+                    self.assertTrue((module / name).is_file() or (module / "examples" / name).is_file()
+                                    or (module / "examples/reference_models" / name).is_file(),
                                     f"Broken BP reference: {name}")
 
     def test_readme_sequence_labels_use_the_actual_notebook_numbers(self):

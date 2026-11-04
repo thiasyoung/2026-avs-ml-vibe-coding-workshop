@@ -27,7 +27,7 @@ of the source files, not newly executed notebooks.
 Each module's sidebar follows its `00`–`02` main path, with completed references
 nested under **Examples (optional)**. BP focuses on the full pipeline, IR on
 carpentry with a fixed classifier, and HTEM on model experiments with fixed prepared
-features. The BP examples guide links to two unchanged plain-text prompt downloads.
+features. The BP prompt-iteration guide links to four unchanged plain-text prompt downloads (P0–P3).
 Shared helpers in `lib/`, datasets and generated `outputs/` are not reading pages;
 attendees download the full repository and the IR release asset to execute the work.
 
@@ -130,7 +130,7 @@ not mean **Publish workshop website** succeeded.
    and Build a Scientific Machine Learning Pipeline**, with a module sidebar and
    search, not just **AVS workshop code**.
 4. Select a notebook in the sidebar. Its reading URL ends in `.html`, for example
-   `01_boiling_point/examples/01_BP_Chemprop_GNN.html`. It should display explanations and
+   `01_boiling_point/examples/reference_models/01_BP_Chemprop_GNN.html`. It should display explanations and
    saved plots, with **Show Python code** controls that expand individual cells.
    A `.ipynb` link is the original executable notebook, not the HTML reading page.
 

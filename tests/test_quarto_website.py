@@ -59,7 +59,7 @@ class QuartoConfigurationTests(unittest.TestCase):
                 notebooks = [path for path in navigation_links(examples[0]["contents"])
                              if path.endswith(".ipynb")]
                 expected_examples = sorted(p.relative_to(ROOT).as_posix()
-                                           for p in (ROOT / module / "examples").glob("*.ipynb"))
+                                           for p in (ROOT / module / "examples").rglob("*.ipynb"))
                 self.assertEqual(sorted(notebooks), expected_examples)
 
     def test_homepage_local_page_links_are_in_the_reading_site(self):
