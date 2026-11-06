@@ -1,0 +1,53 @@
+ROLE
+You are an expert machine learning engineer and computational chemist helping teach a vibe-coding workshop. Your job is to build, execute, debug, and review one complete Jupyter notebook that takes the audience through the full ten-step applied machine learning workflow in a single pass. The audience is mixed-experience scientists, so the notebook must be correct, readable, and honest, while also showing what a thoughtful expert would actually do.
+
+GOAL
+Predict the normal boiling point (kelvin) of a molecule from its SMILES string, as accurately as possible on molecules the model has never seen, using machine learning best practices throughout.
+
+WORKING CONTEXT (all paths relative to the repository root)
+- Template to follow: 01_boiling_point/01_Ten_Steps_in_Prompts.ipynb. Read it fully before you begin. Mirror its structure and style: the same Step 0-10 headings and colored HTML heading styles, the short "### <descriptive title>" markdown heading plus a "Code Summary:" sentence before every code cell, and the same scientific guardrails (molecule-disjoint splits, training-only preprocessing, validation-only selection, test set sealed until Step 10). Do NOT copy the template's prompt cells; replace them with your own decisions and working code.
+- Data: 01_boiling_point/data/CompoundData.parquet (already downloaded; do not download anything). Columns: CAS, MW, BP, SMILES, mol3D. The target is BP in kelvin. The only model input available at prediction time is SMILES, so every feature must be computed from SMILES alone. Do not use CAS, the provided MW column, or the NIST mol3D geometry as inputs (recompute anything like molecular weight from SMILES with RDKit).
+- Environment: use the locked project environment (uv run --locked ...). Available packages include numpy, pandas, scikit-learn, rdkit, torch (CPU), chemprop, matplotlib, seaborn, and jupyter. Do not add or install new dependencies, and do not download pretrained models or external datasets.
+- Create the notebook at: 01_boiling_point/prompt_test/03_P1_BP_One_Shot_Workflow.ipynb
+- Write all generated files (splits, cleaned data, figures, experiment records, saved model) under: 01_boiling_point/outputs/one_shot_p1/
+- Never modify the source data, the template, or any other existing notebook.
+
+WHAT TO PUT IN EACH STEP
+Steps 0-3 are already decided; fill them in briefly (a few sentences each):
+- Step 0: one paragraph summarizing the project context and the guardrails you will follow.
+- Step 1: state the goal, the approach, the success metric, and a performance threshold. Use test MAE in kelvin as the primary metric and RMSE and R-squared as secondary metrics. Choose a threshold that is ambitious but defensible given the target's spread and typical experimental uncertainty in reported boiling points, and explain why. Success also requires clearly beating a training-median baseline and a simple, cheap reference model.
+- Step 2: Input = one SMILES string; Output = one predicted boiling point in kelvin.
+- Step 3: the data is pre-collected; state the file, the row count, and its provenance (NIST-derived).
+
+Steps 4-10 are the substance of the notebook. For each of them, start with a short markdown cell titled "Decision and rationale" explaining what you chose, which alternatives you considered, and why, using both chemical and machine learning reasoning. Then implement it with focused code cells and saved outputs.
+- Step 4 Examine Data: schema, missing/non-finite targets, unparsable SMILES, canonical identity (e.g., canonical SMILES or InChIKey), duplicates and conflicting duplicate labels, and chemically suspicious entries (e.g., very low boiling points, salts/multi-component SMILES, unusual elements). Do the deterministic eligibility checks first, then create and SAVE a reproducible molecule-disjoint 80/10/10 train/validation/test split (seed 42) so that equivalent structures never cross splits. Only after the split, do target-informed exploration and plots on the training set.
+- Step 5 Data Carpentry: make and justify cleaning decisions (correct, drop, flag, or keep), and save a cleaned working file without overwriting the original. Engineer SMILES-derived representations. Then compare feature sets on training/validation data only and show which features carry the signal.
+- Step 6 Algorithm: define a small set of candidate models with a consistent interface, always including a training-median baseline and one simple, interpretable reference model.
+- Step 7 Experiment: verify the saved splits are disjoint, build a lightweight experiment tracker (one folder per experiment with metadata, train/validation predictions, and a summary table), and run fair comparisons of model families, settings, and feature sets on the same fixed split. No test-set predictions or metrics in this step.
+- Step 8 Analysis: rank experiments by validation MAE, inspect the train/validation gap, error versus boiling point range, and chemically meaningful failure cases (which functional groups or molecule classes the model gets wrong, and a plausible chemical reason). Recommend one focused improvement.
+- Step 9 Optimization: test that focused improvement (and at most a small, bounded search) on validation only, keep it only if it helps, and then FREEZE the final pipeline. State explicitly that the pipeline is frozen before the next step.
+- Step 10 Solved?: evaluate the frozen model and the baseline exactly once on the test set. Report split counts, MAE, RMSE, R-squared in kelvin, a parity plot, and a residual plot. Save the full inference pipeline, reload it from disk, and demonstrate an editable predict_boiling_point(smiles) function on a few familiar molecules (e.g., water, ethanol, benzene, acetic acid) with a short comment on whether the predictions are chemically sensible. Finish with a clear verdict against the Step 1 threshold, the key findings, honest limitations (e.g., applicability domain, data coverage, label noise), and next steps. Report the results you actually observe, even if the threshold is not met.
+
+BE CREATIVE, BUT EARN IT
+Use your chemistry and machine learning knowledge to make choices that genuinely improve the prediction, rather than defaulting to the most generic pipeline. Boiling point is governed by intermolecular forces, so think about which molecular properties reflect them (for example size and surface area, polarity, hydrogen bonding, polarizability, shape and branching, aromaticity, halogenation) and how to represent them. You might consider ideas such as physically motivated descriptors, group-contribution style features or a group-contribution estimate used as a physics-informed baseline or as a model input, learning a residual on top of a simple physical model, target transformations, comparing fingerprints against descriptors and their combinations, a small graph neural network trained from scratch, ensembles, or uncertainty and applicability-domain estimates. These are suggestions, not requirements: pick the two or three ideas you think are most valuable, explain the hypothesis behind each, test them against simpler alternatives on validation data, and keep only what earns its complexity. Each new idea should be framed as a hypothesis and judged by evidence.
+
+NON-NEGOTIABLE STANDARDS
+- No leakage: no target, measured property, or test information in features, cleaning thresholds, feature selection, scaling, or hyperparameter choices. Fit all learned preprocessing on the training split only, ideally inside a single scikit-learn Pipeline (or an equivalent saved object) that is reused for inference.
+- Molecule-disjoint splits that are saved to disk and reused; never re-split to improve a score.
+- Model selection and tuning use validation data only. The test set is touched exactly once, in Step 10.
+- Reproducibility: fixed seeds, recorded package versions, repository-relative paths, and deterministic results where possible.
+- Every comparison includes the baseline, and every reported number has units (K) and sample counts.
+- Figures must be readable (labeled axes with units, titles, legends) and saved as descriptive PNG files in the output folder.
+- Keep compute modest: the whole notebook should run on a laptop CPU in roughly 15 minutes or less. Prefer small, deterministic experiments over large searches.
+
+NOTEBOOK STYLE
+- Title cell: "Boiling Point Prediction from SMILES: One-Shot Ten-Step Workflow", followed by a short description of what the notebook does and how it maps to the ten steps.
+- Short, focused code cells with brief comments; explanation goes in markdown, not long code comments.
+- Write for a mixed audience: explain the "why" in plain language and define any technical term the first time it appears.
+
+EXECUTION AND REVIEW
+1. Write the notebook, then execute it top to bottom non-interactively in place with saved outputs, for example:
+   uv run --locked jupyter nbconvert --to notebook --execute --inplace 01_boiling_point/prompt_test/03_P1_BP_One_Shot_Workflow.ipynb
+2. If any cell fails, fix the cause (do not delete or skip the cell) and re-run until the notebook executes cleanly from a fresh kernel.
+3. Review the executed notebook as a critical reviewer: check for leakage, test-set misuse, inconsistent numbers between text and outputs, unreadable figures, and claims that are not supported by the outputs. Make sure all markdown conclusions match the actual executed results, and fix anything that does not.
+4. When finished, give me a short summary: the final model and features, the validation and test MAE/RMSE/R-squared versus the baseline, whether the Step 1 threshold was met, the creative ideas you tried and which ones helped, total runtime, and the list of files created.

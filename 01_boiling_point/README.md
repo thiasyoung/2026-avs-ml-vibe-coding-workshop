@@ -21,11 +21,13 @@ The model notebooks report temperatures and prediction errors in **kelvin**.
 - [02 — Vibe-coding workbook](02_BP_Vibe_Coding_Workbook.ipynb): copy and adapt the
    opening prompt, then ask your assistant to populate and execute this workbook.
 
-The [examples reference library](examples/README.md) contains the Chemprop GNN,
-frozen MoLFormer, full one-shot prompt, completed one-shot workflow, and the two
-`one_shot_prompt_*.txt` files. Consult these as needed; they are not additional live
-steps. Their `01`–`04` labels identify references, not the main workshop order, and
-the methods are not claimed to be globally best on this dataset.
+The [examples reference library](examples/README.md) has two parts. `reference_models/`
+holds the Chemprop GNN and frozen MoLFormer notebooks. `prompt_iteration/` holds the
+same task generated from four prompts that pull different strategy levers (P0–P3), the
+executed notebooks, and [a prompt-only notebook](examples/prompt_iteration/Compare_Prompt_Strategies.ipynb)
+for asking your assistant to analyze them. Consult these as needed; they are not
+additional live steps, the methods are not claimed to be best on this dataset, and their
+scores come from different cleaning rules and splits.
 
 ## Folder layout
 
@@ -36,7 +38,9 @@ the methods are not claimed to be globally best on this dataset.
   02_BP_Vibe_Coding_Workbook.ipynb    # hands-on prompt and workspace
   data/                            # packaged data fallback
   outputs/                         # acquired data and generated results
-  examples/                        # optional demos and prompt text files
+  examples/
+    reference_models/              # Chemprop GNN and frozen MoLFormer notebooks
+    prompt_iteration/              # P0–P3 prompts, executed notebooks, comparison prompt
 ```
 
 Keep shared data and generated artifacts at the module root, not inside `examples/`.
@@ -56,7 +60,8 @@ when present and otherwise use `data/CompoundData.parquet`. Keep the data source
 split settings unchanged for fair comparisons. Notebook 02 contains a single editable
 prompt, not prewritten training code. It asks the assistant to fill out 02 and save
 artifacts under `outputs/bp_workbook/`; use separate destinations for independent
-attempts. Choose any relevant references from `examples/`.
+attempts. Choose any relevant references from `examples/`; the 02 workbook also has a
+strategy toolbox: levers you can add to your prompt to change how the assistant works.
 Optional MoLFormer execution downloads its public checkpoint on first use.
 
 ## What to take away

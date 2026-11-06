@@ -16,6 +16,7 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[2]
 MODULES = ("01_boiling_point", "02_ir_functional_groups", "03_htem_conductivity")
 SITE_PATH = "/2026-avs-ml-vibe-coding-workshop/"
+PROMPT_FILES = ("P0_zero_shot_prompt.txt", "P1_one_shot_prompt.txt", "P2_one_shot_prompt.txt", "P3_one_shot_prompt.txt")
 FORBIDDEN_PARTS = {".git", ".github", ".venv", ".ipynb_checkpoints", "__pycache__", "scratch", "archive", "outputs"}
 FORBIDDEN_SUFFIXES = {".parquet", ".pt", ".pth", ".ckpt", ".env"}
 
@@ -24,18 +25,19 @@ def notebook_sources(root: Path = ROOT) -> list[Path]:
     paths = list(root.glob("00_*.ipynb"))
     for module in MODULES:
         paths.extend((root / module).glob("*.ipynb"))
-        paths.extend((root / module / "examples").glob("*.ipynb"))
+        paths.extend((root / module / "examples").rglob("*.ipynb"))
     return sorted(paths)
 
 
 def prompt_sources(root: Path = ROOT) -> list[Path]:
-    return [root / "01_boiling_point/examples" / f"one_shot_prompt_{n}.txt" for n in (1, 2)]
+    return [root / "01_boiling_point/examples/prompt_iteration/prompts" / name for name in PROMPT_FILES]
 
 
 def page_sources(root: Path = ROOT) -> list[Path]:
     return [root / "index.qmd", root / "SETUP_GUIDE.md", *notebook_sources(root),
             *(root / module / "README.md" for module in MODULES),
             root / "01_boiling_point/examples/README.md",
+            root / "01_boiling_point/examples/prompt_iteration/README.md",
             root / "02_ir_functional_groups/examples/README.md",
             root / "03_htem_conductivity/examples/README.md",
             root / "03_htem_conductivity/TECHNICAL_NOTES.md"]

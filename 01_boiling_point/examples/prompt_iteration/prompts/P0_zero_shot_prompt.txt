@@ -1,0 +1,29 @@
+Create and execute a Jupyter notebook that builds a machine-learning pipeline to predict a molecule's boiling point (in kelvin) from its SMILES string.
+
+GOAL
+- Input: one SMILES string (or a list). Output: predicted boiling point in K.
+- Act as both a chemist and a machine-learning practitioner. Use your chemical and ML knowledge to choose features and models that produce genuinely useful predictions, and be creative where it adds measurable value. Prefer the simplest approach the evidence supports.
+
+DATA (already downloaded; do not re-download or modify it)
+- Use 01_boiling_point/outputs/nist_acquisition/NIST_BP_SMILES.parquet if it exists; otherwise use 01_boiling_point/data/CompoundData.parquet. State which file you used.
+- The target is the BP column (kelvin). Derive every model feature from SMILES only; do not use other columns (e.g., CAS, MW, mol3D) as inputs.
+
+WHAT TO DO
+1. Inspect and clean the data: check units, missing or invalid SMILES, duplicate molecules, and conflicting measurements. Record what you remove and why.
+2. Split unique molecules into fixed train/validation/test sets (e.g., 80/10/10, seed 42) so no molecule appears in more than one set.
+3. Build chemically motivated features from SMILES (e.g., RDKit descriptors and/or fingerprints) and explain why they should relate to boiling point.
+4. Compare a simple baseline (training-median prediction) with a few well-chosen models. Try at least one creative, chemistry-informed idea and test whether it actually helps.
+5. Choose the final model using validation results only. Evaluate it on the test set once, at the end.
+6. Report MAE, RMSE, and R² in kelvin, with a parity plot and a few of the largest errors, and explain the results and limitations honestly.
+7. Finish with a predict_boiling_point(smiles) function that handles one or many SMILES and rejects invalid input clearly.
+
+STANDARDS
+- No data leakage: fit scalers, feature selection, and tuning on training data only; do not look at test results until the model is frozen.
+- Fixed random seeds, readable code in short cells, and brief markdown explanations a workshop audience can follow.
+- Keep the full run to roughly ten minutes on a CPU using the existing locked environment (uv). Avoid new dependencies unless necessary.
+
+DELIVERABLES
+- Notebook: 01_boiling_point/prompt_test/BP_One_Shot_P0.ipynb
+- Saved model, metrics, and figures: 01_boiling_point/outputs/prompt_test_P0/
+- Execute the notebook from a fresh kernel, fix any errors, and save it with its real outputs. If something cannot run, say so; never invent results.
+- End with a short summary: approach chosen, test results versus baseline, and the main limitation.

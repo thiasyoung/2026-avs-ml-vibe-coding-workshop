@@ -14,6 +14,8 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDED = {".git", ".venv", ".quarto", "_site", ".ipynb_checkpoints", "archive", "outputs"}
+# Executed assistant-generated runs keep their own explanations and are preserved byte-for-byte.
+PRESERVED_DIRECTORIES = ("01_boiling_point/examples/prompt_iteration/notebooks",)
 MARKER = "workshop_presentation"
 GUIDE = (
     "### Reading and presenting this notebook\n\n"
@@ -61,7 +63,7 @@ NOTES: dict[str, list[str]] = {
         "Collects missing measurements with checkpoints and a failure log, or reloads the existing raw dataset. Original SMILES and kelvin measurements are preserved before cleaning.",
         "Cleans cached measurements without downloading them again, checks molecular structures and plausible temperatures, and combines repeated structures by median boiling point. Saves a two-column SMILES/BP table in kelvin and an audit; range checks alone cannot confirm ambiguous source units.",
     ],
-    "01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb": [
+    "01_boiling_point/examples/reference_models/01_BP_Chemprop_GNN.ipynb": [
         "Loads boiling points in kelvin, creates the molecular splits shared with the foundation-model example, and configures Chemprop training. Molecular graphs derived from SMILES are the only inputs.",
         "Trains Chemprop in 20-epoch segments, carrying forward weights but not optimizer state. Stopping checks require rising validation-loss trends both before and after removing the five highest losses, with validation loss above training loss. Saves the lowest eligible segment checkpoint, with a documented fallback.",
         "Plots the combined training and validation loss histories, marks the selected checkpoint, and uses that checkpoint to predict boiling points for all three splits.",
@@ -69,7 +71,7 @@ NOTES: dict[str, list[str]] = {
         "Predicts the boiling point in kelvin for an editable SMILES string using the selected final model. The example input is ethanol, written as CCO.",
         "This optional practice cell is blank and ready for a follow-up question or calculation.",
     ],
-    "01_boiling_point/examples/02_BP_Foundation_Model.ipynb": [
+    "01_boiling_point/examples/reference_models/02_BP_Foundation_Model.ipynb": [
         "Loads the same molecular splits as Chemprop and configures a frozen MoLFormer encoder with a small feed-forward regression head. Training uses cosine warm restarts and the robust 20-epoch stopping rule; boiling points remain in kelvin.",
         "Loads the pretrained MoLFormer encoder and converts SMILES into fixed embeddings without updating the encoder. Embedding and target scaling are fitted on training data only; the first run downloads the model.",
         "Trains the regression head using AdamW, MSE, and cosine warm restarts. Stopping requires rising raw and outlier-trimmed validation trends with validation loss above training loss. Restores the lowest eligible validation-loss weights, or the documented fallback if no epoch qualifies.",
@@ -77,24 +79,6 @@ NOTES: dict[str, list[str]] = {
         "Converts predictions back to kelvin, compares train/validation/test parity plots, and examines good/bad held-out examples. Saves evaluation metrics and test predictions from the restored model.",
         "Predicts a boiling point in kelvin for an editable SMILES string using the frozen encoder, training-fitted scaling, and restored regression head.",
         "This optional practice cell is blank and ready for another prediction or analysis.",
-    ],
-    "01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb": [
-        "Locates the boiling-point dataset, sets a reproducible seed, and creates experiment folders. Acquired NIST data is preferred over the packaged fallback, and inputs will be derived only from SMILES.",
-        "Audits molecular identities, missing targets, molecular components, charges, and temperature ranges before modeling. Temperature bounds flag suspicious records but cannot establish their source units.",
-        "Displays flagged records and boiling-point disagreements among repeated molecular structures so questionable measurements can be examined before cleaning.",
-        "Keeps eligible single-component molecules, combines repeated structures by median boiling point, and creates fixed 80/10/10 splits with no shared molecular identities.",
-        "Plots the training boiling-point distribution and displays example labels to show the range of values the model will learn from.",
-        "Converts SMILES into molecular descriptors and Morgan fingerprints, then saves the feature specification. Boiling points and source identifiers are not used as inputs.",
-        "Defines regression metrics and candidate tree models, then fits a training-median baseline as a reference for evaluating useful improvements.",
-        "Trains descriptor-only and fingerprint-augmented models on the same splits, recording settings, runtime, and predictions. Model selection uses validation performance rather than test results.",
-        "Compares validation mean absolute error across experiments and the training-median baseline, showing which approaches improve on a simple constant prediction.",
-        "Examines the leading model's training/validation gap and largest validation errors by molecular size to motivate the next experiment.",
-        "Tests a 1024-bit fingerprint with the leading model family and retains it only if validation error improves. Saves the selected configuration before test evaluation.",
-        "Fits the selected configuration on training data and evaluates it on the independent test set, saving aligned predictions and a comparison with the median baseline.",
-        "Shows train/validation/test parity plots, test residuals, and the largest held-out errors in kelvin to illustrate the selected model's performance and limitations.",
-        "Saves the inference bundle and predicts new SMILES with input checks. Fingerprint similarity provides a rough indication of training-set support, not a calibrated uncertainty estimate.",
-        "Reloads the saved model in a fresh Python process and checks that inference works without retraining, preserves row alignment, and rejects unsupported inputs.",
-        "Records the dataset checksum, software versions, split policy, and selected settings in a manifest so the experiment can be traced and reproduced.",
     ],
     "02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb": [
         "Loads candidate NIST identifiers and sets up resumable IR collection with request delays. Live downloading is off by default so the workshop can reuse the native-spectrum checkpoint.",
@@ -243,7 +227,7 @@ HEADINGS: dict[str, list[str]] = {
         "Collect or reload raw boiling points",
         "Clean and export boiling-point data",
     ],
-    "01_boiling_point/examples/01_BP_Chemprop_GNN.ipynb": [
+    "01_boiling_point/examples/reference_models/01_BP_Chemprop_GNN.ipynb": [
         "Prepare molecular splits and configure Chemprop",
         "Train Chemprop and select a checkpoint",
         "Plot loss histories and generate predictions",
@@ -251,7 +235,7 @@ HEADINGS: dict[str, list[str]] = {
         "Predict boiling point from a SMILES string",
         "Optional practice: extend the prediction analysis",
     ],
-    "01_boiling_point/examples/02_BP_Foundation_Model.ipynb": [
+    "01_boiling_point/examples/reference_models/02_BP_Foundation_Model.ipynb": [
         "Prepare shared splits and configure the regression head",
         "Generate frozen MoLFormer embeddings",
         "Train the regression head and restore selected weights",
@@ -259,24 +243,6 @@ HEADINGS: dict[str, list[str]] = {
         "Evaluate predictions in kelvin",
         "Predict with the frozen encoder and trained head",
         "Optional practice: explore another prediction",
-    ],
-    "01_boiling_point/examples/04_BP_One_Shot_Workflow.ipynb": [
-        "Locate the dataset and organize the experiment",
-        "Audit molecular identities and boiling-point values",
-        "Inspect flagged records and repeated measurements",
-        "Clean molecular records and freeze the splits",
-        "Explore the training boiling-point distribution",
-        "Build molecular descriptors and fingerprints",
-        "Define model candidates and a simple baseline",
-        "Run controlled model and feature experiments",
-        "Compare validation errors against the baseline",
-        "Analyze validation errors to guide the next experiment",
-        "Test a revised fingerprint representation",
-        "Evaluate the selected model on held-out data",
-        "Visualize parity plots and prediction errors",
-        "Save the model and predict new molecules",
-        "Verify inference in a fresh Python process",
-        "Save the reproducibility manifest",
     ],
     "02_ir_functional_groups/00_IR_Get_Data_NISTChemPy_v2.ipynb": [
         "Configure resumable NIST IR collection",
@@ -403,7 +369,11 @@ HEADINGS[BP_GUIDE][9] = "Practice: verify the frozen molecular splits"
 HEADINGS[BP_GUIDE][14] = "Practice: analyze validation finalists"
 
 def notebook_paths(root: Path = ROOT) -> list[Path]:
-    return sorted(p for p in root.rglob("*.ipynb") if not EXCLUDED.intersection(p.relative_to(root).parts))
+    return sorted(
+        p for p in root.rglob("*.ipynb")
+        if not EXCLUDED.intersection(p.relative_to(root).parts)
+        and not p.relative_to(root).as_posix().startswith(PRESERVED_DIRECTORIES)
+    )
 
 
 def source_text(cell: dict) -> str:

@@ -106,7 +106,7 @@ uv run --locked python test_environment.py
 
 The project pins Python 3.11 in `.python-version`, declares all dependencies in `pyproject.toml`, and commits the tested `uv.lock`. The virtual environment is created locally as `.venv` and is ignored by Git. Open the notebooks in VS Code and select the Python interpreter inside `.venv` as the notebook kernel.
 
-Run `00_Test_Installation.ipynb` or the command-line verifier before the workshop. The first run of the optional `01_boiling_point/examples/02_BP_Foundation_Model.ipynb` downloads the public MoLFormer checkpoint (about 188 MB); rehearse it once before the workshop or ensure the Hugging Face cache travels with the workshop computers.
+Run `00_Test_Installation.ipynb` or the command-line verifier before the workshop. The first run of the optional `01_boiling_point/examples/reference_models/02_BP_Foundation_Model.ipynb` downloads the public MoLFormer checkpoint (about 188 MB); rehearse it once before the workshop or ensure the Hugging Face cache travels with the workshop computers.
 
 ## Read explanations and outputs with code folded
 
