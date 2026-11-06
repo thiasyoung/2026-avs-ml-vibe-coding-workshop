@@ -59,8 +59,37 @@ class QuartoConfigurationTests(unittest.TestCase):
                 notebooks = [path for path in navigation_links(examples[0]["contents"])
                              if path.endswith(".ipynb")]
                 expected_examples = sorted(p.relative_to(ROOT).as_posix()
-                                           for p in (ROOT / module / "examples").rglob("*.ipynb"))
+                                           for p in (ROOT / module / "examples").rglob("*.ipynb")
+                                           if not site_check.FORBIDDEN_PARTS.intersection(p.relative_to(ROOT).parts))
                 self.assertEqual(sorted(notebooks), expected_examples)
+
+    def test_bp_examples_mirror_reference_models_and_prompt_iteration_folders(self):
+        bp = next(item for item in CONFIG["website"]["sidebar"]["contents"]
+                  if item.get("href") == "01_boiling_point/README.md")
+        examples = next(item for item in bp["contents"] if "contents" in item)
+        groups = examples["contents"]
+        self.assertEqual([item["section"] for item in groups], ["Reference models", "Prompt iteration"])
+        for group, folder in zip(groups, ("reference_models", "prompt_iteration")):
+            prefix = f"01_boiling_point/examples/{folder}/"
+            self.assertTrue(all(link.startswith(prefix) for link in navigation_links([group])))
+        prompt_links = [path for path in navigation_links([groups[1]]) if path.endswith(".ipynb")]
+        self.assertEqual([Path(path).name.split("_", 1)[0] for path in prompt_links],
+                         ["P0", "P1", "P2", "P3", "Compare"])
+
+    def test_published_markdown_links_target_pages_or_explicit_resources(self):
+        allowed = {ROOT / path for path in CONFIG["project"]["render"]}
+        allowed.update(ROOT / path.lstrip("/") for path in CONFIG["project"]["resources"])
+        for source in site_check.page_sources():
+            if source.suffix not in {".md", ".qmd"}:
+                continue
+            text = re.sub(r"`[^`]*`", "", source.read_text(encoding="utf-8"))
+            for link in re.findall(r"\]\(([^)\s]+)\)", text):
+                if link.startswith(("https://", "http://", "#")):
+                    continue
+                target = (source.parent / link.split("#", 1)[0]).resolve()
+                with self.subTest(page=source.relative_to(ROOT), link=link):
+                    self.assertIn(target, allowed)
+                    self.assertTrue(target.is_file())
 
     def test_homepage_local_page_links_are_in_the_reading_site(self):
         homepage = (ROOT / "index.qmd").read_text(encoding="utf-8")
@@ -137,6 +166,19 @@ class QuartoConfigurationTests(unittest.TestCase):
 
 
 class WebsiteValidatorTests(unittest.TestCase):
+    def test_nested_examples_are_discovered_but_archives_and_generated_copies_are_not(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            examples = root / "01_boiling_point/examples"
+            active = examples / "prompt_iteration/notebooks/P0_BP_Zero_Shot.ipynb"
+            active.parent.mkdir(parents=True)
+            active.touch()
+            for forbidden in site_check.FORBIDDEN_PARTS:
+                excluded = examples / forbidden / "nested/Old.ipynb"
+                excluded.parent.mkdir(parents=True)
+                excluded.touch()
+            self.assertEqual(site_check.notebook_sources(root), [active])
+
     def fixture(self, root: Path) -> tuple[Path, Path]:
         sources, site = root / "source", root / "site"
         sources.mkdir()

@@ -27,7 +27,11 @@ of the source files, not newly executed notebooks.
 Each module's sidebar follows its `00`–`02` main path, with completed references
 nested under **Examples (optional)**. BP focuses on the full pipeline, IR on
 carpentry with a fixed classifier, and HTEM on model experiments with fixed prepared
-features. The BP prompt-iteration guide links to four unchanged plain-text prompt downloads (P0–P3).
+features. BP examples mirror the repository's two folders: **Reference models**
+contains Chemprop and MoLFormer; **Prompt iteration** contains the guide, P0–P3
+executed notebooks and the comparison prompt. The guide links to the four unchanged
+plain-text prompt downloads. The render list, sidebar and download resources use
+these nested paths; archived/checkpoint notebooks are excluded from validation too.
 Shared helpers in `lib/`, datasets and generated `outputs/` are not reading pages;
 attendees download the full repository and the IR release asset to execute the work.
 
@@ -151,8 +155,10 @@ in `lib/` are not website pages.
    and check that the new run uses your latest commit. Rerunning an old run uses
    its old commit and can rebuild the obsolete navigation.
 3. Wait for both build and deployment to succeed, then hard-refresh the site.
-   Confirm that the sidebar includes **HTEM → 02 · Model-experiment workbook**
-   and that BP model links contain `/examples/`.
+   Confirm that BP's **Examples (optional)** contains **Reference models** and
+   **Prompt iteration**, including P0–P3 and **Compare prompt strategies**.
+   BP model links should contain `/examples/reference_models/`, and the HTEM
+   main path should end with **02 · Model-experiment workbook**.
 
 Do not move the notebooks back, add another publishing workflow, or enable notebook
 execution to fix stale navigation. The existing workflow rebuilds from source;

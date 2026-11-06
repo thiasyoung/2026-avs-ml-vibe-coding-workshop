@@ -37,8 +37,12 @@ the lengthy NIST scrape. See the [IR module guide](02_ir_functional_groups/READM
 ### 01 · Build a boiling-point pipeline
 
 Review the ten-step template, then adapt the prompt in the workbook. Ask your
-assistant to generate, execute and explain a pipeline. Chemprop, MoLFormer and
-one-shot workflows are available as references, not prescribed solutions.
+assistant to generate, execute and explain a pipeline. Optional examples are split
+into [reference models](01_boiling_point/examples/README.md#reference-models)
+(Chemprop and MoLFormer) and [prompt iteration](01_boiling_point/examples/prompt_iteration/README.md):
+four prompts (P0–P3), their executed notebooks, and a prompt for comparing strategies.
+These runs use different cleaning rules and splits, so their scores are not a fair
+ranking of the prompts.
 
 [Open the BP module](01_boiling_point/README.md){.btn .btn-outline-primary}
 

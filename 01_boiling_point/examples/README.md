@@ -9,7 +9,7 @@ The library has two parts:
 
 | Folder | Purpose |
 | --- | --- |
-| [`reference_models/`](reference_models/) | Worked neural-network examples: a Chemprop GNN and a frozen MoLFormer encoder. |
+| [`reference_models/`](#reference-models) | Worked neural-network examples: a Chemprop GNN and a frozen MoLFormer encoder. |
 | [`prompt_iteration/`](prompt_iteration/README.md) | The same task generated from four prompts that pull different strategy levers (P0–P3), their executed notebooks, and a prompt-only notebook for mining the strategies. |
 
 ## Reference models

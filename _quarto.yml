@@ -140,15 +140,15 @@ website:
           - section: Examples (optional)
             href: 01_boiling_point/examples/README.md
             contents:
-              - href: 01_boiling_point/examples/reference_models/01_BP_Chemprop_GNN.ipynb
-                text: "Reference · Chemprop GNN"
-              - href: 01_boiling_point/examples/reference_models/02_BP_Foundation_Model.ipynb
-                text: "Reference · Frozen MoLFormer"
+              - section: Reference models
+                contents:
+                  - href: 01_boiling_point/examples/reference_models/01_BP_Chemprop_GNN.ipynb
+                    text: "01 · Chemprop GNN"
+                  - href: 01_boiling_point/examples/reference_models/02_BP_Foundation_Model.ipynb
+                    text: "02 · Frozen MoLFormer"
               - section: Prompt iteration
                 href: 01_boiling_point/examples/prompt_iteration/README.md
                 contents:
-                  - href: 01_boiling_point/examples/prompt_iteration/Compare_Prompt_Strategies.ipynb
-                    text: "Compare prompt strategies"
                   - href: 01_boiling_point/examples/prompt_iteration/notebooks/P0_BP_Zero_Shot.ipynb
                     text: "P0 · Zero-shot"
                   - href: 01_boiling_point/examples/prompt_iteration/notebooks/P1_BP_One_Shot.ipynb
@@ -157,6 +157,8 @@ website:
                     text: "P2 · Self-consistency"
                   - href: 01_boiling_point/examples/prompt_iteration/notebooks/P3_BP_One_Shot.ipynb
                     text: "P3 · VIBE-structured"
+                  - href: 01_boiling_point/examples/prompt_iteration/Compare_Prompt_Strategies.ipynb
+                    text: "Compare prompt strategies"
       - section: "02 · IR functional groups"
         href: 02_ir_functional_groups/README.md
         contents:

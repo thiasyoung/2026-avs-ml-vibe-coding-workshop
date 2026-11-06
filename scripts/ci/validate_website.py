@@ -26,7 +26,8 @@ def notebook_sources(root: Path = ROOT) -> list[Path]:
     for module in MODULES:
         paths.extend((root / module).glob("*.ipynb"))
         paths.extend((root / module / "examples").rglob("*.ipynb"))
-    return sorted(paths)
+    return sorted(path for path in paths
+                  if not FORBIDDEN_PARTS.intersection(path.relative_to(root).parts))
 
 
 def prompt_sources(root: Path = ROOT) -> list[Path]:
