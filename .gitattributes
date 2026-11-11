@@ -1,2 +1,9 @@
 # HTEM saved evaluations fingerprint this source file byte-for-byte.
 03_htem_conductivity/lib/*.py text eol=lf
+
+# Frozen HTEM manifests fingerprint these assets byte-for-byte. Preserve their
+# original LF or CRLF bytes in Git, ZIP downloads, and every platform checkout.
+# Do not normalize them or replace the stored checksums: model/data provenance
+# depends on the original file bytes, not only parsed JSON/CSV values.
+03_htem_conductivity/data/**/*.json -text whitespace=cr-at-eol
+03_htem_conductivity/data/**/*.csv -text whitespace=cr-at-eol
