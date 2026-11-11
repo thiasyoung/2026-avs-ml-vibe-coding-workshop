@@ -69,6 +69,8 @@ uv --version
 
 ## 2. Install Git (recommended for cloning)
 
+Download Git from the [official Git installation page](https://git-scm.com/install/).
+
 Git is optional if you use GitHub's ZIP download instead. To clone the repository,
 first check whether Git is already installed in PowerShell or Terminal:
 
